@@ -1,3 +1,5 @@
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import React from "react";
 import {
 	Modal,
@@ -30,6 +32,14 @@ export function AddDebtModal({
 	newDebt,
 	onNewDebtChange,
 }: AddDebtModalProps) {
+	// Theme hooks
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({}, "background");
+	const textColor = useThemeColor({}, "text");
+	const tintColor = useThemeColor({}, "tint");
+	const iconColor = useThemeColor({}, "icon");
+	const isDark = colorScheme === "dark";
+
 	const handleAdd = () => {
 		if (
 			!newDebt.name ||
@@ -49,12 +59,13 @@ export function AddDebtModal({
 			transparent={true}
 			onRequestClose={onClose}>
 			<View style={styles.modalContainer}>
-				<View style={styles.modalContent}>
-					<Text style={styles.modalTitle}>Add New Debt</Text>
+				<View style={[styles.modalContent, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" }]}>
+					<Text style={[styles.modalTitle, { color: textColor }]}>Add New Debt</Text>
 
 					<TextInput
-						style={styles.input}
+						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
 						placeholder='Debt Name'
+						placeholderTextColor={iconColor}
 						value={newDebt.name}
 						onChangeText={text =>
 							onNewDebtChange({ ...newDebt, name: text })
@@ -62,8 +73,9 @@ export function AddDebtModal({
 					/>
 
 					<TextInput
-						style={styles.input}
+						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
 						placeholder='Amount'
+						placeholderTextColor={iconColor}
 						keyboardType='numeric'
 						value={newDebt.amount}
 						onChangeText={text =>
@@ -72,8 +84,9 @@ export function AddDebtModal({
 					/>
 
 					<TextInput
-						style={styles.input}
+						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
 						placeholder='Interest Rate (%)'
+						placeholderTextColor={iconColor}
 						keyboardType='numeric'
 						value={newDebt.interestRate}
 						onChangeText={text =>
@@ -82,8 +95,9 @@ export function AddDebtModal({
 					/>
 
 					<TextInput
-						style={styles.input}
+						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
 						placeholder='Minimum Payment'
+						placeholderTextColor={iconColor}
 						keyboardType='numeric'
 						value={newDebt.minimumPayment}
 						onChangeText={text =>
@@ -96,15 +110,15 @@ export function AddDebtModal({
 
 					<View style={styles.modalButtons}>
 						<TouchableOpacity
-							style={[styles.modalButton, styles.cancelButton]}
+							style={[styles.modalButton, styles.cancelButton, { backgroundColor: isDark ? "#4a5568" : "#E5E5EA" }]}
 							onPress={onClose}>
-							<Text style={styles.modalButtonText}>Cancel</Text>
+							<Text style={[styles.modalButtonText, { color: isDark ? "#fff" : "#333" }]}>Cancel</Text>
 						</TouchableOpacity>
 
 						<TouchableOpacity
-							style={[styles.modalButton, styles.addButton]}
+							style={[styles.modalButton, styles.addButton, { backgroundColor: tintColor }]}
 							onPress={handleAdd}>
-							<Text style={styles.modalButtonText}>Add</Text>
+							<Text style={[styles.modalButtonText, { color: isDark ? "#000" : "#fff" }]}>Add</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -121,24 +135,21 @@ const styles = StyleSheet.create({
 		backgroundColor: "rgba(0, 0, 0, 0.5)",
 	},
 	modalContent: {
-		backgroundColor: "white",
 		borderRadius: 12,
 		padding: 24,
 		width: "90%",
 		maxWidth: 400,
+		borderWidth: 1,
 	},
 	modalTitle: {
 		fontSize: 24,
 		fontWeight: "bold",
 		marginBottom: 20,
-		color: "#333",
 	},
 	input: {
-		backgroundColor: "white",
 		padding: 16,
 		borderRadius: 8,
 		borderWidth: 1,
-		borderColor: "#ddd",
 		fontSize: 16,
 		marginBottom: 12,
 	},
@@ -153,14 +164,9 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		marginLeft: 12,
 	},
-	cancelButton: {
-		backgroundColor: "#E5E5EA",
-	},
-	addButton: {
-		backgroundColor: "#007AFF",
-	},
+	cancelButton: {},
+	addButton: {},
 	modalButtonText: {
-		color: "white",
 		fontWeight: "600",
 		fontSize: 16,
 	},

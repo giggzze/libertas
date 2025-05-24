@@ -1,6 +1,7 @@
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Expense } from "@/types/STT";
+import { formatCurrency } from "@/utils/formatCurrency";
 import React, { useState } from "react";
 import {
 	Modal,
@@ -53,7 +54,7 @@ export function AddExpenseModal({
 					style={[
 						styles.modalContent,
 						{
-							backgroundColor: isDark ? "#2d3748" : "white",
+							backgroundColor,
 							borderColor: isDark ? "#4a5568" : "#ddd",
 						},
 					]}>
@@ -65,7 +66,7 @@ export function AddExpenseModal({
 						style={[
 							styles.input,
 							{
-								backgroundColor: isDark ? "#1a202c" : "#f5f5f5",
+								backgroundColor,
 								color: textColor,
 								borderColor: isDark ? "#4a5568" : "#ddd",
 							},
@@ -80,7 +81,7 @@ export function AddExpenseModal({
 						style={[
 							styles.input,
 							{
-								backgroundColor: isDark ? "#1a202c" : "#f5f5f5",
+								backgroundColor,
 								color: textColor,
 								borderColor: isDark ? "#4a5568" : "#ddd",
 							},
@@ -96,7 +97,7 @@ export function AddExpenseModal({
 						style={[
 							styles.input,
 							{
-								backgroundColor: isDark ? "#1a202c" : "#f5f5f5",
+								backgroundColor,
 								color: textColor,
 								borderColor: isDark ? "#4a5568" : "#ddd",
 							},
@@ -110,9 +111,9 @@ export function AddExpenseModal({
 
 					<View style={styles.buttonContainer}>
 						<TouchableOpacity
-							style={[styles.button, styles.cancelButton]}
+							style={[styles.button, styles.cancelButton, { backgroundColor: isDark ? "#4a5568" : "#e2e8f0" }]}
 							onPress={onClose}>
-							<Text style={styles.buttonText}>Cancel</Text>
+							<Text style={[styles.buttonText, { color: isDark ? "#fff" : "#333" }]}>Cancel</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={[
@@ -172,9 +173,7 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		alignItems: "center",
 	},
-	cancelButton: {
-		backgroundColor: "#e2e8f0",
-	},
+	cancelButton: {},
 	buttonText: {
 		fontSize: 16,
 		fontWeight: "bold",

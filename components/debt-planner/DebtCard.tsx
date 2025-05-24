@@ -1,21 +1,22 @@
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import { DebtWithPayments } from "@/types/STT";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { DebtWithPayments } from "@/types/STT";
+import { formatCurrency } from "@/utils/formatCurrency";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface DebtCardProps {
 	debt: DebtWithPayments;
 	onEdit: (debt: DebtWithPayments) => void;
-	onDelete: (id: string) => void;
+	onDelete: (debtId: string) => void;
 }
 
 export function DebtCard({ debt, onEdit, onDelete }: DebtCardProps) {
 	// Calculate the current balance (remaining amount or original amount if no payments)
 	const currentBalance = debt.remaining_balance || debt.amount;
 	const totalPaid = debt.total_paid || 0;
-	
+
 	// Theme hooks
 	const colorScheme = useColorScheme();
 	const backgroundColor = useThemeColor({}, "background");
@@ -25,11 +26,21 @@ export function DebtCard({ debt, onEdit, onDelete }: DebtCardProps) {
 	const isDark = colorScheme === "dark";
 
 	return (
-		<View style={[styles.debtCard, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" }]}>
+		<View
+			style={[
+				styles.debtCard,
+				{ backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" },
+			]}>
 			<View style={styles.debtHeader}>
-				<Text style={[styles.debtName, { color: textColor }]}>{debt.name}</Text>
-				<Text style={[styles.debtAmount, { color: isDark ? "#81e6d9" : "#2c5282" }]}>
-					${currentBalance.toLocaleString()}
+				<Text style={[styles.debtName, { color: textColor }]}>
+					{debt.name}
+				</Text>
+				<Text
+					style={[
+						styles.debtAmount,
+						{ color: isDark ? "#81e6d9" : "#2c5282" },
+					]}>
+					{formatCurrency(currentBalance)}
 				</Text>
 			</View>
 			<View style={styles.debtDetails}>
@@ -38,30 +49,45 @@ export function DebtCard({ debt, onEdit, onDelete }: DebtCardProps) {
 						Interest Rate: {debt.interest_rate}%
 					</Text>
 					<Text style={[styles.debtDetail, { color: iconColor }]}>
-						Minimum Payment: ${debt.minimum_payment}
+						Minimum Payment: {formatCurrency(debt.minimum_payment)}
 					</Text>
 				</View>
 				{totalPaid > 0 && (
 					<View style={styles.detailColumn}>
 						<Text style={[styles.debtDetail, { color: iconColor }]}>
-							Original: ${debt.amount.toLocaleString()}
+							Original: {formatCurrency(debt.amount)}
 						</Text>
-						<Text style={[styles.debtDetail, styles.paidAmount, { color: isDark ? "#68d391" : "#28a745" }]}>
-							Paid: ${totalPaid.toLocaleString()}
+						<Text
+							style={[
+								styles.debtDetail,
+								styles.paidAmount,
+								{ color: isDark ? "#68d391" : "#28a745" },
+							]}>
+							Paid: {formatCurrency(totalPaid)}
 						</Text>
 					</View>
 				)}
 			</View>
 			<View style={styles.actionButtons}>
 				<TouchableOpacity
-					style={[styles.actionButton, styles.editButton, { backgroundColor: tintColor }]}
+					style={[
+						styles.actionButton,
+						styles.editButton,
+						{ backgroundColor: tintColor },
+					]}
 					onPress={() => onEdit(debt)}>
 					<IconSymbol
 						name='pencil'
 						size={16}
 						color={isDark ? "#000" : "#fff"}
 					/>
-					<Text style={[styles.actionButtonText, { color: isDark ? "#000" : "#fff" }]}>Edit</Text>
+					<Text
+						style={[
+							styles.actionButtonText,
+							{ color: isDark ? "#000" : "#fff" },
+						]}>
+						Edit
+					</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[styles.actionButton, styles.deleteButton]}
@@ -71,7 +97,13 @@ export function DebtCard({ debt, onEdit, onDelete }: DebtCardProps) {
 						size={16}
 						color={isDark ? "#000" : "#fff"}
 					/>
-					<Text style={[styles.actionButtonText, { color: isDark ? "#000" : "#fff" }]}>Delete</Text>
+					<Text
+						style={[
+							styles.actionButtonText,
+							{ color: isDark ? "#000" : "#fff" },
+						]}>
+						Delete
+					</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -127,8 +159,7 @@ const styles = StyleSheet.create({
 		borderRadius: 6,
 		gap: 4,
 	},
-	editButton: {
-	},
+	editButton: {},
 	deleteButton: {
 		backgroundColor: "#FF3B30",
 	},

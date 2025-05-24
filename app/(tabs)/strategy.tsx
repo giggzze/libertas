@@ -15,6 +15,7 @@ import {
 	calculateRecommendedPayment,
 	calculateTotalInterest,
 } from "@/utils/debtCalculations";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { useFocusEffect } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useCallback, useMemo } from "react";
@@ -203,7 +204,7 @@ export default function StrategyScreen() {
 						</Text>
 						<Text
 							style={[styles.summaryValue, { color: textColor }]}>
-							${monthlyIncome.toLocaleString()}
+							{formatCurrency(monthlyIncome)}
 						</Text>
 					</View>
 					<View style={styles.summaryRow}>
@@ -213,7 +214,7 @@ export default function StrategyScreen() {
 						</Text>
 						<Text
 							style={[styles.summaryValue, { color: textColor }]}>
-							${totalMonthlyPayments.toLocaleString()}
+							{formatCurrency(totalMonthlyPayments)}
 						</Text>
 					</View>
 					<View style={styles.summaryRow}>
@@ -223,7 +224,7 @@ export default function StrategyScreen() {
 						</Text>
 						<Text
 							style={[styles.summaryValue, { color: textColor }]}>
-							${totalExpenses.toLocaleString()}
+							{formatCurrency(totalExpenses)}
 						</Text>
 					</View>
 					<View style={styles.summaryRow}>
@@ -238,7 +239,7 @@ export default function StrategyScreen() {
 									? { color: isDark ? "#68d391" : "#28a745" }
 									: { color: isDark ? "#fc8181" : "#dc3545" },
 							]}>
-							${availablePayment.toLocaleString()}
+							{formatCurrency(availablePayment)}
 						</Text>
 					</View>
 				</View>

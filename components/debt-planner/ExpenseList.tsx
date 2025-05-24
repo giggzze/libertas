@@ -2,6 +2,7 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Expense } from "@/types/STT";
+import { formatCurrency } from "@/utils/formatCurrency";
 import React from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -9,7 +10,7 @@ interface ExpenseListProps {
 	expenses: Expense[];
 	onAddExpense: () => void;
 	onEditExpense: (expense: Expense) => void;
-	onDeleteExpense: (id: string) => void;
+	onDeleteExpense: (expenseId: string) => void;
 }
 
 export function ExpenseList({
@@ -87,7 +88,7 @@ export function ExpenseList({
 									styles.expenseAmount,
 									{ color: textColor },
 								]}>
-								${expense.amount.toLocaleString()}
+								{formatCurrency(expense.amount)}
 							</Text>
 							<Text
 								style={[styles.dueDate, { color: iconColor }]}>
@@ -174,5 +175,9 @@ const styles = StyleSheet.create({
 	},
 	actionButton: {
 		padding: 8,
+	},
+	deleteButton: {
+		padding: 8,
+		backgroundColor: "#e53e3e",
 	},
 });
