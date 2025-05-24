@@ -15,8 +15,9 @@ import {
 	calculateRecommendedPayment,
 	calculateTotalInterest,
 } from "@/utils/debtCalculations";
+import { useFocusEffect } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function StrategyScreen() {
@@ -32,53 +33,103 @@ export default function StrategyScreen() {
 	const isDark = colorScheme === "dark";
 
 	// Use database hooks instead of mock data
-	const { currentIncome, loading: incomeLoading } = useMonthlyIncome();
-	const { debts, loading: debtsLoading } = useDebts();
-	const { expenses, loading: expensesLoading } = useExpenses();
+	const {
+		currentIncome,
+		loading: incomeLoading,
+		refetch: refetchIncome,
+	} = useMonthlyIncome();
+	const { debts, loading: debtsLoading, refetch: refetchDebts } = useDebts();
+	const {
+		expenses,
+		loading: expensesLoading,
+		refetch: refetchExpenses,
+	} = useExpenses();
+
+	// Refresh data when screen comes into focus
+	useFocusEffect(
+		useCallback(() => {
+			refetchIncome();
+			refetchDebts();
+			refetchExpenses();
+		}, [refetchIncome, refetchDebts, refetchExpenses])
+	);
+
+	// Memoize calculations to prevent unnecessary recalculations
+	const calculationDebts = useMemo(
+		() =>
+			debts.map((debt: DebtWithPayments) => ({
+				id: debt.id,
+				name: debt.name,
+				amount: debt.remaining_balance || debt.amount,
+				interestRate: debt.interest_rate,
+				minimumPayment: debt.minimum_payment,
+			})),
+		[debts]
+	);
+
+	const monthlyIncome = useMemo(
+		() => currentIncome?.amount || 0,
+		[currentIncome]
+	);
+
+	const totalMonthlyPayments = useMemo(
+		() =>
+			calculationDebts.reduce(
+				(sum, debt) => sum + debt.minimumPayment,
+				0
+			),
+		[calculationDebts]
+	);
+
+	const totalExpenses = useMemo(
+		() =>
+			expenses.reduce(
+				(sum: number, expense: Expense) => sum + expense.amount,
+				0
+			),
+		[expenses]
+	);
+
+	const totalMonthlyObligations = useMemo(
+		() => totalMonthlyPayments + totalExpenses,
+		[totalMonthlyPayments, totalExpenses]
+	);
+
+	const availablePayment = useMemo(
+		() => monthlyIncome - totalMonthlyObligations,
+		[monthlyIncome, totalMonthlyObligations]
+	);
+
+	const recommendedPayments = useMemo(
+		() =>
+			calculateRecommendedPayment(
+				calculationDebts,
+				selectedStrategy,
+				monthlyIncome
+			),
+		[calculationDebts, selectedStrategy, monthlyIncome]
+	);
+
+	const payoffOrder = useMemo(
+		() => calculatePayoffOrder(calculationDebts, selectedStrategy),
+		[calculationDebts, selectedStrategy]
+	);
+
+	// Calculate total months for timeline
+	const totalMonths = useMemo(
+		() =>
+			Math.max(
+				...payoffOrder.map(debt =>
+					calculatePayoffTime(debt, recommendedPayments[debt.id])
+				)
+			),
+		[payoffOrder, recommendedPayments]
+	);
 
 	// Show loading while data is being fetched
 	if (incomeLoading || debtsLoading || expensesLoading) {
 		return <Loading message='Loading strategy data...' />;
 	}
-
-	// Convert database debts to format expected by calculations
-	const calculationDebts = debts.map((debt: DebtWithPayments) => ({
-		id: debt.id,
-		name: debt.name,
-		amount: debt.remaining_balance || debt.amount,
-		interestRate: debt.interest_rate,
-		minimumPayment: debt.minimum_payment,
-	}));
-
-	const monthlyIncome = currentIncome?.amount || 0;
-	const totalMonthlyPayments = calculationDebts.reduce(
-		(sum, debt) => sum + debt.minimumPayment,
-		0
-	);
-	const totalExpenses = expenses.reduce(
-		(sum: number, expense: Expense) => sum + expense.amount,
-		0
-	);
-	const totalMonthlyObligations = totalMonthlyPayments + totalExpenses;
-	const availablePayment = monthlyIncome - totalMonthlyObligations;
-
-	const recommendedPayments = calculateRecommendedPayment(
-		calculationDebts,
-		selectedStrategy,
-		monthlyIncome
-	);
-
-	const payoffOrder = calculatePayoffOrder(
-		calculationDebts,
-		selectedStrategy
-	);
-
-	// Calculate total months for timeline
-	const totalMonths = Math.max(
-		...payoffOrder.map(debt =>
-			calculatePayoffTime(debt, recommendedPayments[debt.id])
-		)
-	);
 
 	// Show message if no debts
 	if (debts.length === 0) {
