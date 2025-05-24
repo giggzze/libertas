@@ -96,9 +96,20 @@ export default function HomeScreen() {
 		await deleteDebt(debtId);
 	};
 
-	const handleIncomeChange = (income: string) => {
-		// For now, just store locally. We'll implement saving later
-		console.log("Income changed:", income);
+	const handleIncomeChange = async (income: string) => {
+		// Only save if income is a valid number and greater than 0
+		const incomeNumber = Number(income);
+		if (income && !isNaN(incomeNumber) && incomeNumber > 0) {
+			try {
+				await createIncome({
+					amount: incomeNumber,
+					start_date: new Date().toISOString().split("T")[0],
+				});
+				console.log("Income saved:", incomeNumber);
+			} catch (error) {
+				console.error("Failed to save income:", error);
+			}
+		}
 	};
 
 	const handleSaveIncome = async (income: string) => {
