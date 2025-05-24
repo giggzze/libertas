@@ -2,42 +2,31 @@ import { AddDebtModal } from "@/components/debt-planner/AddDebtModal";
 import { DebtList } from "@/components/debt-planner/DebtList";
 import { EditDebtModal } from "@/components/debt-planner/EditDebtModal";
 import { IncomeInput } from "@/components/debt-planner/IncomeInput";
+import { Loading } from "@/components/ui/Loading";
+import { useDebts, useMonthlyIncome } from "@/hooks/useDatabase";
+import { DebtInsert } from "@/types/STT";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-// Mock data for initial development
-const mockDebts = [
-	{
-		id: "1",
-		name: "Credit Card",
-		amount: 5000,
-		interestRate: 19.99,
-		minimumPayment: 100,
-	},
-	{
-		id: "2",
-		name: "Student Loan",
-		amount: 25000,
-		interestRate: 5.5,
-		minimumPayment: 300,
-	},
-	{
-		id: "3",
-		name: "Car Loan",
-		amount: 15000,
-		interestRate: 4.5,
-		minimumPayment: 350,
-	},
-];
-
 export default function HomeScreen() {
-	const [income, setIncome] = useState("");
-	const [debts, setDebts] = useState(mockDebts);
+	// Use database hooks instead of mock data
+	const {
+		currentIncome,
+		createIncome,
+		loading: incomeLoading,
+	} = useMonthlyIncome();
+	const {
+		debts,
+		createDebt,
+		updateDebt,
+		deleteDebt,
+		loading: debtsLoading,
+	} = useDebts();
+
+	// Local UI state
 	const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 	const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-	const [selectedDebt, setSelectedDebt] = useState<
-		(typeof mockDebts)[0] | null
-	>(null);
+	const [selectedDebt, setSelectedDebt] = useState<any | null>(null);
 	const [newDebt, setNewDebt] = useState({
 		name: "",
 		amount: "",
@@ -45,89 +34,118 @@ export default function HomeScreen() {
 		minimumPayment: "",
 	});
 
-	const totalDebt = debts.reduce((sum, debt) => sum + debt.amount, 0);
+	// Show loading while data is being fetched
+	if (incomeLoading || debtsLoading) {
+		return <Loading message='Loading your debt information...' />;
+	}
+
+	// Calculate totals from real data
+	const totalDebt = debts.reduce(
+		(sum, debt) => sum + (debt.remaining_balance || debt.amount),
+		0
+	);
 	const totalMonthlyPayments = debts.reduce(
-		(sum, debt) => sum + debt.minimumPayment,
+		(sum, debt) => sum + debt.minimum_payment,
 		0
 	);
 
-	const handleAddDebt = (debt: typeof newDebt) => {
-		const newDebtWithId = {
-			id: Date.now().toString(),
+	const handleAddDebt = async (debt: typeof newDebt) => {
+		const debtData: DebtInsert = {
 			name: debt.name,
 			amount: Number(debt.amount),
-			interestRate: Number(debt.interestRate),
-			minimumPayment: Number(debt.minimumPayment),
+			interest_rate: Number(debt.interestRate),
+			minimum_payment: Number(debt.minimumPayment),
+			start_date: new Date().toISOString().split("T")[0],
+			is_paid: false,
 		};
 
-		setDebts([...debts, newDebtWithId]);
-		setNewDebt({
-			name: "",
-			amount: "",
-			interestRate: "",
-			minimumPayment: "",
-		});
-		setIsAddModalVisible(false);
+		const success = await createDebt(debtData);
+		if (success) {
+			setNewDebt({
+				name: "",
+				amount: "",
+				interestRate: "",
+				minimumPayment: "",
+			});
+			setIsAddModalVisible(false);
+		}
 	};
 
-	const handleEditDebt = (debt: (typeof mockDebts)[0]) => {
+	const handleEditDebt = (debt: any) => {
 		setSelectedDebt(debt);
 		setIsEditModalVisible(true);
 	};
 
-	const handleSaveEdit = (editedDebt: (typeof mockDebts)[0]) => {
-		setDebts(
-			debts.map(debt => (debt.id === editedDebt.id ? editedDebt : debt))
-		);
-		setIsEditModalVisible(false);
-		setSelectedDebt(null);
+	const handleUpdateDebt = async (debt: any) => {
+		if (!selectedDebt) return;
+
+		const success = await updateDebt(selectedDebt.id, {
+			name: debt.name,
+			amount: Number(debt.amount),
+			interest_rate: Number(debt.interestRate),
+			minimum_payment: Number(debt.minimumPayment),
+		});
+
+		if (success) {
+			setIsEditModalVisible(false);
+			setSelectedDebt(null);
+		}
 	};
 
-	const handleDeleteDebt = (id: string) => {
-		setDebts(debts.filter(debt => debt.id !== id));
+	const handleDeleteDebt = async (debtId: string) => {
+		await deleteDebt(debtId);
+	};
+
+	const handleIncomeChange = (income: string) => {
+		// For now, just store locally. We'll implement saving later
+		console.log("Income changed:", income);
+	};
+
+	const handleSaveIncome = async (income: string) => {
+		if (!income) return;
+
+		await createIncome({
+			amount: Number(income),
+			start_date: new Date().toISOString().split("T")[0],
+		});
 	};
 
 	return (
-		<ScrollView
-			contentContainerStyle={styles.scrollViewContent}
-			showsVerticalScrollIndicator={false}>
-			<View style={styles.summaryCard}>
-				<Text style={styles.summaryTitle}>Summary</Text>
-				<View style={styles.summaryRow}>
-					<Text style={styles.summaryLabel}>Total Debt:</Text>
-					<Text style={styles.summaryValue}>
+		<ScrollView style={styles.container}>
+			<View style={styles.header}>
+				<Text style={styles.title}>Debt Planner</Text>
+				<Text style={styles.subtitle}>
+					Take control of your financial future
+				</Text>
+			</View>
+
+			<IncomeInput
+				income={currentIncome?.amount.toString() || ""}
+				onIncomeChange={handleIncomeChange}
+			/>
+
+			<View style={styles.summaryContainer}>
+				<View style={styles.summaryCard}>
+					<Text style={styles.summaryTitle}>Total Debt</Text>
+					<Text style={styles.summaryAmount}>
 						${totalDebt.toLocaleString()}
 					</Text>
 				</View>
-				<View style={styles.summaryRow}>
-					<Text style={styles.summaryLabel}>Monthly Payments:</Text>
-					<Text style={styles.summaryValue}>
+				<View style={styles.summaryCard}>
+					<Text style={styles.summaryTitle}>Monthly Payments</Text>
+					<Text style={styles.summaryAmount}>
 						${totalMonthlyPayments.toLocaleString()}
 					</Text>
 				</View>
-				{income && (
-					<View style={styles.summaryRow}>
-						<Text style={styles.summaryLabel}>Monthly Income:</Text>
-						<Text style={styles.summaryValue}>
-							${Number(income).toLocaleString()}
-						</Text>
-					</View>
-				)}
 			</View>
-			<View style={styles.sectionSpacing}>
-				<IncomeInput
-					income={income}
-					onIncomeChange={setIncome}
-				/>
-			</View>
-			<View style={styles.sectionSpacing}>
-				<DebtList
-					debts={debts}
-					onAddDebt={() => setIsAddModalVisible(true)}
-					onEditDebt={handleEditDebt}
-					onDeleteDebt={handleDeleteDebt}
-				/>
-			</View>
+
+			<DebtList
+				debts={debts}
+				onAddDebt={() => setIsAddModalVisible(true)}
+				onEditDebt={handleEditDebt}
+				onDeleteDebt={handleDeleteDebt}
+			/>
+
 			<AddDebtModal
 				visible={isAddModalVisible}
 				onClose={() => setIsAddModalVisible(false)}
@@ -135,13 +153,11 @@ export default function HomeScreen() {
 				newDebt={newDebt}
 				onNewDebtChange={setNewDebt}
 			/>
+
 			<EditDebtModal
 				visible={isEditModalVisible}
-				onClose={() => {
-					setIsEditModalVisible(false);
-					setSelectedDebt(null);
-				}}
-				onSave={handleSaveEdit}
+				onClose={() => setIsEditModalVisible(false)}
+				onSave={handleUpdateDebt}
 				debt={selectedDebt}
 			/>
 		</ScrollView>
@@ -149,41 +165,51 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-	scrollViewContent: {
-		padding: 16,
-		paddingBottom: 32,
-		flexGrow: 1,
+	container: {
+		flex: 1,
+		backgroundColor: "#f5f5f5",
 	},
-	summaryCard: {
+	header: {
+		padding: 24,
+		paddingTop: 40,
 		backgroundColor: "white",
-		borderRadius: 8,
-		padding: 16,
-		marginTop: 0,
-		marginBottom: 24,
-		borderWidth: 1,
-		borderColor: "#ddd",
 	},
-	summaryTitle: {
-		fontSize: 20,
+	title: {
+		fontSize: 28,
 		fontWeight: "bold",
 		color: "#333",
-		marginBottom: 16,
-	},
-	summaryRow: {
-		flexDirection: "row",
-		justifyContent: "space-between",
 		marginBottom: 8,
 	},
-	summaryLabel: {
+	subtitle: {
 		fontSize: 16,
 		color: "#666",
 	},
-	summaryValue: {
-		fontSize: 16,
-		fontWeight: "600",
-		color: "#333",
+	summaryContainer: {
+		flexDirection: "row",
+		padding: 16,
+		gap: 16,
 	},
-	sectionSpacing: {
-		marginBottom: 24,
+	summaryCard: {
+		flex: 1,
+		backgroundColor: "white",
+		padding: 20,
+		borderRadius: 12,
+		alignItems: "center",
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 3,
+	},
+	summaryTitle: {
+		fontSize: 14,
+		color: "#666",
+		marginBottom: 8,
+		textAlign: "center",
+	},
+	summaryAmount: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: "#333",
 	},
 });

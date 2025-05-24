@@ -1,19 +1,12 @@
+import { DebtWithPayments } from "@/types/STT";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { DebtCard } from "./DebtCard";
 
-interface Debt {
-	id: string;
-	name: string;
-	amount: number;
-	interestRate: number;
-	minimumPayment: number;
-}
-
 interface DebtListProps {
-	debts: Debt[];
+	debts: DebtWithPayments[];
 	onAddDebt: () => void;
-	onEditDebt: (debt: Debt) => void;
+	onEditDebt: (debt: DebtWithPayments) => void;
 	onDeleteDebt: (id: string) => void;
 }
 

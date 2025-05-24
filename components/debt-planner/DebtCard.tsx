@@ -1,37 +1,46 @@
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import { DebtWithPayments } from "@/types/STT";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-interface Debt {
-	id: string;
-	name: string;
-	amount: number;
-	interestRate: number;
-	minimumPayment: number;
-}
-
 interface DebtCardProps {
-	debt: Debt;
-	onEdit: (debt: Debt) => void;
+	debt: DebtWithPayments;
+	onEdit: (debt: DebtWithPayments) => void;
 	onDelete: (id: string) => void;
 }
 
 export function DebtCard({ debt, onEdit, onDelete }: DebtCardProps) {
+	// Calculate the current balance (remaining amount or original amount if no payments)
+	const currentBalance = debt.remaining_balance || debt.amount;
+	const totalPaid = debt.total_paid || 0;
+
 	return (
 		<View style={styles.debtCard}>
 			<View style={styles.debtHeader}>
 				<Text style={styles.debtName}>{debt.name}</Text>
 				<Text style={styles.debtAmount}>
-					${debt.amount.toLocaleString()}
+					${currentBalance.toLocaleString()}
 				</Text>
 			</View>
 			<View style={styles.debtDetails}>
-				<Text style={styles.debtDetail}>
-					Interest Rate: {debt.interestRate}%
-				</Text>
-				<Text style={styles.debtDetail}>
-					Minimum Payment: ${debt.minimumPayment}
-				</Text>
+				<View style={styles.detailColumn}>
+					<Text style={styles.debtDetail}>
+						Interest Rate: {debt.interest_rate}%
+					</Text>
+					<Text style={styles.debtDetail}>
+						Minimum Payment: ${debt.minimum_payment}
+					</Text>
+				</View>
+				{totalPaid > 0 && (
+					<View style={styles.detailColumn}>
+						<Text style={styles.debtDetail}>
+							Original: ${debt.amount.toLocaleString()}
+						</Text>
+						<Text style={[styles.debtDetail, styles.paidAmount]}>
+							Paid: ${totalPaid.toLocaleString()}
+						</Text>
+					</View>
+				)}
 			</View>
 			<View style={styles.actionButtons}>
 				<TouchableOpacity
@@ -89,9 +98,17 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		marginBottom: 12,
 	},
+	detailColumn: {
+		flex: 1,
+	},
 	debtDetail: {
 		color: "#666",
 		fontSize: 14,
+		marginBottom: 2,
+	},
+	paidAmount: {
+		color: "#28a745",
+		fontWeight: "600",
 	},
 	actionButtons: {
 		flexDirection: "row",
