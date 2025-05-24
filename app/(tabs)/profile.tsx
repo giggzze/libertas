@@ -1,4 +1,6 @@
 import { useMonthlyIncome } from "@/hooks/useDatabase";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { useAuthStore } from "@/store/auth";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -22,6 +24,14 @@ export default function ProfileScreen() {
 	} = useMonthlyIncome();
 	const [newIncome, setNewIncome] = useState("");
 	const router = useRouter();
+	
+	// Theme hooks
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({}, "background");
+	const textColor = useThemeColor({}, "text");
+	const tintColor = useThemeColor({}, "tint");
+	const iconColor = useThemeColor({}, "icon");
+	const isDark = colorScheme === "dark";
 
 	const handleLogout = async () => {
 		Alert.alert("Logout", "Are you sure you want to logout?", [
@@ -66,41 +76,42 @@ export default function ProfileScreen() {
 
 	if (authLoading || incomeLoading) {
 		return (
-			<View style={styles.loadingContainer}>
+			<View style={[styles.loadingContainer, { backgroundColor }]}>
 				<ActivityIndicator
 					size='large'
-					color='#007AFF'
+					color={tintColor}
 				/>
 			</View>
 		);
 	}
 
 	return (
-		<ScrollView style={styles.container}>
-			<View style={styles.header}>
-				<Text style={styles.title}>Profile</Text>
-				<Text style={styles.email}>{user?.email}</Text>
+		<ScrollView style={[styles.container, { backgroundColor }]}>
+			<View style={[styles.header, { backgroundColor }]}>
+				<Text style={[styles.title, { color: textColor }]}>Profile</Text>
+				<Text style={[styles.email, { color: iconColor }]}>{user?.email}</Text>
 			</View>
 
-			<View style={styles.section}>
-				<Text style={styles.sectionTitle}>Monthly Income</Text>
+			<View style={[styles.section, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" }]}>
+				<Text style={[styles.sectionTitle, { color: textColor }]}>Monthly Income</Text>
 				<View style={styles.incomeContainer}>
-					<Text style={styles.currentIncome}>
+					<Text style={[styles.currentIncome, { color: iconColor }]}>
 						Current: $
 						{currentIncome?.amount.toLocaleString() || "0"}
 					</Text>
 					<View style={styles.inputContainer}>
 						<TextInput
-							style={styles.input}
+							style={[styles.input, { backgroundColor: isDark ? "#2d3748" : "#f5f5f5", color: textColor }]}
 							placeholder='Enter new monthly income'
+							placeholderTextColor={iconColor}
 							keyboardType='numeric'
 							value={newIncome}
 							onChangeText={setNewIncome}
 						/>
 						<TouchableOpacity
-							style={styles.updateButton}
+							style={[styles.updateButton, { backgroundColor: tintColor }]}
 							onPress={handleUpdateIncome}>
-							<Text style={styles.updateButtonText}>Update</Text>
+							<Text style={[styles.updateButtonText, { color: isDark ? "#000" : "#fff" }]}>Update</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -118,7 +129,6 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#f5f5f5",
 	},
 	loadingContainer: {
 		flex: 1,
@@ -128,28 +138,28 @@ const styles = StyleSheet.create({
 	header: {
 		padding: 24,
 		paddingTop: 40,
-		backgroundColor: "white",
 		marginBottom: 16,
+		borderBottomWidth: 1,
+		borderBottomColor: "#ddd",
 	},
 	title: {
 		fontSize: 28,
 		fontWeight: "bold",
-		color: "#333",
 		marginBottom: 8,
 	},
 	email: {
 		fontSize: 16,
-		color: "#666",
 	},
 	section: {
-		backgroundColor: "white",
 		padding: 20,
 		marginBottom: 16,
+		borderWidth: 1,
+		borderRadius: 8,
+		marginHorizontal: 16,
 	},
 	sectionTitle: {
 		fontSize: 18,
 		fontWeight: "bold",
-		color: "#333",
 		marginBottom: 16,
 	},
 	incomeContainer: {
@@ -157,7 +167,6 @@ const styles = StyleSheet.create({
 	},
 	currentIncome: {
 		fontSize: 16,
-		color: "#666",
 	},
 	inputContainer: {
 		flexDirection: "row",
@@ -165,19 +174,16 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		flex: 1,
-		backgroundColor: "#f5f5f5",
 		padding: 12,
 		borderRadius: 8,
 		fontSize: 16,
 	},
 	updateButton: {
-		backgroundColor: "#007AFF",
 		padding: 12,
 		borderRadius: 8,
 		justifyContent: "center",
 	},
 	updateButtonText: {
-		color: "white",
 		fontWeight: "bold",
 		fontSize: 16,
 	},

@@ -1,18 +1,26 @@
 import { useAuthStore } from "@/store/auth";
 import { Tabs, useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { Platform } from "react-native";
+import { Platform, StatusBar } from "react-native";
 
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { Loading } from "@/components/ui/Loading";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function TabLayout() {
 	const { user, loading } = useAuthStore();
 	const router = useRouter();
 	const colorScheme = useColorScheme();
+	const isDark = colorScheme === "dark";
+	
+	// Theme colors
+	const backgroundColor = useThemeColor({}, "background");
+	const textColor = useThemeColor({}, "text");
+	const tintColor = useThemeColor({}, "tint");
+	const iconColor = useThemeColor({}, "icon");
 
 	useEffect(() => {
 		if (!loading && !user) {
@@ -24,30 +32,33 @@ export default function TabLayout() {
 		// Optionally show a splash/loading screen
 		return <Loading />;
 	}
+	
+	// Set status bar style based on theme
+	StatusBar.setBarStyle(isDark ? "light-content" : "dark-content");
 
 	if (!user) return null;
 
 	return (
 		<Tabs
 			screenOptions={{
-				tabBarActiveTintColor: "#007AFF",
-				tabBarInactiveTintColor: "#666",
+				tabBarActiveTintColor: tintColor,
+				tabBarInactiveTintColor: iconColor,
 				tabBarStyle: Platform.select({
 					ios: {
-						backgroundColor: "white",
-						borderTopColor: "#ddd",
+						backgroundColor: backgroundColor,
+						borderTopColor: isDark ? "#4a5568" : "#ddd",
 						position: "absolute",
 					},
 					default: {
-						backgroundColor: "white",
-						borderTopColor: "#ddd",
+						backgroundColor: backgroundColor,
+						borderTopColor: isDark ? "#4a5568" : "#ddd",
 					},
 				}),
 				headerStyle: {
-					backgroundColor: "white",
+					backgroundColor: backgroundColor,
 				},
 				headerTitleStyle: {
-					color: "#333",
+					color: textColor,
 				},
 				headerShown: true,
 				tabBarButton: HapticTab,
