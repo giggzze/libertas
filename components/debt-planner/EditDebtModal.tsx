@@ -1,3 +1,6 @@
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { formatCurrency } from "@/utils/formatCurrency";
 import React from "react";
 import {
 	Modal,
@@ -31,6 +34,14 @@ export function EditDebtModal({
 }: EditDebtModalProps) {
 	const [editedDebt, setEditedDebt] = React.useState<Debt | null>(null);
 
+	// Theme hooks
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({}, "background");
+	const textColor = useThemeColor({}, "text");
+	const tintColor = useThemeColor({}, "tint");
+	const iconColor = useThemeColor({}, "icon");
+	const isDark = colorScheme === "dark";
+
 	React.useEffect(() => {
 		if (debt) {
 			setEditedDebt(debt);
@@ -51,12 +62,13 @@ export function EditDebtModal({
 			transparent={true}
 			onRequestClose={onClose}>
 			<View style={styles.modalContainer}>
-				<View style={styles.modalContent}>
-					<Text style={styles.modalTitle}>Edit Debt</Text>
+				<View style={[styles.modalContent, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", borderWidth: 1 }]}>
+					<Text style={[styles.modalTitle, { color: textColor }]}>Edit Debt</Text>
 
 					<TextInput
-						style={styles.input}
+						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
 						placeholder='Debt Name'
+						placeholderTextColor={iconColor}
 						value={editedDebt.name}
 						onChangeText={text =>
 							setEditedDebt({ ...editedDebt, name: text })
@@ -64,10 +76,15 @@ export function EditDebtModal({
 					/>
 
 					<TextInput
-						style={styles.input}
+						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
 						placeholder='Amount'
+						placeholderTextColor={iconColor}
 						keyboardType='numeric'
-						value={editedDebt.amount.toString()}
+						value={
+							editedDebt.amount !== undefined
+								? editedDebt.amount.toString()
+								: ""
+						}
 						onChangeText={text =>
 							setEditedDebt({
 								...editedDebt,
@@ -77,10 +94,15 @@ export function EditDebtModal({
 					/>
 
 					<TextInput
-						style={styles.input}
+						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
 						placeholder='Interest Rate (%)'
+						placeholderTextColor={iconColor}
 						keyboardType='numeric'
-						value={editedDebt.interestRate.toString()}
+						value={
+							editedDebt.interestRate !== undefined
+								? editedDebt.interestRate.toString()
+								: ""
+						}
 						onChangeText={text =>
 							setEditedDebt({
 								...editedDebt,
@@ -90,10 +112,15 @@ export function EditDebtModal({
 					/>
 
 					<TextInput
-						style={styles.input}
+						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
 						placeholder='Minimum Payment'
+						placeholderTextColor={iconColor}
 						keyboardType='numeric'
-						value={editedDebt.minimumPayment.toString()}
+						value={
+							editedDebt.minimumPayment !== undefined
+								? editedDebt.minimumPayment.toString()
+								: ""
+						}
 						onChangeText={text =>
 							setEditedDebt({
 								...editedDebt,
@@ -104,15 +131,15 @@ export function EditDebtModal({
 
 					<View style={styles.modalButtons}>
 						<TouchableOpacity
-							style={[styles.modalButton, styles.cancelButton]}
+							style={[styles.modalButton, styles.cancelButton, { backgroundColor: isDark ? "#4a5568" : "#E5E5EA" }]}
 							onPress={onClose}>
-							<Text style={styles.modalButtonText}>Cancel</Text>
+							<Text style={[styles.modalButtonText, { color: isDark ? "#fff" : "#333" }]}>Cancel</Text>
 						</TouchableOpacity>
 
 						<TouchableOpacity
-							style={[styles.modalButton, styles.saveButton]}
+							style={[styles.modalButton, styles.saveButton, { backgroundColor: tintColor }]}
 							onPress={handleSave}>
-							<Text style={styles.modalButtonText}>Save</Text>
+							<Text style={[styles.modalButtonText, { color: isDark ? "#000" : "#fff" }]}>Save</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -129,7 +156,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "rgba(0, 0, 0, 0.5)",
 	},
 	modalContent: {
-		backgroundColor: "white",
 		borderRadius: 12,
 		padding: 24,
 		width: "90%",
@@ -139,14 +165,11 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		fontWeight: "bold",
 		marginBottom: 20,
-		color: "#333",
 	},
 	input: {
-		backgroundColor: "white",
 		padding: 16,
 		borderRadius: 8,
 		borderWidth: 1,
-		borderColor: "#ddd",
 		fontSize: 16,
 		marginBottom: 12,
 	},
@@ -161,14 +184,9 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		marginLeft: 12,
 	},
-	cancelButton: {
-		backgroundColor: "#E5E5EA",
-	},
-	saveButton: {
-		backgroundColor: "#007AFF",
-	},
+	cancelButton: {},
+	saveButton: {},
 	modalButtonText: {
-		color: "white",
 		fontWeight: "600",
 		fontSize: 16,
 	},

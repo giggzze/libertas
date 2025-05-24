@@ -1,8 +1,7 @@
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Expense } from "@/types/STT";
-import { formatCurrency } from "@/utils/formatCurrency";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Modal,
 	StyleSheet,
@@ -25,9 +24,21 @@ export function AddExpenseModal({
 	onAdd,
 	expense,
 }: AddExpenseModalProps) {
-	const [name, setName] = useState(expense?.name || "");
-	const [amount, setAmount] = useState(expense?.amount.toString() || "");
-	const [dueDate, setDueDate] = useState(expense?.due_date.toString() || "");
+	const [name, setName] = useState("");
+	const [amount, setAmount] = useState("");
+	const [dueDate, setDueDate] = useState("");
+
+	useEffect(() => {
+		if (visible && expense) {
+			setName(expense.name || "");
+			setAmount(expense.amount ? expense.amount.toString() : "");
+			setDueDate(expense.due_date ? expense.due_date.toString() : "");
+		} else if (visible && !expense) {
+			setName("");
+			setAmount("");
+			setDueDate("");
+		}
+	}, [visible, expense]);
 
 	const colorScheme = useColorScheme();
 	const isDark = colorScheme === "dark";
@@ -111,9 +122,23 @@ export function AddExpenseModal({
 
 					<View style={styles.buttonContainer}>
 						<TouchableOpacity
-							style={[styles.button, styles.cancelButton, { backgroundColor: isDark ? "#4a5568" : "#e2e8f0" }]}
+							style={[
+								styles.button,
+								styles.cancelButton,
+								{
+									backgroundColor: isDark
+										? "#4a5568"
+										: "#e2e8f0",
+								},
+							]}
 							onPress={onClose}>
-							<Text style={[styles.buttonText, { color: isDark ? "#fff" : "#333" }]}>Cancel</Text>
+							<Text
+								style={[
+									styles.buttonText,
+									{ color: isDark ? "#fff" : "#333" },
+								]}>
+								Cancel
+							</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							style={[
