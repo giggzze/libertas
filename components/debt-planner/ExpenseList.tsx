@@ -54,7 +54,7 @@ export function ExpenseList({
 					<IconSymbol
 						name='plus'
 						size={20}
-						color='white'
+						color={isDark ? "black" : "white"}
 					/>
 				</TouchableOpacity>
 			</View>
