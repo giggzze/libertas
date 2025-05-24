@@ -1,6 +1,5 @@
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { formatCurrency } from "@/utils/formatCurrency";
 import React from "react";
 import {
 	Modal,
@@ -44,7 +43,17 @@ export function EditDebtModal({
 
 	React.useEffect(() => {
 		if (debt) {
-			setEditedDebt(debt);
+			setEditedDebt({
+				...debt,
+				interestRate:
+					(debt as any).interestRate ??
+					(debt as any).interest_rate ??
+					0,
+				minimumPayment:
+					(debt as any).minimumPayment ??
+					(debt as any).minimum_payment ??
+					0,
+			});
 		}
 	}, [debt]);
 
@@ -62,11 +71,28 @@ export function EditDebtModal({
 			transparent={true}
 			onRequestClose={onClose}>
 			<View style={styles.modalContainer}>
-				<View style={[styles.modalContent, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", borderWidth: 1 }]}>
-					<Text style={[styles.modalTitle, { color: textColor }]}>Edit Debt</Text>
+				<View
+					style={[
+						styles.modalContent,
+						{
+							backgroundColor,
+							borderColor: isDark ? "#4a5568" : "#ddd",
+							borderWidth: 1,
+						},
+					]}>
+					<Text style={[styles.modalTitle, { color: textColor }]}>
+						Edit Debt
+					</Text>
 
 					<TextInput
-						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
+						style={[
+							styles.input,
+							{
+								backgroundColor,
+								borderColor: isDark ? "#4a5568" : "#ddd",
+								color: textColor,
+							},
+						]}
 						placeholder='Debt Name'
 						placeholderTextColor={iconColor}
 						value={editedDebt.name}
@@ -76,7 +102,14 @@ export function EditDebtModal({
 					/>
 
 					<TextInput
-						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
+						style={[
+							styles.input,
+							{
+								backgroundColor,
+								borderColor: isDark ? "#4a5568" : "#ddd",
+								color: textColor,
+							},
+						]}
 						placeholder='Amount'
 						placeholderTextColor={iconColor}
 						keyboardType='numeric'
@@ -94,7 +127,14 @@ export function EditDebtModal({
 					/>
 
 					<TextInput
-						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
+						style={[
+							styles.input,
+							{
+								backgroundColor,
+								borderColor: isDark ? "#4a5568" : "#ddd",
+								color: textColor,
+							},
+						]}
 						placeholder='Interest Rate (%)'
 						placeholderTextColor={iconColor}
 						keyboardType='numeric'
@@ -112,7 +152,14 @@ export function EditDebtModal({
 					/>
 
 					<TextInput
-						style={[styles.input, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd", color: textColor }]}
+						style={[
+							styles.input,
+							{
+								backgroundColor,
+								borderColor: isDark ? "#4a5568" : "#ddd",
+								color: textColor,
+							},
+						]}
 						placeholder='Minimum Payment'
 						placeholderTextColor={iconColor}
 						keyboardType='numeric'
@@ -131,15 +178,39 @@ export function EditDebtModal({
 
 					<View style={styles.modalButtons}>
 						<TouchableOpacity
-							style={[styles.modalButton, styles.cancelButton, { backgroundColor: isDark ? "#4a5568" : "#E5E5EA" }]}
+							style={[
+								styles.modalButton,
+								styles.cancelButton,
+								{
+									backgroundColor: isDark
+										? "#4a5568"
+										: "#E5E5EA",
+								},
+							]}
 							onPress={onClose}>
-							<Text style={[styles.modalButtonText, { color: isDark ? "#fff" : "#333" }]}>Cancel</Text>
+							<Text
+								style={[
+									styles.modalButtonText,
+									{ color: isDark ? "#fff" : "#333" },
+								]}>
+								Cancel
+							</Text>
 						</TouchableOpacity>
 
 						<TouchableOpacity
-							style={[styles.modalButton, styles.saveButton, { backgroundColor: tintColor }]}
+							style={[
+								styles.modalButton,
+								styles.saveButton,
+								{ backgroundColor: tintColor },
+							]}
 							onPress={handleSave}>
-							<Text style={[styles.modalButtonText, { color: isDark ? "#000" : "#fff" }]}>Save</Text>
+							<Text
+								style={[
+									styles.modalButtonText,
+									{ color: isDark ? "#000" : "#fff" },
+								]}>
+								Save
+							</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
