@@ -1,4 +1,6 @@
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import React, { useState } from "react";
 import {
 	StyleSheet,
@@ -15,6 +17,14 @@ interface IncomeInputProps {
 
 export function IncomeInput({ income, onIncomeChange }: IncomeInputProps) {
 	const [isSaved, setIsSaved] = useState(false);
+	
+	// Theme hooks
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({}, "background");
+	const textColor = useThemeColor({}, "text");
+	const tintColor = useThemeColor({}, "tint");
+	const iconColor = useThemeColor({}, "icon");
+	const isDark = colorScheme === "dark";
 
 	const handleSave = () => {
 		if (income) {
@@ -26,11 +36,19 @@ export function IncomeInput({ income, onIncomeChange }: IncomeInputProps) {
 
 	return (
 		<View style={styles.section}>
-			<Text style={styles.sectionTitle}>Monthly Income</Text>
+			<Text style={[styles.sectionTitle, { color: textColor }]}>Monthly Income</Text>
 			<View style={styles.inputContainer}>
 				<TextInput
-					style={styles.input}
+					style={[
+						styles.input, 
+						{ 
+							backgroundColor: backgroundColor,
+							color: textColor,
+							borderColor: isDark ? "#4a5568" : "#ddd" 
+						}
+					]}
 					placeholder='Enter your monthly income'
+					placeholderTextColor={iconColor}
 					keyboardType='numeric'
 					value={income}
 					onChangeText={text => {
@@ -41,6 +59,7 @@ export function IncomeInput({ income, onIncomeChange }: IncomeInputProps) {
 				<TouchableOpacity
 					style={[
 						styles.saveButton,
+						{ backgroundColor: tintColor },
 						!income && styles.saveButtonDisabled,
 					]}
 					onPress={handleSave}
@@ -48,7 +67,7 @@ export function IncomeInput({ income, onIncomeChange }: IncomeInputProps) {
 					<IconSymbol
 						name='checkmark'
 						size={20}
-						color='white'
+						color={isDark ? "#000" : "#fff"}
 					/>
 				</TouchableOpacity>
 			</View>
@@ -69,7 +88,6 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		fontWeight: "bold",
 		marginBottom: 16,
-		color: "#333",
 	},
 	inputContainer: {
 		flexDirection: "row",
@@ -77,16 +95,13 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		flex: 1,
-		backgroundColor: "white",
 		padding: 16,
 		borderRadius: 8,
 		borderWidth: 1,
-		borderColor: "#ddd",
 		fontSize: 16,
 		marginRight: 8,
 	},
 	saveButton: {
-		backgroundColor: "#007AFF",
 		width: 44,
 		height: 44,
 		borderRadius: 8,
@@ -95,6 +110,7 @@ const styles = StyleSheet.create({
 	},
 	saveButtonDisabled: {
 		backgroundColor: "#ccc",
+		opacity: 0.7,
 	},
 	successMessage: {
 		color: "#34C759",

@@ -3,10 +3,13 @@ import { DebtList } from "@/components/debt-planner/DebtList";
 import { EditDebtModal } from "@/components/debt-planner/EditDebtModal";
 import { IncomeInput } from "@/components/debt-planner/IncomeInput";
 import { Loading } from "@/components/ui/Loading";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { useDebts, useMonthlyIncome } from "@/hooks/useDatabase";
 import { DebtInsert } from "@/types/STT";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 export default function HomeScreen() {
 	// Use database hooks instead of mock data
@@ -22,6 +25,14 @@ export default function HomeScreen() {
 		deleteDebt,
 		loading: debtsLoading,
 	} = useDebts();
+	
+	// Theme hooks
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({}, "background");
+	const textColor = useThemeColor({}, "text");
+	const tintColor = useThemeColor({}, "tint");
+	const iconColor = useThemeColor({}, "icon");
+	const isDark = colorScheme === "dark";
 
 	// Local UI state
 	const [isAddModalVisible, setIsAddModalVisible] = useState(false);
@@ -122,10 +133,12 @@ export default function HomeScreen() {
 	};
 
 	return (
-		<ScrollView style={styles.container}>
-			<View style={styles.header}>
-				<Text style={styles.title}>Debt Planner</Text>
-				<Text style={styles.subtitle}>
+		<>
+		<StatusBar style={isDark ? "light" : "dark"} />
+		<ScrollView style={[styles.container, { backgroundColor: isDark ? "#1a202c" : "#f5f5f5" }]}>
+			<View style={[styles.header, { backgroundColor: backgroundColor }]}>
+				<Text style={[styles.title, { color: textColor }]}>Debt Planner</Text>
+				<Text style={[styles.subtitle, { color: iconColor }]}>
 					Take control of your financial future
 				</Text>
 			</View>
@@ -136,15 +149,15 @@ export default function HomeScreen() {
 			/>
 
 			<View style={styles.summaryContainer}>
-				<View style={styles.summaryCard}>
-					<Text style={styles.summaryTitle}>Total Debt</Text>
-					<Text style={styles.summaryAmount}>
+				<View style={[styles.summaryCard, { backgroundColor: backgroundColor }]}>
+					<Text style={[styles.summaryTitle, { color: iconColor }]}>Total Debt</Text>
+					<Text style={[styles.summaryAmount, { color: textColor }]}>
 						${totalDebt.toLocaleString()}
 					</Text>
 				</View>
-				<View style={styles.summaryCard}>
-					<Text style={styles.summaryTitle}>Monthly Payments</Text>
-					<Text style={styles.summaryAmount}>
+				<View style={[styles.summaryCard, { backgroundColor: backgroundColor }]}>
+					<Text style={[styles.summaryTitle, { color: iconColor }]}>Monthly Payments</Text>
+					<Text style={[styles.summaryAmount, { color: textColor }]}>
 						${totalMonthlyPayments.toLocaleString()}
 					</Text>
 				</View>
@@ -172,28 +185,25 @@ export default function HomeScreen() {
 				debt={selectedDebt}
 			/>
 		</ScrollView>
+		</>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#f5f5f5",
 	},
 	header: {
 		padding: 24,
 		paddingTop: 40,
-		backgroundColor: "white",
 	},
 	title: {
 		fontSize: 28,
 		fontWeight: "bold",
-		color: "#333",
 		marginBottom: 8,
 	},
 	subtitle: {
 		fontSize: 16,
-		color: "#666",
 	},
 	summaryContainer: {
 		flexDirection: "row",
@@ -202,7 +212,6 @@ const styles = StyleSheet.create({
 	},
 	summaryCard: {
 		flex: 1,
-		backgroundColor: "white",
 		padding: 20,
 		borderRadius: 12,
 		alignItems: "center",
@@ -214,13 +223,11 @@ const styles = StyleSheet.create({
 	},
 	summaryTitle: {
 		fontSize: 14,
-		color: "#666",
 		marginBottom: 8,
 		textAlign: "center",
 	},
 	summaryAmount: {
 		fontSize: 20,
 		fontWeight: "bold",
-		color: "#333",
 	},
 });

@@ -1,5 +1,7 @@
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { DebtWithPayments } from "@/types/STT";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -13,30 +15,38 @@ export function DebtCard({ debt, onEdit, onDelete }: DebtCardProps) {
 	// Calculate the current balance (remaining amount or original amount if no payments)
 	const currentBalance = debt.remaining_balance || debt.amount;
 	const totalPaid = debt.total_paid || 0;
+	
+	// Theme hooks
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({}, "background");
+	const textColor = useThemeColor({}, "text");
+	const tintColor = useThemeColor({}, "tint");
+	const iconColor = useThemeColor({}, "icon");
+	const isDark = colorScheme === "dark";
 
 	return (
-		<View style={styles.debtCard}>
+		<View style={[styles.debtCard, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" }]}>
 			<View style={styles.debtHeader}>
-				<Text style={styles.debtName}>{debt.name}</Text>
-				<Text style={styles.debtAmount}>
+				<Text style={[styles.debtName, { color: textColor }]}>{debt.name}</Text>
+				<Text style={[styles.debtAmount, { color: isDark ? "#81e6d9" : "#2c5282" }]}>
 					${currentBalance.toLocaleString()}
 				</Text>
 			</View>
 			<View style={styles.debtDetails}>
 				<View style={styles.detailColumn}>
-					<Text style={styles.debtDetail}>
+					<Text style={[styles.debtDetail, { color: iconColor }]}>
 						Interest Rate: {debt.interest_rate}%
 					</Text>
-					<Text style={styles.debtDetail}>
+					<Text style={[styles.debtDetail, { color: iconColor }]}>
 						Minimum Payment: ${debt.minimum_payment}
 					</Text>
 				</View>
 				{totalPaid > 0 && (
 					<View style={styles.detailColumn}>
-						<Text style={styles.debtDetail}>
+						<Text style={[styles.debtDetail, { color: iconColor }]}>
 							Original: ${debt.amount.toLocaleString()}
 						</Text>
-						<Text style={[styles.debtDetail, styles.paidAmount]}>
+						<Text style={[styles.debtDetail, styles.paidAmount, { color: isDark ? "#68d391" : "#28a745" }]}>
 							Paid: ${totalPaid.toLocaleString()}
 						</Text>
 					</View>
@@ -44,14 +54,14 @@ export function DebtCard({ debt, onEdit, onDelete }: DebtCardProps) {
 			</View>
 			<View style={styles.actionButtons}>
 				<TouchableOpacity
-					style={[styles.actionButton, styles.editButton]}
+					style={[styles.actionButton, styles.editButton, { backgroundColor: tintColor }]}
 					onPress={() => onEdit(debt)}>
 					<IconSymbol
 						name='pencil'
 						size={16}
-						color='white'
+						color={isDark ? "#000" : "#fff"}
 					/>
-					<Text style={styles.actionButtonText}>Edit</Text>
+					<Text style={[styles.actionButtonText, { color: isDark ? "#000" : "#fff" }]}>Edit</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[styles.actionButton, styles.deleteButton]}
@@ -59,9 +69,9 @@ export function DebtCard({ debt, onEdit, onDelete }: DebtCardProps) {
 					<IconSymbol
 						name='trash'
 						size={16}
-						color='white'
+						color={isDark ? "#000" : "#fff"}
 					/>
-					<Text style={styles.actionButtonText}>Delete</Text>
+					<Text style={[styles.actionButtonText, { color: isDark ? "#000" : "#fff" }]}>Delete</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -70,12 +80,10 @@ export function DebtCard({ debt, onEdit, onDelete }: DebtCardProps) {
 
 const styles = StyleSheet.create({
 	debtCard: {
-		backgroundColor: "white",
 		borderRadius: 8,
 		padding: 16,
 		marginBottom: 12,
 		borderWidth: 1,
-		borderColor: "#ddd",
 	},
 	debtHeader: {
 		flexDirection: "row",
@@ -86,12 +94,10 @@ const styles = StyleSheet.create({
 	debtName: {
 		fontSize: 18,
 		fontWeight: "600",
-		color: "#333",
 	},
 	debtAmount: {
 		fontSize: 18,
 		fontWeight: "bold",
-		color: "#2c3e50",
 	},
 	debtDetails: {
 		flexDirection: "row",
@@ -102,12 +108,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	debtDetail: {
-		color: "#666",
 		fontSize: 14,
 		marginBottom: 2,
 	},
 	paidAmount: {
-		color: "#28a745",
 		fontWeight: "600",
 	},
 	actionButtons: {
@@ -124,13 +128,11 @@ const styles = StyleSheet.create({
 		gap: 4,
 	},
 	editButton: {
-		backgroundColor: "#007AFF",
 	},
 	deleteButton: {
 		backgroundColor: "#FF3B30",
 	},
 	actionButtonText: {
-		color: "white",
 		fontWeight: "600",
 		fontSize: 14,
 	},
