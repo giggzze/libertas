@@ -1,322 +1,346 @@
 import { PayoffTimeline } from "@/components/debt-planner/PayoffTimeline";
 import { RecommendationItem } from "@/components/debt-planner/RecommendationItem";
 import {
-  PayoffStrategy,
-  StrategySelector,
+	PayoffStrategy,
+	StrategySelector,
 } from "@/components/debt-planner/StrategySelector";
 import { Loading } from "@/components/ui/Loading";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useDebts, useMonthlyIncome } from "@/hooks/useDatabase";
+import { useDebts, useExpenses, useMonthlyIncome } from "@/hooks/useDatabase";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { DebtWithPayments } from "@/types/STT";
+import { DebtWithPayments, Expense } from "@/types/STT";
 import {
-  calculatePayoffOrder,
-  calculatePayoffTime,
-  calculateRecommendedPayment,
-  calculateTotalInterest,
+	calculatePayoffOrder,
+	calculatePayoffTime,
+	calculateRecommendedPayment,
+	calculateTotalInterest,
 } from "@/utils/debtCalculations";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function StrategyScreen() {
-  const [selectedStrategy, setSelectedStrategy] =
-    React.useState<PayoffStrategy>("snowball");
+	const [selectedStrategy, setSelectedStrategy] =
+		React.useState<PayoffStrategy>("snowball");
 
-  // Theme hooks
-  const colorScheme = useColorScheme();
-  const backgroundColor = useThemeColor({}, "background");
-  const textColor = useThemeColor({}, "text");
-  const tintColor = useThemeColor({}, "tint");
-  const iconColor = useThemeColor({}, "icon");
-  const isDark = colorScheme === "dark";
+	// Theme hooks
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({}, "background");
+	const textColor = useThemeColor({}, "text");
+	const tintColor = useThemeColor({}, "tint");
+	const iconColor = useThemeColor({}, "icon");
+	const isDark = colorScheme === "dark";
 
-  // Use database hooks instead of mock data
-  const { currentIncome, loading: incomeLoading } = useMonthlyIncome();
-  const { debts, loading: debtsLoading } = useDebts();
+	// Use database hooks instead of mock data
+	const { currentIncome, loading: incomeLoading } = useMonthlyIncome();
+	const { debts, loading: debtsLoading } = useDebts();
+	const { expenses, loading: expensesLoading } = useExpenses();
 
-  // Show loading while data is being fetched
-  if (incomeLoading || debtsLoading) {
-    return <Loading message="Loading strategy data..." />;
-  }
+	// Show loading while data is being fetched
+	if (incomeLoading || debtsLoading || expensesLoading) {
+		return <Loading message='Loading strategy data...' />;
+	}
 
-  // Convert database debts to format expected by calculations
-  const calculationDebts = debts.map((debt: DebtWithPayments) => ({
-    id: debt.id,
-    name: debt.name,
-    amount: debt.remaining_balance || debt.amount,
-    interestRate: debt.interest_rate,
-    minimumPayment: debt.minimum_payment,
-  }));
+	// Convert database debts to format expected by calculations
+	const calculationDebts = debts.map((debt: DebtWithPayments) => ({
+		id: debt.id,
+		name: debt.name,
+		amount: debt.remaining_balance || debt.amount,
+		interestRate: debt.interest_rate,
+		minimumPayment: debt.minimum_payment,
+	}));
 
-  const monthlyIncome = currentIncome?.amount || 0;
-  const totalMonthlyPayments = calculationDebts.reduce(
-    (sum, debt) => sum + debt.minimumPayment,
-    0
-  );
+	const monthlyIncome = currentIncome?.amount || 0;
+	const totalMonthlyPayments = calculationDebts.reduce(
+		(sum, debt) => sum + debt.minimumPayment,
+		0
+	);
+	const totalExpenses = expenses.reduce(
+		(sum: number, expense: Expense) => sum + expense.amount,
+		0
+	);
+	const totalMonthlyObligations = totalMonthlyPayments + totalExpenses;
+	const availablePayment = monthlyIncome - totalMonthlyObligations;
 
-  const availablePayment = monthlyIncome - totalMonthlyPayments;
+	const recommendedPayments = calculateRecommendedPayment(
+		calculationDebts,
+		selectedStrategy,
+		monthlyIncome
+	);
 
-  const recommendedPayments = calculateRecommendedPayment(
-    calculationDebts,
-    selectedStrategy,
-    monthlyIncome
-  );
+	const payoffOrder = calculatePayoffOrder(
+		calculationDebts,
+		selectedStrategy
+	);
 
-  const payoffOrder = calculatePayoffOrder(calculationDebts, selectedStrategy);
+	// Calculate total months for timeline
+	const totalMonths = Math.max(
+		...payoffOrder.map(debt =>
+			calculatePayoffTime(debt, recommendedPayments[debt.id])
+		)
+	);
 
-  // Calculate total months for timeline
-  const totalMonths = Math.max(
-    ...payoffOrder.map((debt) =>
-      calculatePayoffTime(debt, recommendedPayments[debt.id])
-    )
-  );
+	// Show message if no debts
+	if (debts.length === 0) {
+		return (
+			<>
+				<StatusBar style={isDark ? "light" : "dark"} />
+				<View style={[styles.emptyContainer, { backgroundColor }]}>
+					<Text style={[styles.emptyTitle, { color: textColor }]}>
+						No Debts Found
+					</Text>
+					<Text style={[styles.emptyMessage, { color: iconColor }]}>
+						Add some debts to see your payoff strategy
+						recommendations.
+					</Text>
+				</View>
+			</>
+		);
+	}
 
-  // Show message if no debts
-  if (debts.length === 0) {
-    return (
-      <>
-        <StatusBar style={isDark ? "light" : "dark"} />
-        <View style={[styles.emptyContainer, { backgroundColor }]}>
-          <Text style={[styles.emptyTitle, { color: textColor }]}>
-            No Debts Found
-          </Text>
-          <Text style={[styles.emptyMessage, { color: iconColor }]}>
-            Add some debts to see your payoff strategy recommendations.
-          </Text>
-        </View>
-      </>
-    );
-  }
+	// Show message if no income set
+	if (!currentIncome) {
+		return (
+			<>
+				<StatusBar style={isDark ? "light" : "dark"} />
+				<View style={[styles.emptyContainer, { backgroundColor }]}>
+					<Text style={[styles.emptyTitle, { color: textColor }]}>
+						Set Your Monthly Income
+					</Text>
+					<Text style={[styles.emptyMessage, { color: iconColor }]}>
+						Go to the Debts tab and set your monthly income to see
+						strategy recommendations.
+					</Text>
+				</View>
+			</>
+		);
+	}
 
-  // Show message if no income set
-  if (!currentIncome) {
-    return (
-      <>
-        <StatusBar style={isDark ? "light" : "dark"} />
-        <View style={[styles.emptyContainer, { backgroundColor }]}>
-          <Text style={[styles.emptyTitle, { color: textColor }]}>
-            Set Your Monthly Income
-          </Text>
-          <Text style={[styles.emptyMessage, { color: iconColor }]}>
-            Go to the Debts tab and set your monthly income to see strategy
-            recommendations.
-          </Text>
-        </View>
-      </>
-    );
-  }
+	return (
+		<>
+			<StatusBar style={isDark ? "light" : "dark"} />
+			<ScrollView
+				contentContainerStyle={[
+					styles.scrollViewContent,
+					{ backgroundColor },
+				]}
+				showsVerticalScrollIndicator={false}>
+				<View style={styles.header}>
+					<Text style={[styles.headerTitle, { color: textColor }]}>
+						Strategy
+					</Text>
+					<Text style={[styles.headerSubtitle, { color: iconColor }]}>
+						Optimize your debt payoff plan
+					</Text>
+				</View>
 
-  return (
-    <>
-      <StatusBar style={isDark ? "light" : "dark"} />
-      <ScrollView
-        contentContainerStyle={[styles.scrollViewContent, { backgroundColor }]}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.header}>
-          <Text style={[styles.headerTitle, { color: textColor }]}>
-            Strategy
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: iconColor }]}>
-            Optimize your debt payoff plan
-          </Text>
-        </View>
+				<View
+					style={[
+						styles.summaryCard,
+						{
+							backgroundColor,
+							borderColor: isDark ? "#4a5568" : "#ddd",
+						},
+					]}>
+					<Text style={[styles.summaryTitle, { color: textColor }]}>
+						Strategy Overview
+					</Text>
+					<View style={styles.summaryRow}>
+						<Text
+							style={[styles.summaryLabel, { color: iconColor }]}>
+							Monthly Income:
+						</Text>
+						<Text
+							style={[styles.summaryValue, { color: textColor }]}>
+							${monthlyIncome.toLocaleString()}
+						</Text>
+					</View>
+					<View style={styles.summaryRow}>
+						<Text
+							style={[styles.summaryLabel, { color: iconColor }]}>
+							Debt Payments:
+						</Text>
+						<Text
+							style={[styles.summaryValue, { color: textColor }]}>
+							${totalMonthlyPayments.toLocaleString()}
+						</Text>
+					</View>
+					<View style={styles.summaryRow}>
+						<Text
+							style={[styles.summaryLabel, { color: iconColor }]}>
+							Monthly Expenses:
+						</Text>
+						<Text
+							style={[styles.summaryValue, { color: textColor }]}>
+							${totalExpenses.toLocaleString()}
+						</Text>
+					</View>
+					<View style={styles.summaryRow}>
+						<Text
+							style={[styles.summaryLabel, { color: iconColor }]}>
+							Available for Extra Payments:
+						</Text>
+						<Text
+							style={[
+								styles.summaryValue,
+								availablePayment > 0
+									? { color: isDark ? "#68d391" : "#28a745" }
+									: { color: isDark ? "#fc8181" : "#dc3545" },
+							]}>
+							${availablePayment.toLocaleString()}
+						</Text>
+					</View>
+				</View>
 
-        <View
-          style={[
-            styles.summaryCard,
-            { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" },
-          ]}
-        >
-          <Text style={[styles.summaryTitle, { color: textColor }]}>
-            Strategy Overview
-          </Text>
-          <View style={styles.summaryRow}>
-            <Text style={[styles.summaryLabel, { color: iconColor }]}>
-              Monthly Income:
-            </Text>
-            <Text
-              style={[
-                styles.summaryValue,
-                { color: isDark ? "#81e6d9" : "#2c5282" },
-              ]}
-            >
-              ${monthlyIncome.toLocaleString()}
-            </Text>
-          </View>
-          <View style={styles.summaryRow}>
-            <Text style={[styles.summaryLabel, { color: iconColor }]}>
-              Total Minimum Payments:
-            </Text>
-            <Text
-              style={[
-                styles.summaryValue,
-                { color: isDark ? "#81e6d9" : "#2c5282" },
-              ]}
-            >
-              ${totalMonthlyPayments.toLocaleString()}
-            </Text>
-          </View>
-          <View style={styles.summaryRow}>
-            <Text style={[styles.summaryLabel, { color: iconColor }]}>
-              Available for Extra Payments:
-            </Text>
-            <Text
-              style={[
-                styles.summaryValue,
-                availablePayment > 0
-                  ? { color: isDark ? "#68d391" : "#28a745" }
-                  : { color: isDark ? "#fc8181" : "#dc3545" },
-              ]}
-            >
-              ${availablePayment.toLocaleString()}
-            </Text>
-          </View>
-        </View>
+				<View style={styles.section}>
+					<StrategySelector
+						selectedStrategy={selectedStrategy}
+						onStrategyChange={setSelectedStrategy}
+					/>
+				</View>
 
-        <View style={styles.section}>
-          <StrategySelector
-            selectedStrategy={selectedStrategy}
-            onStrategyChange={setSelectedStrategy}
-          />
-        </View>
+				<View style={styles.section}>
+					<PayoffTimeline
+						debts={payoffOrder}
+						recommendedPayments={recommendedPayments}
+						totalMonths={totalMonths}
+					/>
+				</View>
 
-        <View style={styles.section}>
-          <PayoffTimeline
-            debts={payoffOrder}
-            recommendedPayments={recommendedPayments}
-            totalMonths={totalMonths}
-          />
-        </View>
-
-        <View style={styles.section}>
-          <View
-            style={[
-              styles.recommendationCard,
-              {
-                backgroundColor,
-                borderColor: isDark ? "#4a5568" : "#ddd",
-                marginBottom: 80,
-              },
-            ]}
-          >
-            <Text style={[styles.recommendationTitle, { color: textColor }]}>
-              Recommended Payment Plan
-            </Text>
-            {payoffOrder.map((debt, index) => {
-              const recommendedPayment = recommendedPayments[debt.id];
-              const payoffTime = calculatePayoffTime(debt, recommendedPayment);
-              const totalInterest = calculateTotalInterest(
-                debt,
-                recommendedPayment
-              );
-              return (
-                <RecommendationItem
-                  key={debt.id}
-                  debt={debt}
-                  index={index}
-                  recommendedPayment={recommendedPayment}
-                  payoffTime={payoffTime}
-                  totalInterest={totalInterest}
-                />
-              );
-            })}
-          </View>
-        </View>
-      </ScrollView>
-    </>
-  );
+				<View style={styles.section}>
+					<View
+						style={[
+							styles.recommendationCard,
+							{
+								backgroundColor,
+								borderColor: isDark ? "#4a5568" : "#ddd",
+								marginBottom: 80,
+							},
+						]}>
+						<Text
+							style={[
+								styles.recommendationTitle,
+								{ color: textColor },
+							]}>
+							Recommended Payment Plan
+						</Text>
+						{payoffOrder.map((debt, index) => {
+							const recommendedPayment =
+								recommendedPayments[debt.id];
+							const payoffTime = calculatePayoffTime(
+								debt,
+								recommendedPayment
+							);
+							const totalInterest = calculateTotalInterest(
+								debt,
+								recommendedPayment
+							);
+							return (
+								<RecommendationItem
+									key={debt.id}
+									debt={debt}
+									index={index}
+									recommendedPayment={recommendedPayment}
+									payoffTime={payoffTime}
+									totalInterest={totalInterest}
+								/>
+							);
+						})}
+					</View>
+				</View>
+			</ScrollView>
+		</>
+	);
 }
 
 const styles = StyleSheet.create({
-  scrollViewContent: {
-    flexGrow: 1,
-    marginBottom: 60,
-  },
-  header: {
-    padding: 24,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#2d3748",
-    marginBottom: 16,
-  },
-  headerTitle: {
-    fontSize: 32,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  headerSubtitle: {
-    fontSize: 16,
-    opacity: 0.8,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 24,
-  },
-  emptyTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 12,
-    textAlign: "center",
-  },
-  emptyMessage: {
-    fontSize: 16,
-    textAlign: "center",
-    lineHeight: 24,
-    opacity: 0.8,
-    paddingHorizontal: 20,
-  },
-  section: {
-    marginBottom: 24,
-    paddingHorizontal: 16,
-  },
-  summaryCard: {
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    borderWidth: 1,
-    marginHorizontal: 16,
-  },
-  summaryTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
-  summaryRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 12,
-  },
-  summaryLabel: {
-    fontSize: 15,
-  },
-  summaryValue: {
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  positive: {
-    // Color is set dynamically
-  },
-  negative: {
-    // Color is set dynamically
-  },
-  recommendationCard: {
-    borderRadius: 12,
-    padding: 20,
-    borderWidth: 1,
-    marginBottom: 24,
-  },
-  recommendationTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
+	scrollViewContent: {
+		flexGrow: 1,
+		marginBottom: 60,
+	},
+	header: {
+		padding: 24,
+		paddingBottom: 20,
+		borderBottomWidth: 1,
+		borderBottomColor: "#2d3748",
+		marginBottom: 16,
+	},
+	headerTitle: {
+		fontSize: 32,
+		fontWeight: "bold",
+		marginBottom: 8,
+	},
+	headerSubtitle: {
+		fontSize: 16,
+		opacity: 0.8,
+	},
+	emptyContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		padding: 24,
+	},
+	emptyTitle: {
+		fontSize: 28,
+		fontWeight: "bold",
+		marginBottom: 12,
+		textAlign: "center",
+	},
+	emptyMessage: {
+		fontSize: 16,
+		textAlign: "center",
+		lineHeight: 24,
+		opacity: 0.8,
+		paddingHorizontal: 20,
+	},
+	section: {
+		marginBottom: 24,
+		paddingHorizontal: 16,
+	},
+	summaryCard: {
+		borderRadius: 12,
+		padding: 20,
+		marginBottom: 16,
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 3,
+		borderWidth: 1,
+		marginHorizontal: 16,
+	},
+	summaryTitle: {
+		fontSize: 18,
+		fontWeight: "bold",
+		marginBottom: 16,
+	},
+	summaryRow: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		marginBottom: 12,
+	},
+	summaryLabel: {
+		fontSize: 15,
+	},
+	summaryValue: {
+		fontSize: 15,
+		fontWeight: "600",
+	},
+	positive: {
+		// Color is set dynamically
+	},
+	negative: {
+		// Color is set dynamically
+	},
+	recommendationCard: {
+		borderRadius: 12,
+		padding: 20,
+		borderWidth: 1,
+		marginBottom: 24,
+	},
+	recommendationTitle: {
+		fontSize: 18,
+		fontWeight: "bold",
+		marginBottom: 16,
+	},
 });

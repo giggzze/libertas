@@ -440,21 +440,48 @@ export class DatabaseService {
 	}
 
 	static async getTotalMonthlyPayments(userId: string): Promise<number> {
-		const { data, error } = await supabase
-			.from("debts")
-			.select("minimum_payment")
-			.eq("user_id", userId)
-			.eq("is_paid", false);
+		try {
+			// Get debt payments
+			const { data: debts, error: debtsError } = await supabase
+				.from("debts")
+				.select("minimum_payment")
+				.eq("user_id", userId)
+				.eq("is_paid", false);
 
-		if (error) {
+			if (debtsError) {
+				console.error("Error calculating debt payments:", debtsError);
+				return 0;
+			}
+
+			// Get expenses
+			const { data: expenses, error: expensesError } = await supabase
+				.from("expenses")
+				.select("amount")
+				.eq("user_id", userId);
+
+			if (expensesError) {
+				console.error("Error calculating expenses:", expensesError);
+				return 0;
+			}
+
+			// Calculate total debt payments
+			const totalDebtPayments = (debts || []).reduce(
+				(sum, debt) => sum + debt.minimum_payment,
+				0
+			);
+
+			// Calculate total expenses
+			const totalExpenses = (expenses || []).reduce(
+				(sum, expense) => sum + expense.amount,
+				0
+			);
+
+			// Return combined total
+			return totalDebtPayments + totalExpenses;
+		} catch (error) {
 			console.error("Error calculating total monthly payments:", error);
 			return 0;
 		}
-
-		return (data || []).reduce(
-			(sum, debt) => sum + debt.minimum_payment,
-			0
-		);
 	}
 
 	// Expense methods
