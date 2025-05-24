@@ -5,7 +5,9 @@ import {
 	StrategySelector,
 } from "@/components/debt-planner/StrategySelector";
 import { Loading } from "@/components/ui/Loading";
+import { useColorScheme } from "@/hooks/useColorScheme";
 import { useDebts, useMonthlyIncome } from "@/hooks/useDatabase";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { DebtWithPayments } from "@/types/STT";
 import {
 	calculatePayoffOrder,
@@ -19,6 +21,14 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 export default function StrategyScreen() {
 	const [selectedStrategy, setSelectedStrategy] =
 		React.useState<PayoffStrategy>("snowball");
+		
+	// Theme hooks
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({}, "background");
+	const textColor = useThemeColor({}, "text");
+	const tintColor = useThemeColor({}, "tint");
+	const iconColor = useThemeColor({}, "icon");
+	const isDark = colorScheme === "dark";
 
 	// Use database hooks instead of mock data
 	const { currentIncome, loading: incomeLoading } = useMonthlyIncome();
@@ -67,9 +77,9 @@ export default function StrategyScreen() {
 	// Show message if no debts
 	if (debts.length === 0) {
 		return (
-			<View style={styles.emptyContainer}>
-				<Text style={styles.emptyTitle}>No Debts Found</Text>
-				<Text style={styles.emptyMessage}>
+			<View style={[styles.emptyContainer, { backgroundColor }]}>
+				<Text style={[styles.emptyTitle, { color: textColor }]}>No Debts Found</Text>
+				<Text style={[styles.emptyMessage, { color: iconColor }]}>
 					Add some debts to see your payoff strategy recommendations.
 				</Text>
 			</View>
@@ -79,9 +89,9 @@ export default function StrategyScreen() {
 	// Show message if no income set
 	if (!currentIncome) {
 		return (
-			<View style={styles.emptyContainer}>
-				<Text style={styles.emptyTitle}>Set Your Monthly Income</Text>
-				<Text style={styles.emptyMessage}>
+			<View style={[styles.emptyContainer, { backgroundColor }]}>
+				<Text style={[styles.emptyTitle, { color: textColor }]}>Set Your Monthly Income</Text>
+				<Text style={[styles.emptyMessage, { color: iconColor }]}>
 					Go to the Debts tab and set your monthly income to see
 					strategy recommendations.
 				</Text>
@@ -91,34 +101,34 @@ export default function StrategyScreen() {
 
 	return (
 		<ScrollView
-			contentContainerStyle={styles.scrollViewContent}
+			contentContainerStyle={[styles.scrollViewContent, { backgroundColor }]}
 			showsVerticalScrollIndicator={false}>
-			<View style={styles.summaryCard}>
-				<Text style={styles.summaryTitle}>Strategy Overview</Text>
+			<View style={[styles.summaryCard, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" }]}>
+				<Text style={[styles.summaryTitle, { color: textColor }]}>Strategy Overview</Text>
 				<View style={styles.summaryRow}>
-					<Text style={styles.summaryLabel}>Monthly Income:</Text>
-					<Text style={styles.summaryValue}>
+					<Text style={[styles.summaryLabel, { color: iconColor }]}>Monthly Income:</Text>
+					<Text style={[styles.summaryValue, { color: textColor }]}>
 						${monthlyIncome.toLocaleString()}
 					</Text>
 				</View>
 				<View style={styles.summaryRow}>
-					<Text style={styles.summaryLabel}>
+					<Text style={[styles.summaryLabel, { color: iconColor }]}>
 						Total Minimum Payments:
 					</Text>
-					<Text style={styles.summaryValue}>
+					<Text style={[styles.summaryValue, { color: textColor }]}>
 						${totalMonthlyPayments.toLocaleString()}
 					</Text>
 				</View>
 				<View style={styles.summaryRow}>
-					<Text style={styles.summaryLabel}>
+					<Text style={[styles.summaryLabel, { color: iconColor }]}>
 						Available for Extra Payments:
 					</Text>
 					<Text
 						style={[
 							styles.summaryValue,
 							availablePayment > 0
-								? styles.positive
-								: styles.negative,
+								? { color: isDark ? "#68d391" : "#28a745" }
+								: { color: isDark ? "#fc8181" : "#dc3545" },
 						]}>
 						${availablePayment.toLocaleString()}
 					</Text>
@@ -140,8 +150,8 @@ export default function StrategyScreen() {
 				/>
 			</View>
 
-			<View style={styles.recommendationCard}>
-				<Text style={styles.recommendationTitle}>
+			<View style={[styles.recommendationCard, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" }]}>
+				<Text style={[styles.recommendationTitle, { color: textColor }]}>
 					Recommended Payment Plan
 				</Text>
 				{payoffOrder.map((debt, index) => {
@@ -185,18 +195,15 @@ const styles = StyleSheet.create({
 	emptyTitle: {
 		fontSize: 24,
 		fontWeight: "bold",
-		color: "#333",
 		marginBottom: 8,
 		textAlign: "center",
 	},
 	emptyMessage: {
 		fontSize: 16,
-		color: "#666",
 		textAlign: "center",
 		lineHeight: 24,
 	},
 	summaryCard: {
-		backgroundColor: "white",
 		borderRadius: 12,
 		padding: 20,
 		marginBottom: 16,
@@ -205,11 +212,11 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.1,
 		shadowRadius: 4,
 		elevation: 3,
+		borderWidth: 1,
 	},
 	summaryTitle: {
 		fontSize: 18,
 		fontWeight: "bold",
-		color: "#333",
 		marginBottom: 16,
 	},
 	summaryRow: {
@@ -219,35 +226,30 @@ const styles = StyleSheet.create({
 	},
 	summaryLabel: {
 		fontSize: 14,
-		color: "#666",
 	},
 	summaryValue: {
 		fontSize: 14,
 		fontWeight: "600",
-		color: "#333",
 	},
 	positive: {
-		color: "#28a745",
+		// Color is set dynamically
 	},
 	negative: {
-		color: "#dc3545",
+		// Color is set dynamically
 	},
 	sectionSpacing: {
 		marginBottom: 4,
 	},
 	recommendationCard: {
-		backgroundColor: "white",
 		borderRadius: 8,
 		padding: 16,
 		borderWidth: 1,
-		borderColor: "#ddd",
 		marginTop: 24,
 		marginBottom: 54,
 	},
 	recommendationTitle: {
 		fontSize: 18,
 		fontWeight: "bold",
-		color: "#333",
 		marginBottom: 16,
 	},
 });

@@ -1,4 +1,6 @@
 import { calculatePayoffTime } from "@/utils/debtCalculations";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 
@@ -34,6 +36,13 @@ export function PayoffTimeline({
 	recommendedPayments,
 	totalMonths,
 }: PayoffTimelineProps) {
+	// Theme hooks
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({}, "background");
+	const textColor = useThemeColor({}, "text");
+	const tintColor = useThemeColor({}, "tint");
+	const iconColor = useThemeColor({}, "icon");
+	const isDark = colorScheme === "dark";
 	const screenWidth = Dimensions.get("window").width - 32; // Account for padding
 	const timelineItems = debts.map((debt, index) => {
 		const payoffTime = calculatePayoffTime(
@@ -56,8 +65,8 @@ export function PayoffTimeline({
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Payoff Timeline</Text>
-			<View style={styles.timelineContainer}>
+			<Text style={[styles.title, { color: textColor }]}>Payoff Timeline</Text>
+			<View style={[styles.timelineContainer, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" }]}>
 				<View style={styles.timeline}>
 					{timelineItems.map((item, index) => (
 						<View
@@ -85,10 +94,10 @@ export function PayoffTimeline({
 								]}
 							/>
 							<View style={styles.legendText}>
-								<Text style={styles.legendName}>
+								<Text style={[styles.legendName, { color: textColor }]}>
 									{item.debt.name}
 								</Text>
-								<Text style={styles.legendTime}>
+								<Text style={[styles.legendTime, { color: iconColor }]}>
 									{Math.floor(item.payoffTime / 12)} years,{" "}
 									{item.payoffTime % 12} months
 								</Text>
@@ -108,15 +117,12 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 18,
 		fontWeight: "bold",
-		color: "#333",
 		marginBottom: 16,
 	},
 	timelineContainer: {
-		backgroundColor: "white",
 		borderRadius: 8,
 		padding: 16,
 		borderWidth: 1,
-		borderColor: "#ddd",
 	},
 	timeline: {
 		height: 40,
@@ -150,10 +156,8 @@ const styles = StyleSheet.create({
 	legendName: {
 		fontSize: 14,
 		fontWeight: "600",
-		color: "#333",
 	},
 	legendTime: {
 		fontSize: 12,
-		color: "#666",
 	},
 });

@@ -1,3 +1,5 @@
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -12,26 +14,39 @@ export function StrategySelector({
 	selectedStrategy,
 	onStrategyChange,
 }: StrategySelectorProps) {
+	// Theme hooks
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({}, "background");
+	const textColor = useThemeColor({}, "text");
+	const tintColor = useThemeColor({}, "tint");
+	const iconColor = useThemeColor({}, "icon");
+	const isDark = colorScheme === "dark";
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Payoff Strategy</Text>
+			<Text style={[styles.title, { color: textColor }]}>Payoff Strategy</Text>
 			<View style={styles.strategyContainer}>
 				<TouchableOpacity
 					style={[
 						styles.strategyButton,
-						selectedStrategy === "snowball" &&
+						{ backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" },
+						selectedStrategy === "snowball" && [
 							styles.selectedStrategy,
+							{ backgroundColor: tintColor, borderColor: tintColor }
+						],
 					]}
 					onPress={() => onStrategyChange("snowball")}>
 					<Text
 						style={[
 							styles.strategyText,
-							selectedStrategy === "snowball" &&
+							{ color: textColor },
+							selectedStrategy === "snowball" && [
 								styles.selectedStrategyText,
+								{ color: isDark ? "#000" : "#fff" }
+							],
 						]}>
 						Snowball
 					</Text>
-					<Text style={styles.strategyDescription}>
+					<Text style={[styles.strategyDescription, { color: iconColor }]}>
 						Pay smallest debts first
 					</Text>
 				</TouchableOpacity>
@@ -39,19 +54,25 @@ export function StrategySelector({
 				<TouchableOpacity
 					style={[
 						styles.strategyButton,
-						selectedStrategy === "avalanche" &&
+						{ backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" },
+						selectedStrategy === "avalanche" && [
 							styles.selectedStrategy,
+							{ backgroundColor: tintColor, borderColor: tintColor }
+						],
 					]}
 					onPress={() => onStrategyChange("avalanche")}>
 					<Text
 						style={[
 							styles.strategyText,
-							selectedStrategy === "avalanche" &&
+							{ color: textColor },
+							selectedStrategy === "avalanche" && [
 								styles.selectedStrategyText,
+								{ color: isDark ? "#000" : "#fff" }
+							],
 						]}>
 						Avalanche
 					</Text>
-					<Text style={styles.strategyDescription}>
+					<Text style={[styles.strategyDescription, { color: iconColor }]}>
 						Pay highest interest first
 					</Text>
 				</TouchableOpacity>
@@ -59,19 +80,25 @@ export function StrategySelector({
 				<TouchableOpacity
 					style={[
 						styles.strategyButton,
-						selectedStrategy === "minimum" &&
+						{ backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" },
+						selectedStrategy === "minimum" && [
 							styles.selectedStrategy,
+							{ backgroundColor: tintColor, borderColor: tintColor }
+						],
 					]}
 					onPress={() => onStrategyChange("minimum")}>
 					<Text
 						style={[
 							styles.strategyText,
-							selectedStrategy === "minimum" &&
+							{ color: textColor },
+							selectedStrategy === "minimum" && [
 								styles.selectedStrategyText,
+								{ color: isDark ? "#000" : "#fff" }
+							],
 						]}>
 						Minimum
 					</Text>
-					<Text style={styles.strategyDescription}>
+					<Text style={[styles.strategyDescription, { color: iconColor }]}>
 						Pay minimum payments only
 					</Text>
 				</TouchableOpacity>
@@ -87,7 +114,6 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 20,
 		fontWeight: "bold",
-		color: "#333",
 		marginBottom: 12,
 	},
 	strategyContainer: {
@@ -97,29 +123,24 @@ const styles = StyleSheet.create({
 	},
 	strategyButton: {
 		flex: 1,
-		backgroundColor: "white",
 		padding: 12,
 		borderRadius: 8,
 		borderWidth: 1,
-		borderColor: "#ddd",
 		alignItems: "center",
 	},
 	selectedStrategy: {
-		backgroundColor: "#007AFF",
-		borderColor: "#007AFF",
+		// Colors set dynamically
 	},
 	strategyText: {
 		fontSize: 16,
 		fontWeight: "600",
-		color: "#333",
 		marginBottom: 4,
 	},
 	selectedStrategyText: {
-		color: "white",
+		// Color set dynamically
 	},
 	strategyDescription: {
 		fontSize: 12,
-		color: "#666",
 		textAlign: "center",
 	},
 });
