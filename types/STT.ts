@@ -4,20 +4,20 @@ export type Debt = Tables<"debts">;
 export type DebtPayment = Tables<"debt_payments">;
 export type MonthlyIncome = Tables<"monthly_income">;
 export type Profile = Tables<"profiles">;
+export type Expense = Tables<"expenses">;
 
 // update types
 export type DebtUpdate = TablesUpdate<"debts">;
 export type DebtPaymentUpdate = TablesUpdate<"debt_payments">;
 export type MonthlyIncomeUpdate = TablesUpdate<"monthly_income">;
 export type ProfileUpdate = TablesUpdate<"profiles">;
+export type ExpenseUpdate = TablesUpdate<"expenses">;
 
 // insert types (custom types that exclude user_id since it's handled automatically)
-export type DebtInsert = Omit<TablesInsert<"debts">, "user_id">;
+export type DebtInsert = TablesInsert<"debts">;
 export type DebtPaymentInsert = TablesInsert<"debt_payments">;
-export type MonthlyIncomeInsert = Omit<
-	TablesInsert<"monthly_income">,
-	"user_id"
->;
+export type MonthlyIncomeInsert = TablesInsert<"monthly_income">;
+export type ExpenseInsert = TablesInsert<"expenses">;
 export type ProfileInsert = TablesInsert<"profiles">;
 
 // Extended types with relationships
