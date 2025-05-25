@@ -35,3 +35,5 @@ export interface UserDebtSummary {
 	total_monthly_payments: number;
 	total_paid: number;
 }
+
+export type PayoffStrategy = "snowball" | "avalanche" | "minimum";
