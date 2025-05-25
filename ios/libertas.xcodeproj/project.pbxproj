@@ -7,29 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B726C71C7BCF164076BB345 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E675CF26F7B0048381A36306 /* PrivacyInfo.xcprivacy */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		275EFD51822B2808922803F1 /* libPods-libertas.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 295B8BD6D54A6067EF4A8145 /* libPods-libertas.a */; };
+		155DA363A02366C3A02D7272 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB223C6F65C6C8B4814D1558 /* ExpoModulesProvider.swift */; };
+		3B7E3B8D0D34955E9E490DC6 /* libPods-Libertas.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DD21D85052240F694C42714 /* libPods-Libertas.a */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		9657CDE8392C8087B7D036E2 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF89F4C3FF2DB1EC5789023 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
+		BC03B2B2AE2A92FF52DC44B5 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7E8BC0DDEA9F828D5F375529 /* PrivacyInfo.xcprivacy */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		13B07F961A680F5B00A75B9A /* libertas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = libertas.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = libertas/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = libertas/Info.plist; sourceTree = "<group>"; };
-		295B8BD6D54A6067EF4A8145 /* libPods-libertas.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-libertas.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		88A7996E967C04CA40224D13 /* Pods-libertas.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-libertas.release.xcconfig"; path = "Target Support Files/Pods-libertas/Pods-libertas.release.xcconfig"; sourceTree = "<group>"; };
-		9BF89F4C3FF2DB1EC5789023 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-libertas/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = libertas/SplashScreen.storyboard; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* Libertas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Libertas.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Libertas/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Libertas/Info.plist; sourceTree = "<group>"; };
+		3DD21D85052240F694C42714 /* libPods-Libertas.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Libertas.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		46BA0D98888CD0129C770258 /* Pods-Libertas.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Libertas.release.xcconfig"; path = "Target Support Files/Pods-Libertas/Pods-Libertas.release.xcconfig"; sourceTree = "<group>"; };
+		7E8BC0DDEA9F828D5F375529 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = Libertas/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		840216EB9A4992EA65636B11 /* Pods-Libertas.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Libertas.debug.xcconfig"; path = "Target Support Files/Pods-Libertas/Pods-Libertas.debug.xcconfig"; sourceTree = "<group>"; };
+		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Libertas/SplashScreen.storyboard; sourceTree = "<group>"; };
+		BB223C6F65C6C8B4814D1558 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Libertas/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		D1795DBF8D3234951B4A6243 /* Pods-libertas.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-libertas.debug.xcconfig"; path = "Target Support Files/Pods-libertas/Pods-libertas.debug.xcconfig"; sourceTree = "<group>"; };
-		E675CF26F7B0048381A36306 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = libertas/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = libertas/AppDelegate.swift; sourceTree = "<group>"; };
-		F11748442D0722820044C1D9 /* libertas-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "libertas-Bridging-Header.h"; path = "libertas/libertas-Bridging-Header.h"; sourceTree = "<group>"; };
+		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Libertas/AppDelegate.swift; sourceTree = "<group>"; };
+		F11748442D0722820044C1D9 /* Libertas-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Libertas-Bridging-Header.h"; path = "Libertas/Libertas-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,52 +37,50 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				275EFD51822B2808922803F1 /* libPods-libertas.a in Frameworks */,
+				3B7E3B8D0D34955E9E490DC6 /* libPods-Libertas.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		120D74487D73520B3ACE9D50 /* libertas */ = {
-			isa = PBXGroup;
-			children = (
-				9BF89F4C3FF2DB1EC5789023 /* ExpoModulesProvider.swift */,
-			);
-			name = libertas;
-			sourceTree = "<group>";
-		};
-		13B07FAE1A68108700A75B9A /* libertas */ = {
+		13B07FAE1A68108700A75B9A /* Libertas */ = {
 			isa = PBXGroup;
 			children = (
 				F11748412D0307B40044C1D9 /* AppDelegate.swift */,
-				F11748442D0722820044C1D9 /* libertas-Bridging-Header.h */,
+				F11748442D0722820044C1D9 /* Libertas-Bridging-Header.h */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				E675CF26F7B0048381A36306 /* PrivacyInfo.xcprivacy */,
+				7E8BC0DDEA9F828D5F375529 /* PrivacyInfo.xcprivacy */,
 			);
-			name = libertas;
-			sourceTree = "<group>";
-		};
-		2044495EA960F286B10527CC /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				D1795DBF8D3234951B4A6243 /* Pods-libertas.debug.xcconfig */,
-				88A7996E967C04CA40224D13 /* Pods-libertas.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
+			name = Libertas;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				295B8BD6D54A6067EF4A8145 /* libPods-libertas.a */,
+				3DD21D85052240F694C42714 /* libPods-Libertas.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		351E12FBAA9DDFE01B9C38D5 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				6DA62AE6AA40F4AEFAA9E3F9 /* Libertas */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
+		6DA62AE6AA40F4AEFAA9E3F9 /* Libertas */ = {
+			isa = PBXGroup;
+			children = (
+				BB223C6F65C6C8B4814D1558 /* ExpoModulesProvider.swift */,
+			);
+			name = Libertas;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -95,12 +93,12 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* libertas */,
+				13B07FAE1A68108700A75B9A /* Libertas */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				2044495EA960F286B10527CC /* Pods */,
-				B57E65BCFD4B7FC1643EE1A7 /* ExpoModulesProviders */,
+				DC2E6136A0EC9CB4C88107AC /* Pods */,
+				351E12FBAA9DDFE01B9C38D5 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -110,17 +108,9 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* libertas.app */,
+				13B07F961A680F5B00A75B9A /* Libertas.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		B57E65BCFD4B7FC1643EE1A7 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				120D74487D73520B3ACE9D50 /* libertas */,
-			);
-			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -129,32 +119,42 @@
 				BB2F792C24A3F905000567C9 /* Expo.plist */,
 			);
 			name = Supporting;
-			path = libertas/Supporting;
+			path = Libertas/Supporting;
+			sourceTree = "<group>";
+		};
+		DC2E6136A0EC9CB4C88107AC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				840216EB9A4992EA65636B11 /* Pods-Libertas.debug.xcconfig */,
+				46BA0D98888CD0129C770258 /* Pods-Libertas.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		13B07F861A680F5B00A75B9A /* libertas */ = {
+		13B07F861A680F5B00A75B9A /* Libertas */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "libertas" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Libertas" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				30DEBCBFE28692B514138322 /* [Expo] Configure project */,
+				3C6631C5761D7B7625F582ED /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				A7D400F5AC9CA37C1E100617 /* [CP] Embed Pods Frameworks */,
+				E5EF7F68E05960E3162BE617 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = libertas;
-			productName = libertas;
-			productReference = 13B07F961A680F5B00A75B9A /* libertas.app */;
+			name = Libertas;
+			productName = Libertas;
+			productReference = 13B07F961A680F5B00A75B9A /* Libertas.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -170,7 +170,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "libertas" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Libertas" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -183,7 +183,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* libertas */,
+				13B07F861A680F5B00A75B9A /* Libertas */,
 			);
 		};
 /* End PBXProject section */
@@ -196,7 +196,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				0B726C71C7BCF164076BB345 /* PrivacyInfo.xcprivacy in Resources */,
+				BC03B2B2AE2A92FF52DC44B5 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,14 +233,14 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-libertas-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Libertas-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		30DEBCBFE28692B514138322 /* [Expo] Configure project */ = {
+		3C6631C5761D7B7625F582ED /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -257,7 +257,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-libertas/expo-configure-project.sh\"\n";
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-Libertas/expo-configure-project.sh\"\n";
 		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -265,7 +265,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-libertas/Pods-libertas-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Libertas/Pods-Libertas-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/ExpoConstants_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ExpoFileSystem/ExpoFileSystem_privacy.bundle",
@@ -276,6 +276,8 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/React-cxxreact_privacy.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/boost/boost_privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/expo-dev-launcher/EXDevLauncher.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/expo-dev-menu/EXDevMenu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/glog/glog_privacy.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -290,20 +292,22 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/React-cxxreact_privacy.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SDWebImage.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/boost_privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXDevLauncher.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXDevMenu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/glog_privacy.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-libertas/Pods-libertas-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Libertas/Pods-Libertas-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A7D400F5AC9CA37C1E100617 /* [CP] Embed Pods Frameworks */ = {
+		E5EF7F68E05960E3162BE617 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-libertas/Pods-libertas-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Libertas/Pods-Libertas-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -312,7 +316,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-libertas/Pods-libertas-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Libertas/Pods-Libertas-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -323,7 +327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				9657CDE8392C8087B7D036E2 /* ExpoModulesProvider.swift in Sources */,
+				155DA363A02366C3A02D7272 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,18 +336,18 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D1795DBF8D3234951B4A6243 /* Pods-libertas.debug.xcconfig */;
+			baseConfigurationReference = 840216EB9A4992EA65636B11 /* Pods-Libertas.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = libertas/libertas.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Libertas/Libertas.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"FB_SONARKIT_ENABLED=1",
 				);
-				INFOPLIST_FILE = libertas/Info.plist;
+				INFOPLIST_FILE = Libertas/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -357,8 +361,8 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.giggzze.libertas;
-				PRODUCT_NAME = libertas;
-				SWIFT_OBJC_BRIDGING_HEADER = "libertas/libertas-Bridging-Header.h";
+				PRODUCT_NAME = Libertas;
+				SWIFT_OBJC_BRIDGING_HEADER = "Libertas/Libertas-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -368,13 +372,13 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 88A7996E967C04CA40224D13 /* Pods-libertas.release.xcconfig */;
+			baseConfigurationReference = 46BA0D98888CD0129C770258 /* Pods-Libertas.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = libertas/libertas.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Libertas/Libertas.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				INFOPLIST_FILE = libertas/Info.plist;
+				INFOPLIST_FILE = Libertas/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -388,8 +392,8 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.giggzze.libertas;
-				PRODUCT_NAME = libertas;
-				SWIFT_OBJC_BRIDGING_HEADER = "libertas/libertas-Bridging-Header.h";
+				PRODUCT_NAME = Libertas;
+				SWIFT_OBJC_BRIDGING_HEADER = "Libertas/Libertas-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -523,7 +527,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "libertas" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Libertas" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -532,7 +536,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "libertas" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Libertas" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

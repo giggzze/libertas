@@ -1,8 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 import "react-native-url-polyfill/auto";
 
-const SUPABASE_URL = "http://127.0.0.1:54321"; // Replace with your Supabase URL
-const SUPABASE_ANON_KEY =
-	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"; // Replace with your Supabase anon key
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+	throw new Error("Missing Supabase environment variables");
+}
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);

@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "libertas.app"
-               BlueprintName = "libertas"
-               ReferencedContainer = "container:libertas.xcodeproj">
+               BuildableName = "Libertas.app"
+               BlueprintName = "Libertas"
+               ReferencedContainer = "container:Libertas.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "libertasTests.xctest"
-               BlueprintName = "libertasTests"
-               ReferencedContainer = "container:libertas.xcodeproj">
+               BuildableName = "LibertasTests.xctest"
+               BlueprintName = "LibertasTests"
+               ReferencedContainer = "container:Libertas.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "libertas.app"
-            BlueprintName = "libertas"
-            ReferencedContainer = "container:libertas.xcodeproj">
+            BuildableName = "Libertas.app"
+            BlueprintName = "Libertas"
+            ReferencedContainer = "container:Libertas.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "libertas.app"
-            BlueprintName = "libertas"
-            ReferencedContainer = "container:libertas.xcodeproj">
+            BuildableName = "Libertas.app"
+            BlueprintName = "Libertas"
+            ReferencedContainer = "container:Libertas.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
