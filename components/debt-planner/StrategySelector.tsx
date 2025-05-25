@@ -19,6 +19,8 @@ export function StrategySelector({
 	const textColor = useThemeColor({}, "text");
 	const tintColor = useThemeColor({}, "tint");
 	const iconColor = useThemeColor({}, "icon");
+	const borderColor = useThemeColor({}, "border");
+	const contrastTextColor = useThemeColor({}, "contrastText");
 	const isDark = colorScheme === "dark";
 	return (
 		<View style={styles.container}>
@@ -31,7 +33,7 @@ export function StrategySelector({
 						styles.strategyButton,
 						{
 							backgroundColor,
-							borderColor: isDark ? "#4a5568" : "#ddd",
+							borderColor: borderColor,
 						},
 						selectedStrategy === "snowball" && [
 							styles.selectedStrategy,
@@ -48,7 +50,7 @@ export function StrategySelector({
 							{ color: textColor },
 							selectedStrategy === "snowball" && [
 								styles.selectedStrategyText,
-								{ color: isDark ? "#000" : "#fff" },
+								{ color: contrastTextColor },
 							],
 						]}>
 						Snowball
@@ -56,7 +58,11 @@ export function StrategySelector({
 					<Text
 						style={[
 							styles.strategyDescription,
-							{ color: iconColor },
+							{ color: textColor },
+							selectedStrategy === "snowball" && [
+								styles.selectedStrategyText,
+								{ color: contrastTextColor },
+							],
 						]}>
 						Pay smallest debts first
 					</Text>
@@ -67,7 +73,7 @@ export function StrategySelector({
 						styles.strategyButton,
 						{
 							backgroundColor,
-							borderColor: isDark ? "#4a5568" : "#ddd",
+							borderColor: borderColor,
 						},
 						selectedStrategy === "avalanche" && [
 							styles.selectedStrategy,
@@ -84,7 +90,7 @@ export function StrategySelector({
 							{ color: textColor },
 							selectedStrategy === "avalanche" && [
 								styles.selectedStrategyText,
-								{ color: isDark ? "#000" : "#fff" },
+								{ color: contrastTextColor },
 							],
 						]}>
 						Avalanche
@@ -92,7 +98,11 @@ export function StrategySelector({
 					<Text
 						style={[
 							styles.strategyDescription,
-							{ color: iconColor },
+							{ color: textColor },
+							selectedStrategy === "avalanche" && [
+								styles.selectedStrategyText,
+								{ color: contrastTextColor },
+							],
 						]}>
 						Pay highest interest first
 					</Text>
@@ -103,7 +113,7 @@ export function StrategySelector({
 						styles.strategyButton,
 						{
 							backgroundColor,
-							borderColor: isDark ? "#4a5568" : "#ddd",
+							borderColor: borderColor,
 						},
 						selectedStrategy === "minimum" && [
 							styles.selectedStrategy,
@@ -120,7 +130,7 @@ export function StrategySelector({
 							{ color: textColor },
 							selectedStrategy === "minimum" && [
 								styles.selectedStrategyText,
-								{ color: isDark ? "#000" : "#fff" },
+								{ color: contrastTextColor },
 							],
 						]}>
 						Minimum
@@ -128,7 +138,11 @@ export function StrategySelector({
 					<Text
 						style={[
 							styles.strategyDescription,
-							{ color: iconColor },
+							{ color: textColor },
+							selectedStrategy === "minimum" && [
+								styles.selectedStrategyText,
+								{ color: contrastTextColor },
+							],
 						]}>
 						Pay minimum payments only
 					</Text>
