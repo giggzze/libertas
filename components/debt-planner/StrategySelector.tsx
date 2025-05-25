@@ -1,9 +1,8 @@
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { PayoffStrategy } from "@/types/STT";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-export type PayoffStrategy = "snowball" | "avalanche" | "minimum";
 
 interface StrategySelectorProps {
 	selectedStrategy: PayoffStrategy;
@@ -23,15 +22,23 @@ export function StrategySelector({
 	const isDark = colorScheme === "dark";
 	return (
 		<View style={styles.container}>
-			<Text style={[styles.title, { color: textColor }]}>Payoff Strategy</Text>
+			<Text style={[styles.title, { color: textColor }]}>
+				Payoff Strategy
+			</Text>
 			<View style={styles.strategyContainer}>
 				<TouchableOpacity
 					style={[
 						styles.strategyButton,
-						{ backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" },
+						{
+							backgroundColor,
+							borderColor: isDark ? "#4a5568" : "#ddd",
+						},
 						selectedStrategy === "snowball" && [
 							styles.selectedStrategy,
-							{ backgroundColor: tintColor, borderColor: tintColor }
+							{
+								backgroundColor: tintColor,
+								borderColor: tintColor,
+							},
 						],
 					]}
 					onPress={() => onStrategyChange("snowball")}>
@@ -41,12 +48,16 @@ export function StrategySelector({
 							{ color: textColor },
 							selectedStrategy === "snowball" && [
 								styles.selectedStrategyText,
-								{ color: isDark ? "#000" : "#fff" }
+								{ color: isDark ? "#000" : "#fff" },
 							],
 						]}>
 						Snowball
 					</Text>
-					<Text style={[styles.strategyDescription, { color: iconColor }]}>
+					<Text
+						style={[
+							styles.strategyDescription,
+							{ color: iconColor },
+						]}>
 						Pay smallest debts first
 					</Text>
 				</TouchableOpacity>
@@ -54,10 +65,16 @@ export function StrategySelector({
 				<TouchableOpacity
 					style={[
 						styles.strategyButton,
-						{ backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" },
+						{
+							backgroundColor,
+							borderColor: isDark ? "#4a5568" : "#ddd",
+						},
 						selectedStrategy === "avalanche" && [
 							styles.selectedStrategy,
-							{ backgroundColor: tintColor, borderColor: tintColor }
+							{
+								backgroundColor: tintColor,
+								borderColor: tintColor,
+							},
 						],
 					]}
 					onPress={() => onStrategyChange("avalanche")}>
@@ -67,12 +84,16 @@ export function StrategySelector({
 							{ color: textColor },
 							selectedStrategy === "avalanche" && [
 								styles.selectedStrategyText,
-								{ color: isDark ? "#000" : "#fff" }
+								{ color: isDark ? "#000" : "#fff" },
 							],
 						]}>
 						Avalanche
 					</Text>
-					<Text style={[styles.strategyDescription, { color: iconColor }]}>
+					<Text
+						style={[
+							styles.strategyDescription,
+							{ color: iconColor },
+						]}>
 						Pay highest interest first
 					</Text>
 				</TouchableOpacity>
@@ -80,10 +101,16 @@ export function StrategySelector({
 				<TouchableOpacity
 					style={[
 						styles.strategyButton,
-						{ backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" },
+						{
+							backgroundColor,
+							borderColor: isDark ? "#4a5568" : "#ddd",
+						},
 						selectedStrategy === "minimum" && [
 							styles.selectedStrategy,
-							{ backgroundColor: tintColor, borderColor: tintColor }
+							{
+								backgroundColor: tintColor,
+								borderColor: tintColor,
+							},
 						],
 					]}
 					onPress={() => onStrategyChange("minimum")}>
@@ -93,12 +120,16 @@ export function StrategySelector({
 							{ color: textColor },
 							selectedStrategy === "minimum" && [
 								styles.selectedStrategyText,
-								{ color: isDark ? "#000" : "#fff" }
+								{ color: isDark ? "#000" : "#fff" },
 							],
 						]}>
 						Minimum
 					</Text>
-					<Text style={[styles.strategyDescription, { color: iconColor }]}>
+					<Text
+						style={[
+							styles.strategyDescription,
+							{ color: iconColor },
+						]}>
 						Pay minimum payments only
 					</Text>
 				</TouchableOpacity>

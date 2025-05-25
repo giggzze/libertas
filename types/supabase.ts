@@ -83,6 +83,7 @@ export type Database = {
           minimum_payment: number
           name: string
           start_date: string
+          term_in_months: number
           updated_at: string
           user_id: string
         }
@@ -96,6 +97,7 @@ export type Database = {
           minimum_payment: number
           name: string
           start_date: string
+          term_in_months?: number
           updated_at?: string
           user_id: string
         }
@@ -109,6 +111,7 @@ export type Database = {
           minimum_payment?: number
           name?: string
           start_date?: string
+          term_in_months?: number
           updated_at?: string
           user_id?: string
         }

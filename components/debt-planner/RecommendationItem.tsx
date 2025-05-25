@@ -1,16 +1,9 @@
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { Debt } from "@/types/STT";
 import { formatCurrency } from "@/utils/formatCurrency";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-
-interface Debt {
-	id: string;
-	name: string;
-	amount: number;
-	interestRate: number;
-	minimumPayment: number;
-}
 
 interface RecommendationItemProps {
 	debt: Debt;
@@ -34,6 +27,23 @@ export const RecommendationItem: React.FC<RecommendationItemProps> = ({
 	const tintColor = useThemeColor({}, "tint");
 	const iconColor = useThemeColor({}, "icon");
 	const isDark = colorScheme === "dark";
+
+	const formatPayoffTime = (months: number) => {
+		if (!isFinite(months)) {
+			return "Cannot be paid off with current payment";
+		}
+		const years = Math.floor(months / 12);
+		const remainingMonths = Math.round(months % 12);
+		if (years === 0) {
+			return `${remainingMonths} months`;
+		}
+		return `${years} years${
+			remainingMonths > 0 ? `, ${remainingMonths} months` : ""
+		}`;
+	};
+
+	const isMinimumPayment = recommendedPayment <= debt.minimum_payment;
+
 	return (
 		<View
 			style={[
@@ -59,33 +69,25 @@ export const RecommendationItem: React.FC<RecommendationItemProps> = ({
 						styles.recommendationPayment,
 						{ color: iconColor },
 					]}>
-					Pay: {formatCurrency(recommendedPayment)}/month
+					{isMinimumPayment ? (
+						<>
+							Minimum Payment:{" "}
+							{formatCurrency(recommendedPayment)}/month
+						</>
+					) : (
+						<>Pay: {formatCurrency(recommendedPayment)}/month</>
+					)}
 				</Text>
-				{isFinite(payoffTime) && payoffTime > 0 ? (
-					<>
-						<Text
-							style={[
-								styles.recommendationTime,
-								{ color: iconColor },
-							]}>
-							Payoff Time: {Math.floor(payoffTime / 12)} years,{" "}
-							{Math.round(payoffTime % 12)} months
-						</Text>
-						<Text
-							style={[
-								styles.recommendationInterest,
-								{ color: iconColor },
-							]}>
-							Total Interest: {formatCurrency(totalInterest)}
-						</Text>
-					</>
-				) : (
+				<Text style={[styles.recommendationTime, { color: iconColor }]}>
+					Payoff Time: {formatPayoffTime(payoffTime)}
+				</Text>
+				{isFinite(totalInterest) && (
 					<Text
 						style={[
-							styles.recommendationTime,
+							styles.recommendationInterest,
 							{ color: iconColor },
 						]}>
-						Payoff Time: Minimum payments only
+						Total Interest: {formatCurrency(totalInterest)}
 					</Text>
 				)}
 			</View>

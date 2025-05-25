@@ -1,17 +1,10 @@
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { Debt } from "@/types/STT";
 import { calculatePayoffTime } from "@/utils/debtCalculations";
 import { format } from "date-fns";
 import React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
-
-interface Debt {
-	id: string;
-	name: string;
-	amount: number;
-	interestRate: number;
-	minimumPayment: number;
-}
 
 interface PayoffTimelineProps {
 	debts: Debt[];

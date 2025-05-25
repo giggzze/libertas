@@ -52,8 +52,9 @@ export default function HomeScreen() {
 	const [newDebt, setNewDebt] = useState({
 		name: "",
 		amount: "",
-		interestRate: "",
-		minimumPayment: "",
+		interest_rate: "",
+		minimum_payment: "",
+		term_in_months: "60", // Default to 5 years
 	});
 
 	// Expense modal state
@@ -87,9 +88,10 @@ export default function HomeScreen() {
 		const debtData: DebtInsert = {
 			name: debt.name,
 			amount: Number(debt.amount),
-			interest_rate: Number(debt.interestRate),
-			minimum_payment: Number(debt.minimumPayment),
+			interest_rate: Number(debt.interest_rate),
+			minimum_payment: Number(debt.minimum_payment),
 			start_date: new Date().toISOString().split("T")[0],
+			term_in_months: Number(debt.term_in_months),
 			is_paid: false,
 			user_id: user.id,
 		};
@@ -99,8 +101,9 @@ export default function HomeScreen() {
 			setNewDebt({
 				name: "",
 				amount: "",
-				interestRate: "",
-				minimumPayment: "",
+				interest_rate: "",
+				minimum_payment: "",
+				term_in_months: "60",
 			});
 			setIsAddModalVisible(false);
 		}
@@ -117,8 +120,9 @@ export default function HomeScreen() {
 		const success = await updateDebt(selectedDebt.id, {
 			name: debt.name,
 			amount: Number(debt.amount),
-			interest_rate: Number(debt.interestRate),
-			minimum_payment: Number(debt.minimumPayment),
+			interest_rate: Number(debt.interest_rate),
+			minimum_payment: Number(debt.minimum_payment),
+			term_in_months: Number(debt.term_in_months),
 		});
 
 		if (success) {
