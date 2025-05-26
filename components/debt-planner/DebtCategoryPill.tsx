@@ -4,7 +4,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 interface DebtCategoryPillProps {
-	category: DebtCategory;
+	category?: DebtCategory;
 }
 
 const categoryColors: Record<DebtCategory, { bg: string; text: string }> = {
@@ -26,13 +26,18 @@ const categoryLabels: Record<DebtCategory, string> = {
 };
 
 export const DebtCategoryPill: React.FC<DebtCategoryPillProps> = ({
-	category,
+	category = "OTHER",
 }) => {
 	const colorScheme = useColorScheme();
 	const isDark = colorScheme === "dark";
 
-	const colors = categoryColors[category];
-	const label = categoryLabels[category];
+	// Ensure category is a valid DebtCategory
+	const validCategory = Object.keys(categoryColors).includes(category)
+		? (category as DebtCategory)
+		: "OTHER";
+
+	const colors = categoryColors[validCategory];
+	const label = categoryLabels[validCategory];
 
 	return (
 		<View
