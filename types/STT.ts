@@ -1,4 +1,4 @@
-import { Tables, TablesInsert, TablesUpdate } from "./supabase";
+import { Enums, Tables, TablesInsert, TablesUpdate } from "./supabase";
 
 export type Debt = Tables<"debts">;
 export type DebtPayment = Tables<"debt_payments">;
@@ -20,11 +20,16 @@ export type MonthlyIncomeInsert = TablesInsert<"monthly_income">;
 export type ExpenseInsert = TablesInsert<"expenses">;
 export type ProfileInsert = TablesInsert<"profiles">;
 
+// enums
+export type DebtCategory = Enums<"debt_category">;
+
 // Extended types with relationships
 export interface DebtWithPayments extends Debt {
 	debt_payments: DebtPayment[];
 	total_paid?: number;
-	remaining_balance?: number;
+	remaining_balance: number | null;
+	last_payment_date: string | null;
+	last_payment_amount: number | null;
 }
 
 export interface UserDebtSummary {
