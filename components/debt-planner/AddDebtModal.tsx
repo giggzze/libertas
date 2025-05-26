@@ -110,6 +110,15 @@ export function AddDebtModal({
 			return;
 		}
 
+		console.log("Adding debt", {
+			name: newDebt.name,
+			amount: newDebt.amount,
+			interest_rate: newDebt.interest_rate,
+			minimum_payment: newDebt.minimum_payment,
+			term_in_months: newDebt.term_in_months,
+			category: newDebt.category,
+		});
+
 		// Pass the string values to the parent component
 		onAdd({
 			name: newDebt.name,

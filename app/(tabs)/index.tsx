@@ -9,7 +9,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { useDebts, useExpenses, useMonthlyIncome } from "@/hooks/useDatabase";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useAuthStore } from "@/store/auth";
-import { DebtInsert, ExpenseInsert } from "@/types/STT";
+import { DebtCategory, DebtInsert, ExpenseInsert } from "@/types/STT";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
@@ -55,6 +55,7 @@ export default function HomeScreen() {
 		interest_rate: "",
 		minimum_payment: "",
 		term_in_months: "60", // Default to 5 years
+		category: "OTHER" as DebtCategory,
 	});
 
 	// Expense modal state
@@ -92,6 +93,7 @@ export default function HomeScreen() {
 			minimum_payment: Number(debt.minimum_payment),
 			start_date: new Date().toISOString().split("T")[0],
 			term_in_months: Number(debt.term_in_months),
+			category: debt.category,
 			is_paid: false,
 			user_id: user.id,
 		};
@@ -104,6 +106,7 @@ export default function HomeScreen() {
 				interest_rate: "",
 				minimum_payment: "",
 				term_in_months: "60",
+				category: "OTHER" as DebtCategory,
 			});
 			setIsAddModalVisible(false);
 		}
@@ -123,6 +126,7 @@ export default function HomeScreen() {
 			interest_rate: Number(debt.interest_rate),
 			minimum_payment: Number(debt.minimum_payment),
 			term_in_months: Number(debt.term_in_months),
+			category: debt.category,
 		});
 
 		if (success) {
