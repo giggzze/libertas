@@ -1,10 +1,13 @@
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useAuthStore } from "@/store/auth";
+import { DebtCategory } from "@/types/STT";
 import { calculateMinimumPayment } from "@/utils/debtCalculations";
-import React from "react";
+import { Picker } from "@react-native-picker/picker";
+import React, { useEffect } from "react";
 import {
 	Modal,
+	Platform,
 	StyleSheet,
 	Text,
 	TextInput,
@@ -21,6 +24,7 @@ interface AddDebtModalProps {
 		interest_rate: string;
 		minimum_payment: string;
 		term_in_months: string;
+		category: DebtCategory;
 	}) => void;
 	newDebt: {
 		name: string;
@@ -28,6 +32,7 @@ interface AddDebtModalProps {
 		interest_rate: string;
 		minimum_payment: string;
 		term_in_months: string;
+		category: DebtCategory;
 	};
 	onNewDebtChange: (debt: {
 		name: string;
@@ -35,8 +40,18 @@ interface AddDebtModalProps {
 		interest_rate: string;
 		minimum_payment: string;
 		term_in_months: string;
+		category: DebtCategory;
 	}) => void;
 }
+
+const categoryLabels: Record<DebtCategory, string> = {
+	CREDIT_CARD: "Credit Card",
+	OVERDRAFT: "Overdraft",
+	CAR_LOAN: "Car Loan",
+	PERSONAL_LOAN: "Personal Loan",
+	SUBSCRIPTION: "Subscription",
+	OTHER: "Other",
+};
 
 export function AddDebtModal({
 	visible,
@@ -53,6 +68,16 @@ export function AddDebtModal({
 	const iconColor = useThemeColor({}, "icon");
 	const isDark = colorScheme === "dark";
 	const { user } = useAuthStore();
+
+	// Initialize category if not set
+	useEffect(() => {
+		if (!newDebt.category) {
+			onNewDebtChange({
+				...newDebt,
+				category: "OTHER",
+			});
+		}
+	}, []);
 
 	const handleAdd = () => {
 		// Convert string values to numbers for validation
@@ -71,7 +96,8 @@ export function AddDebtModal({
 			amount <= 0 ||
 			interestRate < 0 ||
 			minimumPayment <= 0 ||
-			termInMonths <= 0
+			termInMonths <= 0 ||
+			!newDebt.category
 		) {
 			console.log("Invalid debt values", {
 				name: newDebt.name,
@@ -79,9 +105,19 @@ export function AddDebtModal({
 				interestRate,
 				minimumPayment,
 				termInMonths,
+				category: newDebt.category,
 			});
 			return;
 		}
+
+		console.log("Adding debt", {
+			name: newDebt.name,
+			amount: newDebt.amount,
+			interest_rate: newDebt.interest_rate,
+			minimum_payment: newDebt.minimum_payment,
+			term_in_months: newDebt.term_in_months,
+			category: newDebt.category,
+		});
 
 		// Pass the string values to the parent component
 		onAdd({
@@ -90,6 +126,7 @@ export function AddDebtModal({
 			interest_rate: newDebt.interest_rate,
 			minimum_payment: newDebt.minimum_payment,
 			term_in_months: newDebt.term_in_months,
+			category: newDebt.category,
 		});
 	};
 
@@ -160,6 +197,39 @@ export function AddDebtModal({
 							onNewDebtChange({ ...newDebt, name: text })
 						}
 					/>
+
+					<View
+						style={[
+							styles.pickerContainer,
+							{
+								backgroundColor,
+								borderColor: isDark ? "#4a5568" : "#ddd",
+							},
+						]}>
+						<Picker
+							selectedValue={newDebt.category || "OTHER"}
+							onValueChange={(value: DebtCategory) =>
+								onNewDebtChange({ ...newDebt, category: value })
+							}
+							style={[
+								styles.picker,
+								{
+									color: textColor,
+								},
+							]}
+							dropdownIconColor={textColor}>
+							{Object.entries(categoryLabels).map(
+								([value, label]) => (
+									<Picker.Item
+										key={value}
+										label={label}
+										value={value}
+										color={textColor}
+									/>
+								)
+							)}
+						</Picker>
+					</View>
 
 					<TextInput
 						style={[
@@ -325,6 +395,15 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		fontSize: 16,
 		marginBottom: 12,
+	},
+	pickerContainer: {
+		borderRadius: 8,
+		borderWidth: 1,
+		marginBottom: 12,
+		overflow: "hidden",
+	},
+	picker: {
+		height: Platform.OS === "ios" ? 150 : 50,
 	},
 	modalButtons: {
 		flexDirection: "row",

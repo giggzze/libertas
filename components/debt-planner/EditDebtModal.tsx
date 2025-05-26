@@ -1,8 +1,11 @@
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { DebtCategory } from "@/types/STT";
+import { Picker } from "@react-native-picker/picker";
 import React from "react";
 import {
 	Modal,
+	Platform,
 	StyleSheet,
 	Text,
 	TextInput,
@@ -10,12 +13,22 @@ import {
 	View,
 } from "react-native";
 
+const categoryLabels: Record<DebtCategory, string> = {
+	CREDIT_CARD: "Credit Card",
+	OVERDRAFT: "Overdraft",
+	CAR_LOAN: "Car Loan",
+	PERSONAL_LOAN: "Personal Loan",
+	SUBSCRIPTION: "Subscription",
+	OTHER: "Other",
+};
+
 interface Debt {
 	id: string;
 	name: string;
 	amount: number;
 	interestRate: number;
 	minimumPayment: number;
+	category: DebtCategory;
 }
 
 interface EditDebtModalProps {
@@ -53,6 +66,7 @@ export function EditDebtModal({
 					(debt as any).minimumPayment ??
 					(debt as any).minimum_payment ??
 					0,
+				category: (debt as any).category ?? "OTHER",
 			});
 		}
 	}, [debt]);
@@ -100,6 +114,42 @@ export function EditDebtModal({
 							setEditedDebt({ ...editedDebt, name: text })
 						}
 					/>
+
+					<View
+						style={[
+							styles.pickerContainer,
+							{
+								backgroundColor,
+								borderColor: isDark ? "#4a5568" : "#ddd",
+							},
+						]}>
+						<Picker
+							selectedValue={editedDebt.category}
+							onValueChange={(value: DebtCategory) =>
+								setEditedDebt({
+									...editedDebt,
+									category: value,
+								})
+							}
+							style={[
+								styles.picker,
+								{
+									color: textColor,
+								},
+							]}
+							dropdownIconColor={textColor}>
+							{Object.entries(categoryLabels).map(
+								([value, label]) => (
+									<Picker.Item
+										key={value}
+										label={label}
+										value={value}
+										color={textColor}
+									/>
+								)
+							)}
+						</Picker>
+					</View>
 
 					<TextInput
 						style={[
@@ -243,6 +293,15 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		fontSize: 16,
 		marginBottom: 12,
+	},
+	pickerContainer: {
+		borderRadius: 8,
+		borderWidth: 1,
+		marginBottom: 12,
+		overflow: "hidden",
+	},
+	picker: {
+		height: Platform.OS === "ios" ? 150 : 50,
 	},
 	modalButtons: {
 		flexDirection: "row",

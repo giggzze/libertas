@@ -4,6 +4,7 @@ import { Debt } from "@/types/STT";
 import { formatCurrency } from "@/utils/formatCurrency";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { DebtCategoryPill } from "./DebtCategoryPill";
 
 interface RecommendationItemProps {
 	debt: Debt;
@@ -61,9 +62,16 @@ export const RecommendationItem: React.FC<RecommendationItemProps> = ({
 				{index + 1}
 			</Text>
 			<View style={styles.recommendationDetails}>
-				<Text style={[styles.recommendationName, { color: textColor }]}>
-					{debt.name}
-				</Text>
+				<View style={styles.headerRow}>
+					<Text
+						style={[
+							styles.recommendationName,
+							{ color: textColor },
+						]}>
+						{debt.name}
+					</Text>
+					<DebtCategoryPill category={debt.category} />
+				</View>
 				<Text
 					style={[
 						styles.recommendationPayment,
@@ -114,10 +122,17 @@ const styles = StyleSheet.create({
 	recommendationDetails: {
 		flex: 1,
 	},
+	headerRow: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginBottom: 4,
+	},
 	recommendationName: {
 		fontSize: 16,
 		fontWeight: "600",
-		marginBottom: 4,
+		flex: 1,
+		marginRight: 8,
 	},
 	recommendationPayment: {
 		fontSize: 14,
