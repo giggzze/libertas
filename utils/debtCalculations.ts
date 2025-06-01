@@ -165,7 +165,6 @@ export function calculateTotalInterest(
 	}
 
 	const monthlyRate = debt.interest_rate / 100 / 12;
-	const monthlyPaymentAmount = monthlyPayment - debt.minimum_payment;
 	const remainingAmount =
 		"remaining_balance" in debt
 			? debt.remaining_balance ?? debt.amount
@@ -176,10 +175,19 @@ export function calculateTotalInterest(
 		return 0;
 	}
 
-	// Calculate total interest using amortization
-	// Total Interest = (Monthly Payment * Number of Months) - Principal
-	const totalPayment = monthlyPaymentAmount * months;
-	return totalPayment - remainingAmount;
+	// Calculate total interest using amortization schedule
+	let balance = remainingAmount;
+	let totalInterest = 0;
+
+	for (let i = 0; i < months; i++) {
+		const interestPayment = balance * monthlyRate;
+		const principalPayment = monthlyPayment - interestPayment;
+
+		totalInterest += interestPayment;
+		balance -= principalPayment;
+	}
+
+	return Math.round(totalInterest * 100) / 100;
 }
 
 /**
