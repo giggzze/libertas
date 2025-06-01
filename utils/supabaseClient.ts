@@ -1,8 +1,47 @@
 import { createClient } from "@supabase/supabase-js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import "react-native-url-polyfill/auto";
 
-const SUPABASE_URL = "http://127.0.0.1:54321"; // Replace with your Supabase URL
-const SUPABASE_ANON_KEY =
-	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"; // Replace with your Supabase anon key
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+	throw new Error("Missing Supabase environment variables");
+}
+
+// Create a custom storage implementation using AsyncStorage
+const ExpoSecureStorage = {
+  getItem: async (key: string): Promise<string | null> => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      return value;
+    } catch (error) {
+      console.error('Error getting item from AsyncStorage:', error);
+      return null;
+    }
+  },
+  setItem: async (key: string, value: string): Promise<void> => {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (error) {
+      console.error('Error setting item to AsyncStorage:', error);
+    }
+  },
+  removeItem: async (key: string): Promise<void> => {
+    try {
+      await AsyncStorage.removeItem(key);
+    } catch (error) {
+      console.error('Error removing item from AsyncStorage:', error);
+    }
+  },
+};
+
+// Initialize Supabase with persistent storage
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    storage: ExpoSecureStorage,
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: false,
+  },
+});

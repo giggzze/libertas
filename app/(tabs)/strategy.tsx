@@ -1,14 +1,14 @@
 import { PayoffTimeline } from "@/components/debt-planner/PayoffTimeline";
 import { RecommendationItem } from "@/components/debt-planner/RecommendationItem";
-import {
-	PayoffStrategy,
-	StrategySelector,
-} from "@/components/debt-planner/StrategySelector";
+import { StrategySelector } from "@/components/debt-planner/StrategySelector";
 import { Loading } from "@/components/ui/Loading";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useDebts, useExpenses, useMonthlyIncome } from "@/hooks/useDatabase";
+import { useDebts } from "@/hooks/useDebt";
+import { useExpenses } from "@/hooks/useExpense";
+import { useMonthlyIncome } from "@/hooks/useMonthlyIncome";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { DebtWithPayments, Expense } from "@/types/STT";
+import { useAuthStore } from "@/store/auth";
+import { DebtWithPayments, Expense, PayoffStrategy } from "@/types/STT";
 import {
 	calculatePayoffOrder,
 	calculatePayoffTime,
@@ -39,7 +39,9 @@ export default function StrategyScreen() {
 		loading: incomeLoading,
 		refetch: refetchIncome,
 	} = useMonthlyIncome();
+
 	const { debts, loading: debtsLoading, refetch: refetchDebts } = useDebts();
+
 	const {
 		expenses,
 		loading: expensesLoading,
@@ -49,9 +51,13 @@ export default function StrategyScreen() {
 	// Refresh data when screen comes into focus
 	useFocusEffect(
 		useCallback(() => {
-			refetchIncome();
-			refetchDebts();
-			refetchExpenses();
+			// Only refetch if auth state is ready
+			if (useAuthStore.getState().rehydrated) {
+				console.log("Refreshing strategy data on focus");
+				refetchIncome();
+				refetchDebts();
+				refetchExpenses();
+			}
 		}, [refetchIncome, refetchDebts, refetchExpenses])
 	);
 
@@ -59,11 +65,10 @@ export default function StrategyScreen() {
 	const calculationDebts = useMemo(
 		() =>
 			debts.map((debt: DebtWithPayments) => ({
-				id: debt.id,
-				name: debt.name,
+				...debt,
 				amount: debt.remaining_balance || debt.amount,
-				interestRate: debt.interest_rate,
-				minimumPayment: debt.minimum_payment,
+				interest_rate: debt.interest_rate,
+				minimum_payment: debt.minimum_payment,
 			})),
 		[debts]
 	);
@@ -76,7 +81,7 @@ export default function StrategyScreen() {
 	const totalMonthlyPayments = useMemo(
 		() =>
 			calculationDebts.reduce(
-				(sum, debt) => sum + debt.minimumPayment,
+				(sum, debt) => sum + debt.minimum_payment,
 				0
 			),
 		[calculationDebts]
@@ -127,9 +132,20 @@ export default function StrategyScreen() {
 		[payoffOrder, recommendedPayments]
 	);
 
-	// Show loading while data is being fetched
-	if (incomeLoading || debtsLoading || expensesLoading) {
-		return <Loading message='Loading strategy data...' />;
+	// Check if auth state is rehydrated
+	const { rehydrated } = useAuthStore();
+
+	// Show loading while auth state is being rehydrated or data is being fetched
+	if (!rehydrated || incomeLoading || debtsLoading || expensesLoading) {
+		return (
+			<Loading
+				message={
+					!rehydrated
+						? "Restoring session..."
+						: "Loading strategy data..."
+				}
+			/>
+		);
 	}
 
 	// Show message if no debts
@@ -177,6 +193,7 @@ export default function StrategyScreen() {
 					{ backgroundColor },
 				]}
 				showsVerticalScrollIndicator={false}>
+				{/* Header */}
 				<View style={styles.header}>
 					<Text style={[styles.headerTitle, { color: textColor }]}>
 						Strategy
@@ -186,6 +203,7 @@ export default function StrategyScreen() {
 					</Text>
 				</View>
 
+				{/* Strategy Overview */}
 				<View
 					style={[
 						styles.summaryCard,
@@ -244,6 +262,7 @@ export default function StrategyScreen() {
 					</View>
 				</View>
 
+				{/* Strategy Selector */}
 				<View style={styles.section}>
 					<StrategySelector
 						selectedStrategy={selectedStrategy}
@@ -251,6 +270,7 @@ export default function StrategyScreen() {
 					/>
 				</View>
 
+				{/* Payoff Timeline */}
 				<View style={styles.section}>
 					<PayoffTimeline
 						debts={payoffOrder}
@@ -259,6 +279,7 @@ export default function StrategyScreen() {
 					/>
 				</View>
 
+				{/* Recommended Payment Plan */}
 				<View style={styles.section}>
 					<View
 						style={[

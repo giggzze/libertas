@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "dev": "APP_VARIANT=development npx expo start",
+    "preview": "APP_VARIANT=preview npx expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -41,7 +43,9 @@
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "~0.20.0",
     "react-native-webview": "13.13.5",
-    "zustand": "^5.0.5"
+    "zustand": "^5.0.5",
+    "expo-dev-client": "~5.1.8",
+    "@react-native-picker/picker": "2.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

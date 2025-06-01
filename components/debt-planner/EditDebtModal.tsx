@@ -1,8 +1,11 @@
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { Debt, DebtCategory } from "@/types/STT";
+import { Picker } from "@react-native-picker/picker";
 import React from "react";
 import {
 	Modal,
+	Platform,
 	StyleSheet,
 	Text,
 	TextInput,
@@ -10,13 +13,14 @@ import {
 	View,
 } from "react-native";
 
-interface Debt {
-	id: string;
-	name: string;
-	amount: number;
-	interestRate: number;
-	minimumPayment: number;
-}
+const categoryLabels: Record<DebtCategory, string> = {
+	CREDIT_CARD: "Credit Card",
+	OVERDRAFT: "Overdraft",
+	CAR_LOAN: "Car Loan",
+	PERSONAL_LOAN: "Personal Loan",
+	SUBSCRIPTION: "Subscription",
+	OTHER: "Other",
+};
 
 interface EditDebtModalProps {
 	visible: boolean;
@@ -45,14 +49,9 @@ export function EditDebtModal({
 		if (debt) {
 			setEditedDebt({
 				...debt,
-				interestRate:
-					(debt as any).interestRate ??
-					(debt as any).interest_rate ??
-					0,
-				minimumPayment:
-					(debt as any).minimumPayment ??
-					(debt as any).minimum_payment ??
-					0,
+				interest_rate: debt.interest_rate ?? 0,
+				minimum_payment: debt.minimum_payment ?? 0,
+				category: debt.category ?? "OTHER",
 			});
 		}
 	}, [debt]);
@@ -101,6 +100,42 @@ export function EditDebtModal({
 						}
 					/>
 
+					<View
+						style={[
+							styles.pickerContainer,
+							{
+								backgroundColor,
+								borderColor: isDark ? "#4a5568" : "#ddd",
+							},
+						]}>
+						<Picker
+							selectedValue={editedDebt.category}
+							onValueChange={(value: DebtCategory) =>
+								setEditedDebt({
+									...editedDebt,
+									category: value,
+								})
+							}
+							style={[
+								styles.picker,
+								{
+									color: textColor,
+								},
+							]}
+							dropdownIconColor={textColor}>
+							{Object.entries(categoryLabels).map(
+								([value, label]) => (
+									<Picker.Item
+										key={value}
+										label={label}
+										value={value}
+										color={textColor}
+									/>
+								)
+							)}
+						</Picker>
+					</View>
+
 					<TextInput
 						style={[
 							styles.input,
@@ -139,14 +174,14 @@ export function EditDebtModal({
 						placeholderTextColor={iconColor}
 						keyboardType='numeric'
 						value={
-							editedDebt.interestRate !== undefined
-								? editedDebt.interestRate.toString()
+							editedDebt.interest_rate !== undefined
+								? editedDebt.interest_rate.toString()
 								: ""
 						}
 						onChangeText={text =>
 							setEditedDebt({
 								...editedDebt,
-								interestRate: Number(text) || 0,
+								interest_rate: Number(text) || 0,
 							})
 						}
 					/>
@@ -164,14 +199,14 @@ export function EditDebtModal({
 						placeholderTextColor={iconColor}
 						keyboardType='numeric'
 						value={
-							editedDebt.minimumPayment !== undefined
-								? editedDebt.minimumPayment.toString()
+							editedDebt.minimum_payment !== undefined
+								? editedDebt.minimum_payment.toString()
 								: ""
 						}
 						onChangeText={text =>
 							setEditedDebt({
 								...editedDebt,
-								minimumPayment: Number(text) || 0,
+								minimum_payment: Number(text) || 0,
 							})
 						}
 					/>
@@ -243,6 +278,15 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		fontSize: 16,
 		marginBottom: 12,
+	},
+	pickerContainer: {
+		borderRadius: 8,
+		borderWidth: 1,
+		marginBottom: 12,
+		overflow: "hidden",
+	},
+	picker: {
+		height: Platform.OS === "ios" ? 150 : 50,
 	},
 	modalButtons: {
 		flexDirection: "row",

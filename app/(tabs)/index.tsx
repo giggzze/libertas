@@ -6,10 +6,12 @@ import { ExpenseList } from "@/components/debt-planner/ExpenseList";
 import { Loading } from "@/components/ui/Loading";
 import { SummaryCard } from "@/components/ui/SummaryCard";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useDebts, useExpenses, useMonthlyIncome } from "@/hooks/useDatabase";
+import { useDebts } from "@/hooks/useDebt";
+import { useExpenses } from "@/hooks/useExpense";
+import { useMonthlyIncome } from "@/hooks/useMonthlyIncome";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useAuthStore } from "@/store/auth";
-import { DebtInsert, ExpenseInsert } from "@/types/STT";
+import { DebtCategory, DebtInsert, ExpenseInsert } from "@/types/STT";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
@@ -35,7 +37,7 @@ export default function HomeScreen() {
     deleteExpense,
     loading: expensesLoading,
   } = useExpenses();
-  const { user } = useAuthStore();
+  const { user, rehydrated } = useAuthStore();
 
   // Theme hooks
   const colorScheme = useColorScheme();
@@ -52,8 +54,10 @@ export default function HomeScreen() {
   const [newDebt, setNewDebt] = useState({
     name: "",
     amount: "",
-    interestRate: "",
-    minimumPayment: "",
+    interest_rate: "",
+    minimum_payment: "",
+    term_in_months: "60", // Default to 5 years
+    category: "OTHER" as DebtCategory,
   });
 
   // Expense modal state
@@ -63,9 +67,10 @@ export default function HomeScreen() {
     useState(false);
   const [selectedExpense, setSelectedExpense] = useState<any | null>(null);
 
-  // Show loading while data is being fetched
-  if (incomeLoading || debtsLoading || expensesLoading) {
-    return <Loading message="Loading your financial information..." />;
+  // Check if auth state is rehydrated
+  // Show loading while auth state is being rehydrated or data is being fetched
+  if (!rehydrated || (incomeLoading || debtsLoading || expensesLoading)) {
+    return <Loading message={!rehydrated ? 'Restoring session...' : 'Loading data...'} />;
   }
 
   // Calculate totals from real data
@@ -87,9 +92,11 @@ export default function HomeScreen() {
     const debtData: DebtInsert = {
       name: debt.name,
       amount: Number(debt.amount),
-      interest_rate: Number(debt.interestRate),
-      minimum_payment: Number(debt.minimumPayment),
+      interest_rate: Number(debt.interest_rate),
+      minimum_payment: Number(debt.minimum_payment),
       start_date: new Date().toISOString().split("T")[0],
+      term_in_months: Number(debt.term_in_months),
+      category: debt.category,
       is_paid: false,
       user_id: user.id,
     };
@@ -99,8 +106,10 @@ export default function HomeScreen() {
       setNewDebt({
         name: "",
         amount: "",
-        interestRate: "",
-        minimumPayment: "",
+        interest_rate: "",
+        minimum_payment: "",
+        term_in_months: "60",
+        category: "OTHER" as DebtCategory,
       });
       setIsAddModalVisible(false);
     }
@@ -117,8 +126,10 @@ export default function HomeScreen() {
     const success = await updateDebt(selectedDebt.id, {
       name: debt.name,
       amount: Number(debt.amount),
-      interest_rate: Number(debt.interestRate),
-      minimum_payment: Number(debt.minimumPayment),
+      interest_rate: Number(debt.interest_rate),
+      minimum_payment: Number(debt.minimum_payment),
+      term_in_months: Number(debt.term_in_months),
+      category: debt.category,
     });
 
     if (success) {

@@ -75,6 +75,7 @@ export type Database = {
       debts: {
         Row: {
           amount: number
+          category: Database["public"]["Enums"]["debt_category"]
           created_at: string
           end_date: string | null
           id: string
@@ -83,11 +84,13 @@ export type Database = {
           minimum_payment: number
           name: string
           start_date: string
+          term_in_months: number
           updated_at: string
           user_id: string
         }
         Insert: {
           amount: number
+          category?: Database["public"]["Enums"]["debt_category"]
           created_at?: string
           end_date?: string | null
           id?: string
@@ -96,11 +99,13 @@ export type Database = {
           minimum_payment: number
           name: string
           start_date: string
+          term_in_months?: number
           updated_at?: string
           user_id: string
         }
         Update: {
           amount?: number
+          category?: Database["public"]["Enums"]["debt_category"]
           created_at?: string
           end_date?: string | null
           id?: string
@@ -109,6 +114,7 @@ export type Database = {
           minimum_payment?: number
           name?: string
           start_date?: string
+          term_in_months?: number
           updated_at?: string
           user_id?: string
         }
@@ -225,7 +231,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      debt_category:
+        | "CREDIT_CARD"
+        | "CAR_LOAN"
+        | "PERSONAL_LOAN"
+        | "OVERDRAFT"
+        | "SUBSCRIPTION"
+        | "OTHER"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -343,7 +355,16 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      debt_category: [
+        "CREDIT_CARD",
+        "CAR_LOAN",
+        "PERSONAL_LOAN",
+        "OVERDRAFT",
+        "SUBSCRIPTION",
+        "OTHER",
+      ],
+    },
   },
 } as const
 

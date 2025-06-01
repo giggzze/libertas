@@ -1,5 +1,5 @@
-import { useMonthlyIncome } from "@/hooks/useDatabase";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useMonthlyIncome } from "@/hooks/useMonthlyIncome";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useAuthStore } from "@/store/auth";
 import { useRouter } from "expo-router";
@@ -24,7 +24,7 @@ export default function ProfileScreen() {
 	} = useMonthlyIncome();
 	const [newIncome, setNewIncome] = useState("");
 	const router = useRouter();
-	
+
 	// Theme hooks
 	const colorScheme = useColorScheme();
 	const backgroundColor = useThemeColor({}, "background");
@@ -66,6 +66,7 @@ export default function ProfileScreen() {
 			await createIncome({
 				amount: incomeNumber,
 				start_date: new Date().toISOString().split("T")[0],
+				user_id: user?.id,
 			});
 			setNewIncome("");
 			Alert.alert("Success", "Income updated successfully!");
@@ -88,20 +89,41 @@ export default function ProfileScreen() {
 	return (
 		<ScrollView style={[styles.container, { backgroundColor }]}>
 			<View style={[styles.header, { backgroundColor }]}>
-				<Text style={[styles.title, { color: textColor }]}>Profile</Text>
-				<Text style={[styles.email, { color: iconColor }]}>{user?.email}</Text>
+				<Text style={[styles.title, { color: textColor }]}>
+					Profile
+				</Text>
+				<Text style={[styles.email, { color: iconColor }]}>
+					{user?.email}
+				</Text>
 			</View>
 
-			<View style={[styles.section, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" }]}>
-				<Text style={[styles.sectionTitle, { color: textColor }]}>Monthly Income</Text>
+			<View
+				style={[
+					styles.section,
+					{
+						backgroundColor,
+						borderColor: isDark ? "#4a5568" : "#ddd",
+					},
+				]}>
+				<Text style={[styles.sectionTitle, { color: textColor }]}>
+					Monthly Income
+				</Text>
 				<View style={styles.incomeContainer}>
 					<Text style={[styles.currentIncome, { color: iconColor }]}>
-						Current: $
+						Current: £
 						{currentIncome?.amount.toLocaleString() || "0"}
 					</Text>
 					<View style={styles.inputContainer}>
 						<TextInput
-							style={[styles.input, { backgroundColor: isDark ? "#2d3748" : "#f5f5f5", color: textColor }]}
+							style={[
+								styles.input,
+								{
+									backgroundColor: isDark
+										? "#2d3748"
+										: "#f5f5f5",
+									color: textColor,
+								},
+							]}
 							placeholder='Enter new monthly income'
 							placeholderTextColor={iconColor}
 							keyboardType='numeric'
@@ -109,9 +131,18 @@ export default function ProfileScreen() {
 							onChangeText={setNewIncome}
 						/>
 						<TouchableOpacity
-							style={[styles.updateButton, { backgroundColor: tintColor }]}
+							style={[
+								styles.updateButton,
+								{ backgroundColor: tintColor },
+							]}
 							onPress={handleUpdateIncome}>
-							<Text style={[styles.updateButtonText, { color: isDark ? "#000" : "#fff" }]}>Update</Text>
+							<Text
+								style={[
+									styles.updateButtonText,
+									{ color: isDark ? "#000" : "#fff" },
+								]}>
+								Update
+							</Text>
 						</TouchableOpacity>
 					</View>
 				</View>

@@ -37,3 +37,12 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+# Android
+android/
+
+# iOS
+ios/
+
+# Web
+web/
