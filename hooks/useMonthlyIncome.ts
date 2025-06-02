@@ -1,132 +1,72 @@
-import { DatabaseService } from "@/services/database";
+import { localDatabase } from "@/services/localDatabase";
+import { syncService } from "@/services/syncService";
 import { useAuthStore } from "@/store/auth";
-import { MonthlyIncome, MonthlyIncomeInsert } from "@/types/STT";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { MonthlyIncome } from "@/types/STT";
+import { useCallback, useEffect, useState } from "react";
 
 // Monthly Income hook
 export function useMonthlyIncome() {
-  const { user, rehydrated } = useAuthStore();
-  const [currentIncome, setCurrentIncome] = useState<MonthlyIncome | null>(null);
-  const [incomeHistory, setIncomeHistory] = useState<MonthlyIncome[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  
-  // For retry mechanism
-  const retryCount = useRef(0);
-  const maxRetries = 3;
-  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const [currentIncome, setCurrentIncome] = useState<MonthlyIncome | null>(
+		null
+	);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<Error | null>(null);
+	const { rehydrated } = useAuthStore();
 
-  const fetchCurrentIncome = useCallback(async () => {
-    // Don't attempt to fetch if we're not authenticated yet
-    if (!user?.id) {
-      if (!rehydrated) {
-        // Still waiting for auth state to rehydrate, don't count as a retry
-        console.log("Auth state not rehydrated yet, waiting to fetch income");
-        return;
-      }
-      
-      // Auth state is rehydrated but no user, clear data
-      setCurrentIncome(null);
-      setLoading(false);
-      return;
-    }
+	const fetchIncome = useCallback(async () => {
+		if (!rehydrated) return;
 
-    setLoading(true);
-    setError(null);
+		try {
+			setLoading(true);
+			setError(null);
 
-    try {
-      console.log("Fetching current income for user:", user.id);
-      const income = await DatabaseService.getCurrentMonthlyIncome(user.id);
-      console.log("Fetched current income:", income);
-      setCurrentIncome(income);
-      // Reset retry count on success
-      retryCount.current = 0;
-    } catch (err) {
-      console.error("Error fetching income:", err);
-      setError(err instanceof Error ? err.message : "Failed to fetch income");
-      
-      // Implement retry mechanism
-      if (retryCount.current < maxRetries) {
-        retryCount.current += 1;
-        console.log(`Retrying income fetch (${retryCount.current}/${maxRetries})...`);
-        
-        // Clear any existing timeout
-        if (retryTimeoutRef.current) {
-          clearTimeout(retryTimeoutRef.current);
-        }
-        
-        // Retry with exponential backoff
-        const retryDelay = Math.min(1000 * Math.pow(2, retryCount.current), 10000);
-        retryTimeoutRef.current = setTimeout(() => {
-          fetchCurrentIncome();
-        }, retryDelay);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.id, rehydrated]);
+			// First try to get data from local database
+			const localIncome = await localDatabase.getMonthlyIncome();
+			setCurrentIncome(localIncome);
 
-  const fetchIncomeHistory = useCallback(async () => {
-    // Don't attempt to fetch if we're not authenticated yet
-    if (!user?.id) {
-      if (!rehydrated) {
-        // Still waiting for auth state to rehydrate
-        console.log("Auth state not rehydrated yet, waiting to fetch income history");
-        return;
-      }
-      
-      // Auth state is rehydrated but no user, clear data
-      setIncomeHistory([]);
-      return;
-    }
+			// Then try to sync with remote
+			await syncService.sync();
 
-    try {
-      const history = await DatabaseService.getAllMonthlyIncome(user.id);
-      setIncomeHistory(history);
-    } catch (err) {
-      console.error("Error fetching income history:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to fetch income history"
-      );
-    }
-  }, [user?.id, rehydrated]);
+			// Fetch updated data after sync
+			const updatedIncome = await localDatabase.getMonthlyIncome();
+			setCurrentIncome(updatedIncome);
+		} catch (err) {
+			setError(
+				err instanceof Error
+					? err
+					: new Error("Failed to fetch monthly income")
+			);
+			console.error("Error fetching monthly income:", err);
+		} finally {
+			setLoading(false);
+		}
+	}, [rehydrated]);
 
-  const createIncome = useCallback(
-    async (income: MonthlyIncomeInsert) => {
-      const newIncome = await DatabaseService.createMonthlyIncome(income);
-      if (newIncome) {
-        await fetchCurrentIncome();
-        await fetchIncomeHistory();
-      }
-      return newIncome;
-    },
-    [fetchCurrentIncome, fetchIncomeHistory]
-  );
+	const setIncome = useCallback(async (income: MonthlyIncome) => {
+		try {
+			// Add to local database first
+			await localDatabase.setMonthlyIncome(income);
 
-  useEffect(() => {
-    // Only fetch data if auth state is rehydrated
-    if (rehydrated) {
-      fetchCurrentIncome();
-      fetchIncomeHistory();
-    }
-  }, [fetchCurrentIncome, fetchIncomeHistory, rehydrated]);
-  
-  // Cleanup function to clear any pending retries
-  useEffect(() => {
-    return () => {
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
-      }
-    };
-  }, []);
+			// Update local state
+			setCurrentIncome(income);
 
-  return {
-    currentIncome,
-    incomeHistory,
-    loading,
-    error,
-    refetch: fetchCurrentIncome,
-    createIncome,
-    isReady: rehydrated && (!loading || retryCount.current > 0),
-  };
+			// Trigger sync
+			await syncService.sync();
+		} catch (err) {
+			console.error("Error setting monthly income:", err);
+			throw err;
+		}
+	}, []);
+
+	useEffect(() => {
+		fetchIncome();
+	}, [fetchIncome]);
+
+	return {
+		currentIncome,
+		loading,
+		error,
+		refetch: fetchIncome,
+		setIncome,
+	};
 }

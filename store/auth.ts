@@ -1,5 +1,7 @@
+import { localDatabase } from "@/services/localDatabase";
 import { supabase } from "@/utils/supabaseClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -32,10 +34,20 @@ export const useAuthStore = create<AuthState>()(
 			setUser: user => {
 				console.log("Setting user:", user?.id);
 				set({ user });
+				// Store in local database
+				localDatabase.setAuthState(
+					user,
+					useAuthStore.getState().session
+				);
 			},
 			setSession: session => {
 				console.log("Setting session:", session?.user?.id);
 				set({ session });
+				// Store in local database
+				localDatabase.setAuthState(
+					useAuthStore.getState().user,
+					session
+				);
 			},
 			setLoading: loading => set({ loading }),
 			setError: error => set({ error }),
@@ -43,62 +55,111 @@ export const useAuthStore = create<AuthState>()(
 
 			login: async (email, password) => {
 				set({ loading: true, error: null });
-				const { data, error } = await supabase.auth.signInWithPassword({
-					email,
-					password,
-				});
-				if (error) {
+				try {
+					const { data, error } =
+						await supabase.auth.signInWithPassword({
+							email,
+							password,
+						});
+					if (error) {
+						set({
+							error: error.message,
+							loading: false,
+							user: null,
+							session: null,
+						});
+						await localDatabase.clearAuthState();
+					} else {
+						set({
+							user: data.user,
+							session: data.session,
+							loading: false,
+							error: null,
+						});
+						await localDatabase.setAuthState(
+							data.user,
+							data.session
+						);
+					}
+				} catch (error) {
 					set({
-						error: error.message,
+						error:
+							error instanceof Error
+								? error.message
+								: "Login failed",
 						loading: false,
 						user: null,
 						session: null,
 					});
-				} else {
-					set({
-						user: data.user,
-						session: data.session,
-						loading: false,
-						error: null,
-					});
+					await localDatabase.clearAuthState();
 				}
 			},
 
 			register: async (email, password) => {
 				set({ loading: true, error: null });
-				const { data, error } = await supabase.auth.signUp({
-					email,
-					password,
-				});
-				if (error) {
+				try {
+					const { data, error } = await supabase.auth.signUp({
+						email,
+						password,
+					});
+					if (error) {
+						set({
+							error: error.message,
+							loading: false,
+							user: null,
+							session: null,
+						});
+						await localDatabase.clearAuthState();
+					} else {
+						set({
+							user: data.user,
+							session: data.session,
+							loading: false,
+							error: null,
+						});
+						await localDatabase.setAuthState(
+							data.user,
+							data.session
+						);
+					}
+				} catch (error) {
 					set({
-						error: error.message,
+						error:
+							error instanceof Error
+								? error.message
+								: "Registration failed",
 						loading: false,
 						user: null,
 						session: null,
 					});
-				} else {
-					set({
-						user: data.user,
-						session: data.session,
-						loading: false,
-						error: null,
-					});
+					await localDatabase.clearAuthState();
 				}
 			},
 
 			logout: async () => {
 				set({ loading: true, error: null });
-				const { error } = await supabase.auth.signOut();
-				if (error) {
-					set({ error: error.message, loading: false });
-				} else {
+				try {
+					const { error } = await supabase.auth.signOut();
+					if (error) {
+						set({ error: error.message, loading: false });
+					} else {
+						set({
+							user: null,
+							session: null,
+							loading: false,
+							error: null,
+						});
+						await localDatabase.clearAuthState();
+					}
+				} catch (error) {
 					set({
-						user: null,
-						session: null,
+						error:
+							error instanceof Error
+								? error.message
+								: "Logout failed",
 						loading: false,
-						error: null,
 					});
+					await localDatabase.clearAuthState();
 				}
 			},
 
@@ -106,42 +167,86 @@ export const useAuthStore = create<AuthState>()(
 				console.log("Fetching user...");
 				set({ loading: true });
 				try {
-					const {
-						data: { user },
-						error: userError,
-					} = await supabase.auth.getUser();
-					const {
-						data: { session },
-						error: sessionError,
-					} = await supabase.auth.getSession();
+					// Check network status
+					const netInfo = await NetInfo.fetch();
+					const isOnline = netInfo.isConnected ?? false;
 
-					console.log("Fetch results:", {
-						user: user?.id,
-						session: session?.user?.id,
-						userError,
-						sessionError,
-					});
+					if (isOnline) {
+						// Online: Try to get fresh data from Supabase
+						const {
+							data: { user },
+							error: userError,
+						} = await supabase.auth.getUser();
+						const {
+							data: { session },
+							error: sessionError,
+						} = await supabase.auth.getSession();
 
-					if (userError || sessionError) {
-						set({
-							user: null,
-							session: null,
-							loading: false,
-							error: userError?.message || sessionError?.message || "Authentication error",
+						console.log("Fetch results:", {
+							user: user?.id,
+							session: session?.user?.id,
+							userError,
+							sessionError,
 						});
+
+						if (userError || sessionError) {
+							// If online fetch fails, try local database
+							const localAuth =
+								await localDatabase.getAuthState();
+							if (localAuth) {
+								set({
+									user: localAuth.user,
+									session: localAuth.session,
+									loading: false,
+									error: null,
+								});
+							} else {
+								set({
+									user: null,
+									session: null,
+									loading: false,
+									error:
+										userError?.message ||
+										sessionError?.message ||
+										"Authentication error",
+								});
+							}
+						} else {
+							set({
+								user,
+								session,
+								loading: false,
+								error: null,
+							});
+							await localDatabase.setAuthState(user, session);
+						}
 					} else {
-						set({
-							user,
-							session,
-							loading: false,
-							error: null,
-						});
+						// Offline: Use local database
+						const localAuth = await localDatabase.getAuthState();
+						if (localAuth) {
+							set({
+								user: localAuth.user,
+								session: localAuth.session,
+								loading: false,
+								error: null,
+							});
+						} else {
+							set({
+								user: null,
+								session: null,
+								loading: false,
+								error: "No internet connection and no local session found",
+							});
+						}
 					}
 				} catch (error) {
 					console.error("Error fetching user:", error);
 					set({
 						loading: false,
-						error: error instanceof Error ? error.message : "Failed to fetch user",
+						error:
+							error instanceof Error
+								? error.message
+								: "Failed to fetch user",
 					});
 				}
 			},
@@ -149,36 +254,87 @@ export const useAuthStore = create<AuthState>()(
 		{
 			name: "auth-storage",
 			storage: createJSONStorage(() => AsyncStorage),
-			onRehydrateStorage: () => state => {
-				console.log("Rehydrated state from storage:", state?.user?.id ? "User found" : "No user");
+			onRehydrateStorage: () => async state => {
+				console.log(
+					"Rehydrated state from storage:",
+					state?.user?.id ? "User found" : "No user"
+				);
 				if (state) {
-					// Don't immediately set rehydrated true - we need to verify the session first
-					// Instead, we'll verify the session with Supabase
-					if (state.session) {
-						// Check if the session is still valid with Supabase
-						supabase.auth.getSession().then(({ data: { session } }) => {
-							console.log("Session verification:", session ? "Valid" : "Invalid");
-							if (session) {
-								// Session is valid, update state with current session
-								state.setUser(session.user);
-								state.setSession(session);
+					try {
+						// Check network status first
+						const netInfo = await NetInfo.fetch();
+						const isOnline = netInfo.isConnected ?? false;
+
+						if (isOnline && state.session) {
+							// Online: Verify session with Supabase
+							try {
+								const {
+									data: { session },
+								} = await supabase.auth.getSession();
+								console.log(
+									"Session verification:",
+									session ? "Valid" : "Invalid"
+								);
+								if (session) {
+									// Session is valid, update state with current session
+									state.setUser(session.user);
+									state.setSession(session);
+									state.setRehydrated(true);
+									state.setError(null);
+								} else {
+									// Session is invalid, try local database
+									const localAuth =
+										await localDatabase.getAuthState();
+									if (localAuth) {
+										state.setUser(localAuth.user);
+										state.setSession(localAuth.session);
+										state.setRehydrated(true);
+										state.setError(null);
+									} else {
+										state.setUser(null);
+										state.setSession(null);
+										state.setRehydrated(true);
+										state.setError("Session expired");
+									}
+								}
+							} catch (error) {
+								console.error(
+									"Error verifying session:",
+									error
+								);
+								// If verification fails, try local database
+								const localAuth =
+									await localDatabase.getAuthState();
+								if (localAuth) {
+									state.setUser(localAuth.user);
+									state.setSession(localAuth.session);
+									state.setRehydrated(true);
+									state.setError(null);
+								} else {
+									state.setRehydrated(true);
+									state.setError("Failed to verify session");
+								}
+							}
+						} else {
+							// Offline: Use local database
+							const localAuth =
+								await localDatabase.getAuthState();
+							if (localAuth) {
+								state.setUser(localAuth.user);
+								state.setSession(localAuth.session);
 								state.setRehydrated(true);
 								state.setError(null);
 							} else {
-								// Session is invalid, clear user and session
-								state.setUser(null);
-								state.setSession(null);
 								state.setRehydrated(true);
-								state.setError("Session expired");
+								state.setError(
+									"No internet connection and no local session found"
+								);
 							}
-						}).catch(error => {
-							console.error("Error verifying session:", error);
-							state.setRehydrated(true);
-							state.setError("Failed to verify session");
-						});
-					} else {
-						// No session in storage, just mark as rehydrated
+						}
+					} catch (error) {
+						console.error("Error during rehydration:", error);
 						state.setRehydrated(true);
+						state.setError("Failed to restore session");
 					}
 				}
 			},
@@ -189,25 +345,66 @@ export const useAuthStore = create<AuthState>()(
 // Initialize auth state on app load
 const initializeAuthState = async () => {
 	console.log("Initializing auth state...");
-	const { setUser, setSession, setRehydrated, fetchUser } = useAuthStore.getState();
-	
+	const { setUser, setSession, setRehydrated, fetchUser } =
+		useAuthStore.getState();
+
 	try {
-		// First check if we have a session in Supabase's own storage
-		const { data: { session } } = await supabase.auth.getSession();
-		console.log("Initial session check:", session?.user?.id ? "Found session" : "No session");
-		
-		if (session) {
-			setUser(session.user);
-			setSession(session);
-			setRehydrated(true);
+		// Check network status first
+		const netInfo = await NetInfo.fetch();
+		const isOnline = netInfo.isConnected ?? false;
+
+		if (isOnline) {
+			// Online: Try Supabase first
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
+			console.log(
+				"Initial session check:",
+				session?.user?.id ? "Found session" : "No session"
+			);
+
+			if (session) {
+				setUser(session.user);
+				setSession(session);
+				setRehydrated(true);
+			} else {
+				// If no Supabase session, try local database
+				const localAuth = await localDatabase.getAuthState();
+				if (localAuth) {
+					setUser(localAuth.user);
+					setSession(localAuth.session);
+					setRehydrated(true);
+				} else {
+					setUser(null);
+					setSession(null);
+					setRehydrated(true);
+				}
+			}
 		} else {
-			// If no session, ensure user state is cleared
-			setUser(null);
-			setSession(null);
-			setRehydrated(true);
+			// Offline: Use local database
+			const localAuth = await localDatabase.getAuthState();
+			if (localAuth) {
+				setUser(localAuth.user);
+				setSession(localAuth.session);
+				setRehydrated(true);
+			} else {
+				setUser(null);
+				setSession(null);
+				setRehydrated(true);
+			}
 		}
 	} catch (error) {
 		console.error("Error initializing auth state:", error);
+		// If initialization fails, try local database as last resort
+		try {
+			const localAuth = await localDatabase.getAuthState();
+			if (localAuth) {
+				setUser(localAuth.user);
+				setSession(localAuth.session);
+			}
+		} catch (localError) {
+			console.error("Error getting local auth state:", localError);
+		}
 		setRehydrated(true); // Still mark as rehydrated so the app can proceed
 	}
 };

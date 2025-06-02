@@ -1,138 +1,118 @@
-import { DatabaseService } from "@/services/database";
+import { localDatabase } from "@/services/localDatabase";
+import { syncService } from "@/services/syncService";
 import { useAuthStore } from "@/store/auth";
-import { DebtInsert, DebtUpdate, DebtWithPayments } from "@/types/STT";
-import { useCallback, useEffect, useState, useRef } from "react";
-// Debts hook
+import { Debt, DebtInsert, DebtWithPayments } from "@/types/STT";
+import { supabase } from "@/utils/supabaseClient";
+import { useCallback, useEffect, useState } from "react";
+
 export function useDebts() {
-  const { user, rehydrated } = useAuthStore();
-  const [debts, setDebts] = useState<DebtWithPayments[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  
-  // For retry mechanism
-  const retryCount = useRef(0);
-  const maxRetries = 3;
-  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const [debts, setDebts] = useState<DebtWithPayments[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<Error | null>(null);
+	const { rehydrated } = useAuthStore();
 
-  const fetchDebts = useCallback(async () => {
-    // Don't attempt to fetch if we're not authenticated yet
-    if (!user?.id) {
-      if (!rehydrated) {
-        // Still waiting for auth state to rehydrate, don't count as a retry
-        console.log("Auth state not rehydrated yet, waiting to fetch debts");
-        return;
-      }
-      
-      // Auth state is rehydrated but no user, clear data
-      setDebts([]);
-      setLoading(false);
-      return;
-    }
+	const fetchDebts = useCallback(async () => {
+		if (!rehydrated) return;
 
-    setLoading(true);
-    setError(null);
+		try {
+			setLoading(true);
+			setError(null);
 
-    try {
-      console.log("Fetching debts for user:", user.id);
-      const debtsData = await DatabaseService.getUserDebtsWithPayments(user.id);
-      console.log("Fetched debts:", debtsData.length);
-      setDebts(debtsData);
-      // Reset retry count on success
-      retryCount.current = 0;
-    } catch (err) {
-      console.error("Error fetching debts:", err);
-      setError(err instanceof Error ? err.message : "Failed to fetch debts");
-      
-      // Implement retry mechanism
-      if (retryCount.current < maxRetries) {
-        retryCount.current += 1;
-        console.log(`Retrying debts fetch (${retryCount.current}/${maxRetries})...`);
-        
-        // Clear any existing timeout
-        if (retryTimeoutRef.current) {
-          clearTimeout(retryTimeoutRef.current);
-        }
-        
-        // Retry with exponential backoff
-        const retryDelay = Math.min(1000 * Math.pow(2, retryCount.current), 10000);
-        retryTimeoutRef.current = setTimeout(() => {
-          fetchDebts();
-        }, retryDelay);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.id, rehydrated]);
+			// First try to get data from local database
+			const localDebts = await localDatabase.getDebts();
+			setDebts(localDebts);
 
-  const createDebt = useCallback(
-    async (debt: DebtInsert) => {
-      const newDebt = await DatabaseService.createDebt(debt);
-      if (newDebt) {
-        await fetchDebts();
-      }
-      return newDebt;
-    },
-    [fetchDebts]
-  );
+			// Then try to sync with remote
+			await syncService.sync();
 
-  const updateDebt = useCallback(
-    async (id: string, updates: DebtUpdate) => {
-      const updatedDebt = await DatabaseService.updateDebt(id, updates);
-      if (updatedDebt) {
-        await fetchDebts();
-      }
-      return updatedDebt;
-    },
-    [fetchDebts]
-  );
+			// Fetch updated data after sync
+			const updatedDebts = await localDatabase.getDebts();
+			setDebts(updatedDebts);
+		} catch (err) {
+			setError(
+				err instanceof Error ? err : new Error("Failed to fetch debts")
+			);
+			console.error("Error fetching debts:", err);
+		} finally {
+			setLoading(false);
+		}
+	}, [rehydrated]);
 
-  const deleteDebt = useCallback(
-    async (id: string) => {
-      const success = await DatabaseService.deleteDebt(id);
-      if (success) {
-        await fetchDebts();
-      }
-      return success;
-    },
-    [fetchDebts]
-  );
+	const addDebt = useCallback(async (debt: DebtInsert) => {
+		try {
+			// Add to local database first
+			await localDatabase.addDebt({
+				...debt,
+				category: debt.category ?? "OTHER",
+				created_at: debt.created_at ?? new Date().toISOString(),
+				end_date: debt.end_date ?? null,
+				id: debt.id ?? crypto.randomUUID(),
+				is_paid: debt.is_paid ?? false,
+				term_in_months: debt.term_in_months ?? 60,
+				updated_at: debt.updated_at ?? new Date().toISOString(),
+			});
 
-  const markDebtAsPaid = useCallback(
-    async (id: string) => {
-      const updatedDebt = await DatabaseService.markDebtAsPaid(id);
-      if (updatedDebt) {
-        await fetchDebts();
-      }
-      return updatedDebt;
-    },
-    [fetchDebts]
-  );
+			// Update local state
+			const updatedDebts = await localDatabase.getDebts();
+			setDebts(updatedDebts);
 
-  useEffect(() => {
-    // Only fetch data if auth state is rehydrated
-    if (rehydrated) {
-      fetchDebts();
-    }
-  }, [fetchDebts, rehydrated]);
-  
-  // Cleanup function to clear any pending retries
-  useEffect(() => {
-    return () => {
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
-      }
-    };
-  }, []);
+			// Trigger sync
+			await syncService.sync();
+		} catch (err) {
+			console.error("Error adding debt:", err);
+			throw err;
+		}
+	}, []);
 
-  return {
-    debts,
-    loading,
-    error,
-    refetch: fetchDebts,
-    createDebt,
-    updateDebt,
-    deleteDebt,
-    markDebtAsPaid,
-    isReady: rehydrated && (!loading || retryCount.current > 0),
-  };
+	const updateDebt = useCallback(async (debt: Debt) => {
+		try {
+			// Update local database first
+			await localDatabase.updateDebt(debt);
+
+			// Update local state
+			const updatedDebts = await localDatabase.getDebts();
+			setDebts(updatedDebts);
+
+			// Trigger sync
+			await syncService.sync();
+		} catch (err) {
+			console.error("Error updating debt:", err);
+			throw err;
+		}
+	}, []);
+
+	const deleteDebt = useCallback(async (id: string) => {
+		try {
+			// Delete from local database first
+			await localDatabase.deleteDebt(id);
+
+			// Update local state
+			const updatedDebts = await localDatabase.getDebts();
+			setDebts(updatedDebts);
+
+			// Try to delete from remote if online
+			try {
+				await supabase.from("debts").delete().eq("id", id);
+			} catch (err) {
+				console.error("Error deleting debt from remote:", err);
+			}
+		} catch (err) {
+			console.error("Error deleting debt:", err);
+			throw err;
+		}
+	}, []);
+
+	useEffect(() => {
+		fetchDebts();
+	}, [fetchDebts]);
+
+	return {
+		debts,
+		loading,
+		error,
+		refetch: fetchDebts,
+		addDebt,
+		updateDebt,
+		deleteDebt,
+	};
 }
