@@ -42,6 +42,7 @@ export type Database = {
           id: string
           is_extra_payment: boolean | null
           payment_date: string
+          type: Database["public"]["Enums"]["debt_payment_type"]
           updated_at: string
         }
         Insert: {
@@ -51,6 +52,7 @@ export type Database = {
           id?: string
           is_extra_payment?: boolean | null
           payment_date: string
+          type?: Database["public"]["Enums"]["debt_payment_type"]
           updated_at?: string
         }
         Update: {
@@ -60,6 +62,7 @@ export type Database = {
           id?: string
           is_extra_payment?: boolean | null
           payment_date?: string
+          type?: Database["public"]["Enums"]["debt_payment_type"]
           updated_at?: string
         }
         Relationships: [
@@ -238,6 +241,7 @@ export type Database = {
         | "OVERDRAFT"
         | "SUBSCRIPTION"
         | "OTHER"
+      debt_payment_type: "payment" | "charge" | "adjustment"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -364,6 +368,7 @@ export const Constants = {
         "SUBSCRIPTION",
         "OTHER",
       ],
+      debt_payment_type: ["payment", "charge", "adjustment"],
     },
   },
 } as const

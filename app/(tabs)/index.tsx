@@ -1,378 +1,450 @@
-import { AddDebtModal } from "@/components/debt-planner/AddDebtModal";
-import { AddExpenseModal } from "@/components/debt-planner/AddExpenseModal";
-import { DebtList } from "@/components/debt-planner/DebtList";
-import { EditDebtModal } from "@/components/debt-planner/EditDebtModal";
-import { ExpenseList } from "@/components/debt-planner/ExpenseList";
-import { Loading } from "@/components/ui/Loading";
-import { SummaryCard } from "@/components/ui/SummaryCard";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { useDebts } from "@/hooks/useDebt";
-import { useExpenses } from "@/hooks/useExpense";
-import { useMonthlyIncome } from "@/hooks/useMonthlyIncome";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { useAuthStore } from "@/store/auth";
-import { DebtCategory, DebtInsert, ExpenseInsert } from "@/types/STT";
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { AddDebtModal } from '@/components/debt-planner/AddDebtModal';
+import { AddExpenseModal } from '@/components/debt-planner/AddExpenseModal';
+import { AddPaymentModal } from '@/components/debt-planner/AddPaymentModal';
+import { DebtList } from '@/components/debt-planner/DebtList';
+import { EditDebtModal } from '@/components/debt-planner/EditDebtModal';
+import { ExpenseList } from '@/components/debt-planner/ExpenseList';
+import { Loading } from '@/components/ui/Loading';
+import { SummaryCard } from '@/components/ui/SummaryCard';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { useDebts } from '@/hooks/useDebt';
+import { useDebtPayments } from '@/hooks/useDebtPayment';
+import { useExpenses } from '@/hooks/useExpense';
+import { useMonthlyIncome } from '@/hooks/useMonthlyIncome';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useAuthStore } from '@/store/auth';
+import { DebtCategory, DebtInsert, DebtWithPayments, ExpenseInsert } from '@/types/STT';
+import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
-  // Use database hooks instead of mock data
-  const {
-    currentIncome,
-    createIncome,
-    loading: incomeLoading,
-  } = useMonthlyIncome();
-  const {
-    debts,
-    createDebt,
-    updateDebt,
-    deleteDebt,
-    loading: debtsLoading,
-  } = useDebts();
-  const {
-    expenses,
-    createExpense,
-    updateExpense,
-    deleteExpense,
-    loading: expensesLoading,
-  } = useExpenses();
-  const { user, rehydrated } = useAuthStore();
+	// Use database hooks instead of mock data
+	const { currentIncome, createIncome, loading: incomeLoading } = useMonthlyIncome();
+	const { debts, createDebt, updateDebt, deleteDebt, loading: debtsLoading } = useDebts();
+	const { expenses, createExpense, updateExpense, deleteExpense, loading: expensesLoading } = useExpenses();
+	const { user, rehydrated } = useAuthStore();
 
-  // Theme hooks
-  const colorScheme = useColorScheme();
-  const backgroundColor = useThemeColor({}, "background");
-  const textColor = useThemeColor({}, "text");
-  const tintColor = useThemeColor({}, "tint");
-  const iconColor = useThemeColor({}, "icon");
-  const isDark = colorScheme === "dark";
+	// Theme hooks
+	const colorScheme = useColorScheme();
+	const backgroundColor = useThemeColor({}, 'background');
+	const textColor = useThemeColor({}, 'text');
+	const tintColor = useThemeColor({}, 'tint');
+	const iconColor = useThemeColor({}, 'icon');
+	const isDark = colorScheme === 'dark';
 
-  // Local UI state
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [selectedDebt, setSelectedDebt] = useState<any | null>(null);
-  const [newDebt, setNewDebt] = useState({
-    name: "",
-    amount: "",
-    interest_rate: "",
-    minimum_payment: "",
-    term_in_months: "60", // Default to 5 years
-    category: "OTHER" as DebtCategory,
-  });
+	// Local UI state
+	const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+	const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+	const [selectedDebt, setSelectedDebt] = useState<any | null>(null);
+	const [newDebt, setNewDebt] = useState({
+		name: '',
+		amount: '',
+		interest_rate: '',
+		minimum_payment: '',
+		term_in_months: '60', // Default to 5 years
+		category: 'OTHER' as DebtCategory,
+	});
 
-  // Expense modal state
-  const [isAddExpenseModalVisible, setIsAddExpenseModalVisible] =
-    useState(false);
-  const [isEditExpenseModalVisible, setIsEditExpenseModalVisible] =
-    useState(false);
-  const [selectedExpense, setSelectedExpense] = useState<any | null>(null);
+	// Expense modal state
+	const [isAddExpenseModalVisible, setIsAddExpenseModalVisible] = useState(false);
+	const [isEditExpenseModalVisible, setIsEditExpenseModalVisible] = useState(false);
+	const [selectedExpense, setSelectedExpense] = useState<any | null>(null);
 
-  // Check if auth state is rehydrated
-  // Show loading while auth state is being rehydrated or data is being fetched
-  if (!rehydrated || (incomeLoading || debtsLoading || expensesLoading)) {
-    return <Loading message={!rehydrated ? 'Restoring session...' : 'Loading data...'} />;
-  }
+	// Payment modal state
+	const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
+	const [selectedDebtForPayment, setSelectedDebtForPayment] = useState<DebtWithPayments | null>(null);
 
-  // Calculate totals from real data
-  const totalDebt = debts.reduce(
-    (sum, debt) => sum + (debt.remaining_balance || debt.amount),
-    0
-  );
-  const totalMonthlyPayments = debts.reduce(
-    (sum, debt) => sum + debt.minimum_payment,
-    0
-  );
-  const totalExpenses = expenses.reduce(
-    (sum, expense) => sum + expense.amount,
-    0
-  );
-  const totalMonthlyObligations = totalMonthlyPayments + totalExpenses;
+	// Add Charge modal state
+	const [isChargeModalVisible, setIsChargeModalVisible] = useState(false);
+	const [selectedDebtForCharge, setSelectedDebtForCharge] = useState<DebtWithPayments | null>(null);
 
-  const handleAddDebt = async (debt: typeof newDebt) => {
-    const debtData: DebtInsert = {
-      name: debt.name,
-      amount: Number(debt.amount),
-      interest_rate: Number(debt.interest_rate),
-      minimum_payment: Number(debt.minimum_payment),
-      start_date: new Date().toISOString().split("T")[0],
-      term_in_months: Number(debt.term_in_months),
-      category: debt.category,
-      is_paid: false,
-      user_id: user.id,
-    };
+	// Payment history modal state
+	const [isHistoryModalVisible, setIsHistoryModalVisible] = useState(false);
+	const [selectedDebtForHistory, setSelectedDebtForHistory] = useState<DebtWithPayments | null>(null);
 
-    const success = await createDebt(debtData);
-    if (success) {
-      setNewDebt({
-        name: "",
-        amount: "",
-        interest_rate: "",
-        minimum_payment: "",
-        term_in_months: "60",
-        category: "OTHER" as DebtCategory,
-      });
-      setIsAddModalVisible(false);
-    }
-  };
+	const { createPayment } = useDebtPayments(selectedDebtForPayment?.id || '');
+	const { payments: historyPayments, loading: historyLoading } = useDebtPayments(selectedDebtForHistory?.id || '');
 
-  const handleEditDebt = (debt: any) => {
-    setSelectedDebt(debt);
-    setIsEditModalVisible(true);
-  };
+	// Check if auth state is rehydrated
+	// Show loading while auth state is being rehydrated or data is being fetched
+	if (!rehydrated || incomeLoading || debtsLoading || expensesLoading) {
+		return <Loading message={!rehydrated ? 'Restoring session...' : 'Loading data...'} />;
+	}
 
-  const handleUpdateDebt = async (debt: any) => {
-    if (!selectedDebt) return;
+	// Calculate totals from real data
+	const totalDebt = debts.reduce((sum, debt) => sum + (debt.remaining_balance || debt.amount), 0);
+	const totalMonthlyPayments = debts.reduce((sum, debt) => sum + debt.minimum_payment, 0);
+	const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+	const totalMonthlyObligations = totalMonthlyPayments + totalExpenses;
 
-    const success = await updateDebt(selectedDebt.id, {
-      name: debt.name,
-      amount: Number(debt.amount),
-      interest_rate: Number(debt.interest_rate),
-      minimum_payment: Number(debt.minimum_payment),
-      term_in_months: Number(debt.term_in_months),
-      category: debt.category,
-    });
+	const handleAddDebt = async (debt: typeof newDebt) => {
+		const debtData: DebtInsert = {
+			name: debt.name,
+			amount: Number(debt.amount),
+			interest_rate: Number(debt.interest_rate),
+			minimum_payment: Number(debt.minimum_payment),
+			start_date: new Date().toISOString().split('T')[0],
+			term_in_months: Number(debt.term_in_months),
+			category: debt.category,
+			is_paid: false,
+			user_id: user.id,
+		};
 
-    if (success) {
-      setIsEditModalVisible(false);
-      setSelectedDebt(null);
-    }
-  };
+		const success = await createDebt(debtData);
+		if (success) {
+			setNewDebt({
+				name: '',
+				amount: '',
+				interest_rate: '',
+				minimum_payment: '',
+				term_in_months: '60',
+				category: 'OTHER' as DebtCategory,
+			});
+			setIsAddModalVisible(false);
+		}
+	};
 
-  const handleDeleteDebt = async (debtId: string) => {
-    await deleteDebt(debtId);
-  };
+	const handleEditDebt = (debt: any) => {
+		setSelectedDebt(debt);
+		setIsEditModalVisible(true);
+	};
 
-  const handleAddExpense = async (expense: {
-    name: string;
-    amount: string;
-    dueDate: string;
-  }) => {
-    const expenseData: ExpenseInsert = {
-      name: expense.name,
-      amount: Number(expense.amount),
-      due_date: Number(expense.dueDate),
-      user_id: user?.id,
-    };
+	const handleUpdateDebt = async (debt: any) => {
+		if (!selectedDebt) return;
 
-    const success = await createExpense(expenseData);
-    if (success) {
-      setIsAddExpenseModalVisible(false);
-    }
-  };
+		const success = await updateDebt(selectedDebt.id, {
+			name: debt.name,
+			amount: Number(debt.amount),
+			interest_rate: Number(debt.interest_rate),
+			minimum_payment: Number(debt.minimum_payment),
+			term_in_months: Number(debt.term_in_months),
+			category: debt.category,
+		});
 
-  const handleEditExpense = (expense: any) => {
-    setSelectedExpense(expense);
-    setIsEditExpenseModalVisible(true);
-  };
+		if (success) {
+			setIsEditModalVisible(false);
+			setSelectedDebt(null);
+		}
+	};
 
-  const handleUpdateExpense = async (expense: {
-    name: string;
-    amount: string;
-    dueDate: string;
-  }) => {
-    if (!selectedExpense) return;
+	const handleDeleteDebt = async (debtId: string) => {
+		await deleteDebt(debtId);
+	};
 
-    const success = await updateExpense(selectedExpense.id, {
-      name: expense.name,
-      amount: Number(expense.amount),
-      due_date: Number(expense.dueDate),
-    });
+	const handleAddExpense = async (expense: { name: string; amount: string; dueDate: string }) => {
+		const expenseData: ExpenseInsert = {
+			name: expense.name,
+			amount: Number(expense.amount),
+			due_date: Number(expense.dueDate),
+			user_id: user?.id,
+		};
 
-    if (success) {
-      setIsEditExpenseModalVisible(false);
-      setSelectedExpense(null);
-    }
-  };
+		const success = await createExpense(expenseData);
+		if (success) {
+			setIsAddExpenseModalVisible(false);
+		}
+	};
 
-  const handleDeleteExpense = async (expenseId: string) => {
-    await deleteExpense(expenseId);
-  };
+	const handleEditExpense = (expense: any) => {
+		setSelectedExpense(expense);
+		setIsEditExpenseModalVisible(true);
+	};
 
-  const handleIncomeChange = async (income: string) => {
-    // Only save if income is a valid number and greater than 0
-    const incomeNumber = Number(income);
-    if (income && !isNaN(incomeNumber) && incomeNumber > 0) {
-      try {
-        await createIncome({
-          amount: incomeNumber,
-          start_date: new Date().toISOString().split("T")[0],
-          user_id: user.id,
-        });
-        console.log("Income saved:", incomeNumber);
-      } catch (error) {
-        console.error("Failed to save income:", error);
-      }
-    }
-  };
+	const handleUpdateExpense = async (expense: { name: string; amount: string; dueDate: string }) => {
+		if (!selectedExpense) return;
 
-  const handleSaveIncome = async (income: string) => {
-    if (!income) return;
+		const success = await updateExpense(selectedExpense.id, {
+			name: expense.name,
+			amount: Number(expense.amount),
+			due_date: Number(expense.dueDate),
+		});
 
-    await createIncome({
-      amount: Number(income),
-      start_date: new Date().toISOString().split("T")[0],
-      user_id: user?.id,
-    });
-  };
+		if (success) {
+			setIsEditExpenseModalVisible(false);
+			setSelectedExpense(null);
+		}
+	};
 
-  return (
-    <>
-      <StatusBar style={isDark ? "light" : "dark"} />
-      <ScrollView
-        style={[styles.container, { backgroundColor }]}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={[styles.header, { backgroundColor }]}>
-          <Text style={[styles.title, { color: textColor }]}>Debt Planner</Text>
-          <Text style={[styles.subtitle, { color: iconColor }]}>
-            Take control of your financial future
-          </Text>
-        </View>
+	const handleDeleteExpense = async (expenseId: string) => {
+		await deleteExpense(expenseId);
+	};
 
-        <View style={styles.summarySection}>
-          <Text style={[styles.sectionTitle, { color: textColor }]}>
-            Financial Overview
-          </Text>
-          <View style={styles.summaryContainer}>
-            <SummaryCard title="Total Debt" amount={totalDebt} />
-            <SummaryCard
-              title="Total Outgoings"
-              amount={totalMonthlyObligations}
-              subtitle="Monthly"
-              isNegative={true}
-            />
-          </View>
+	const handleIncomeChange = async (income: string) => {
+		// Only save if income is a valid number and greater than 0
+		const incomeNumber = Number(income);
+		if (income && !isNaN(incomeNumber) && incomeNumber > 0) {
+			try {
+				await createIncome({
+					amount: incomeNumber,
+					start_date: new Date().toISOString().split('T')[0],
+					user_id: user.id,
+				});
+				console.log('Income saved:', incomeNumber);
+			} catch (error) {
+				console.error('Failed to save income:', error);
+			}
+		}
+	};
 
-          <View style={styles.summaryContainer}>
-            <SummaryCard
-              title="Expenses"
-              amount={totalExpenses}
-              subtitle="Monthly"
-            />
+	const handleSaveIncome = async (income: string) => {
+		if (!income) return;
 
-            <SummaryCard
-              title="Debt Payments"
-              amount={totalMonthlyPayments}
-              subtitle="Monthly"
-            />
-          </View>
-        </View>
+		await createIncome({
+			amount: Number(income),
+			start_date: new Date().toISOString().split('T')[0],
+			user_id: user?.id,
+		});
+	};
 
-        <View style={styles.section}>
-          <ExpenseList
-            expenses={expenses}
-            onAddExpense={() => setIsAddExpenseModalVisible(true)}
-            onEditExpense={handleEditExpense}
-            onDeleteExpense={handleDeleteExpense}
-          />
-        </View>
+	const handleMakePayment = (debt: DebtWithPayments) => {
+		setSelectedDebtForPayment(debt);
+		setIsPaymentModalVisible(true);
+	};
 
-        <View style={styles.section}>
-          <DebtList
-            debts={debts}
-            onAddDebt={() => setIsAddModalVisible(true)}
-            onEditDebt={handleEditDebt}
-            onDeleteDebt={handleDeleteDebt}
-          />
-        </View>
+	const handleShowHistory = (debt: DebtWithPayments) => {
+		setSelectedDebtForHistory(debt);
+		setIsHistoryModalVisible(true);
+	};
 
-        <AddDebtModal
-          visible={isAddModalVisible}
-          onClose={() => setIsAddModalVisible(false)}
-          onAdd={handleAddDebt}
-          newDebt={newDebt}
-          onNewDebtChange={setNewDebt}
-        />
+	const handleAddPayment = async (amount: string, date: string) => {
+		if (!selectedDebtForPayment) return;
+		await createPayment({
+			debt_id: selectedDebtForPayment.id,
+			amount: Number(amount),
+			payment_date: date,
+		});
+		setIsPaymentModalVisible(false);
+		setSelectedDebtForPayment(null);
+	};
 
-        <EditDebtModal
-          visible={isEditModalVisible}
-          onClose={() => setIsEditModalVisible(false)}
-          onSave={handleUpdateDebt}
-          debt={selectedDebt}
-        />
+	const handleAddCharge = (debt: DebtWithPayments) => {
+		setSelectedDebtForCharge(debt);
+		setIsChargeModalVisible(true);
+	};
 
-        <AddExpenseModal
-          visible={isAddExpenseModalVisible}
-          onClose={() => setIsAddExpenseModalVisible(false)}
-          onAdd={handleAddExpense}
-        />
+	const handleAddChargeSubmit = async (amount: string, date: string) => {
+		if (!selectedDebtForCharge) return;
+		await createPayment({
+			debt_id: selectedDebtForCharge.id,
+			amount: Number(amount),
+			payment_date: date,
+			type: 'charge',
+		});
+		setIsChargeModalVisible(false);
+		setSelectedDebtForCharge(null);
+	};
 
-        <AddExpenseModal
-          visible={isEditExpenseModalVisible}
-          onClose={() => setIsEditExpenseModalVisible(false)}
-          onAdd={handleUpdateExpense}
-          expense={selectedExpense}
-        />
-      </ScrollView>
-    </>
-  );
+	return (
+		<SafeAreaView style={{ flex: 1 }}>
+			<StatusBar style={isDark ? 'light' : 'dark'} />
+			<ScrollView style={[styles.container, { backgroundColor }]} showsVerticalScrollIndicator={false}>
+				<View style={[styles.header, { backgroundColor }]}>
+					<Text style={[styles.title, { color: textColor }]}>Debt Planner</Text>
+					<Text style={[styles.subtitle, { color: iconColor }]}>Take control of your financial future</Text>
+				</View>
+
+				<View style={styles.summarySection}>
+					<Text style={[styles.sectionTitle, { color: textColor }]}>Financial Overview</Text>
+					<View style={styles.summaryContainer}>
+						<SummaryCard title="Total Debt" amount={totalDebt} />
+						<SummaryCard title="Total Outgoings" amount={totalMonthlyObligations} subtitle="Monthly" isNegative={true} />
+					</View>
+
+					<View style={styles.summaryContainer}>
+						<SummaryCard title="Expenses" amount={totalExpenses} subtitle="Monthly" />
+
+						<SummaryCard title="Debt Payments" amount={totalMonthlyPayments} subtitle="Monthly" />
+					</View>
+				</View>
+
+				<View style={styles.section}>
+					<ExpenseList
+						expenses={expenses}
+						onAddExpense={() => setIsAddExpenseModalVisible(true)}
+						onEditExpense={handleEditExpense}
+						onDeleteExpense={handleDeleteExpense}
+					/>
+				</View>
+
+				<View style={styles.section}>
+					<DebtList
+						debts={debts}
+						onAddDebt={() => setIsAddModalVisible(true)}
+						onEditDebt={handleEditDebt}
+						onDeleteDebt={handleDeleteDebt}
+						onMakePayment={handleMakePayment}
+						onShowHistory={handleShowHistory}
+						onAddCharge={handleAddCharge}
+					/>
+				</View>
+
+				<AddDebtModal
+					visible={isAddModalVisible}
+					onClose={() => setIsAddModalVisible(false)}
+					onAdd={handleAddDebt}
+					newDebt={newDebt}
+					onNewDebtChange={setNewDebt}
+				/>
+
+				<EditDebtModal visible={isEditModalVisible} onClose={() => setIsEditModalVisible(false)} onSave={handleUpdateDebt} debt={selectedDebt} />
+
+				<AddExpenseModal visible={isAddExpenseModalVisible} onClose={() => setIsAddExpenseModalVisible(false)} onAdd={handleAddExpense} />
+
+				<AddExpenseModal
+					visible={isEditExpenseModalVisible}
+					onClose={() => setIsEditExpenseModalVisible(false)}
+					onAdd={handleUpdateExpense}
+					expense={selectedExpense}
+				/>
+
+				<AddPaymentModal
+					visible={isPaymentModalVisible}
+					onClose={() => {
+						setIsPaymentModalVisible(false);
+						setSelectedDebtForPayment(null);
+					}}
+					onAdd={handleAddPayment}
+					debt={selectedDebtForPayment}
+				/>
+
+				{/* Add Charge Modal (reuse AddPaymentModal with type 'charge') */}
+				<AddPaymentModal
+					visible={isChargeModalVisible}
+					onClose={() => {
+						setIsChargeModalVisible(false);
+						setSelectedDebtForCharge(null);
+					}}
+					onAdd={handleAddChargeSubmit}
+					debt={selectedDebtForCharge}
+				/>
+
+				{/* Payment History Modal */}
+				{isHistoryModalVisible && selectedDebtForHistory && (
+					<Modal
+						visible={isHistoryModalVisible}
+						animationType="slide"
+						transparent={true}
+						onRequestClose={() => {
+							setIsHistoryModalVisible(false);
+							setSelectedDebtForHistory(null);
+						}}
+					>
+						<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+							<View style={{ backgroundColor: '#fff', borderRadius: 12, padding: 24, width: '90%', maxWidth: 400 }}>
+								<Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>Payment History</Text>
+								<Text style={{ fontSize: 16, marginBottom: 8 }}>Debt: {selectedDebtForHistory.name}</Text>
+								{historyLoading ? (
+									<Text>Loading...</Text>
+								) : historyPayments.length === 0 ? (
+									<Text>No payments or charges found.</Text>
+								) : (
+									historyPayments.map((payment) => {
+										let typeLabel = '';
+										let color = '#2D3748';
+										if (payment.type === 'payment') {
+											typeLabel = 'Payment';
+											color = '#38A169'; // green
+										} else if (payment.type === 'charge') {
+											typeLabel = 'Charge';
+											color = '#DD6B20'; // orange
+										} else if (payment.type === 'adjustment') {
+											typeLabel = 'Adjustment';
+											color = '#3182CE'; // blue
+										}
+										return (
+											<View key={payment.id} style={{ marginBottom: 12, padding: 8, borderRadius: 6, backgroundColor: '#F7FAFC' }}>
+												<Text style={{ color, fontWeight: 'bold' }}>{typeLabel}</Text>
+												<Text>Amount: ${payment.amount}</Text>
+												<Text>Date: {payment.payment_date}</Text>
+											</View>
+										);
+									})
+								)}
+								<TouchableOpacity
+									style={{ marginTop: 16, alignSelf: 'flex-end', padding: 10, backgroundColor: '#A0AEC0', borderRadius: 8 }}
+									onPress={() => {
+										setIsHistoryModalVisible(false);
+										setSelectedDebtForHistory(null);
+									}}
+								>
+									<Text style={{ color: '#fff', fontWeight: 'bold' }}>Close</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+					</Modal>
+				)}
+			</ScrollView>
+		</SafeAreaView>
+	);
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginBottom: 60,
-  },
-  header: {
-    padding: 24,
-    paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#2d3748",
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    opacity: 0.8,
-  },
-  section: {
-    marginBottom: 24,
-    paddingHorizontal: 16,
-  },
-  summarySection: {
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 12,
-    paddingHorizontal: 16,
-  },
-  summaryContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    gap: 16,
-    marginBottom: 16,
-  },
-  summaryCard: {
-    flex: 1,
-    padding: 20,
-    borderRadius: 12,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  summaryTitle: {
-    fontSize: 14,
-    marginBottom: 12,
-    textAlign: "center",
-    fontWeight: "500",
-  },
-  summaryAmount: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  summarySubtitle: {
-    fontSize: 12,
-    marginTop: 4,
-    opacity: 0.8,
-  },
+	container: {
+		flex: 1,
+		marginBottom: 60,
+	},
+	header: {
+		padding: 24,
+		paddingBottom: 20,
+		borderBottomWidth: 1,
+		borderBottomColor: '#2d3748',
+		marginBottom: 16,
+	},
+	title: {
+		fontSize: 32,
+		fontWeight: 'bold',
+		marginBottom: 8,
+	},
+	subtitle: {
+		fontSize: 16,
+		opacity: 0.8,
+	},
+	section: {
+		marginBottom: 24,
+		paddingHorizontal: 16,
+	},
+	summarySection: {
+		marginBottom: 16,
+	},
+	sectionTitle: {
+		fontSize: 20,
+		fontWeight: 'bold',
+		marginBottom: 12,
+		paddingHorizontal: 16,
+	},
+	summaryContainer: {
+		flexDirection: 'row',
+		paddingHorizontal: 16,
+		paddingVertical: 8,
+		gap: 16,
+		marginBottom: 16,
+	},
+	summaryCard: {
+		flex: 1,
+		padding: 20,
+		borderRadius: 12,
+		alignItems: 'center',
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 3,
+	},
+	summaryTitle: {
+		fontSize: 14,
+		marginBottom: 12,
+		textAlign: 'center',
+		fontWeight: '500',
+	},
+	summaryAmount: {
+		fontSize: 24,
+		fontWeight: 'bold',
+	},
+	summarySubtitle: {
+		fontSize: 12,
+		marginTop: 4,
+		opacity: 0.8,
+	},
 });

@@ -1,27 +1,28 @@
-import { Enums, Tables, TablesInsert, TablesUpdate } from "./supabase";
+import { Enums, Tables, TablesInsert, TablesUpdate } from './supabase';
 
-export type Debt = Tables<"debts">;
-export type DebtPayment = Tables<"debt_payments">;
-export type MonthlyIncome = Tables<"monthly_income">;
-export type Profile = Tables<"profiles">;
-export type Expense = Tables<"expenses">;
+export type Debt = Tables<'debts'>;
+export type DebtPayment = Tables<'debt_payments'>;
+export type MonthlyIncome = Tables<'monthly_income'>;
+export type Profile = Tables<'profiles'>;
+export type Expense = Tables<'expenses'>;
 
 // update types
-export type DebtUpdate = TablesUpdate<"debts">;
-export type DebtPaymentUpdate = TablesUpdate<"debt_payments">;
-export type MonthlyIncomeUpdate = TablesUpdate<"monthly_income">;
-export type ProfileUpdate = TablesUpdate<"profiles">;
-export type ExpenseUpdate = TablesUpdate<"expenses">;
+export type DebtUpdate = TablesUpdate<'debts'>;
+export type DebtPaymentUpdate = TablesUpdate<'debt_payments'>;
+export type MonthlyIncomeUpdate = TablesUpdate<'monthly_income'>;
+export type ProfileUpdate = TablesUpdate<'profiles'>;
+export type ExpenseUpdate = TablesUpdate<'expenses'>;
 
 // insert types (custom types that exclude user_id since it's handled automatically)
-export type DebtInsert = TablesInsert<"debts">;
-export type DebtPaymentInsert = TablesInsert<"debt_payments">;
-export type MonthlyIncomeInsert = TablesInsert<"monthly_income">;
-export type ExpenseInsert = TablesInsert<"expenses">;
-export type ProfileInsert = TablesInsert<"profiles">;
+export type DebtInsert = TablesInsert<'debts'>;
+export type DebtPaymentInsert = TablesInsert<'debt_payments'>;
+export type MonthlyIncomeInsert = TablesInsert<'monthly_income'>;
+export type ExpenseInsert = TablesInsert<'expenses'>;
+export type ProfileInsert = TablesInsert<'profiles'>;
 
 // enums
-export type DebtCategory = Enums<"debt_category">;
+export type DebtCategory = Enums<'debt_category'>;
+export type DebtPaymentType = Enums<'debt_payment_type'>;
 
 // Extended types with relationships
 export interface DebtWithPayments extends Debt {
@@ -41,4 +42,4 @@ export interface UserDebtSummary {
 	total_paid: number;
 }
 
-export type PayoffStrategy = "snowball" | "avalanche" | "minimum";
+export type PayoffStrategy = 'snowball' | 'avalanche' | 'minimum';
