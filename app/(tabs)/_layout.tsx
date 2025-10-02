@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/store/auth';
-import { Redirect, Slot, Tabs, useRouter } from 'expo-router';
+import { Redirect, Slot, Stack, Tabs, useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 import { Platform, StatusBar } from 'react-native';
 
@@ -33,54 +33,42 @@ export default function TabLayout() {
 	if (!user) return null;
 
 	return (
-		<Slot />
-		// <Tabs
-		// 	screenOptions={{
-		// 		tabBarActiveTintColor: tintColor,
-		// 		tabBarInactiveTintColor: iconColor,
-		// 		tabBarStyle: Platform.select({
-		// 			ios: {
-		// 				backgroundColor: backgroundColor,
-		// 				borderTopColor: isDark ? '#4a5568' : '#ddd',
-		// 				position: 'absolute',
-		// 			},
-		// 			default: {
-		// 				backgroundColor: backgroundColor,
-		// 				borderTopColor: isDark ? '#4a5568' : '#ddd',
-		// 			},
-		// 		}),
-		// 		headerStyle: {
-		// 			backgroundColor: backgroundColor,
-		// 		},
-		// 		headerTitleStyle: {
-		// 			color: textColor,
-		// 		},
-		// 		headerShown: false,
-		// 		tabBarButton: HapticTab,
-		// 		tabBarBackground: TabBarBackground,
-		// 	}}
-		// >
-		// 	<Tabs.Screen
-		// 		name="index"
-		// 		options={{
-		// 			title: 'Debts',
-		// 			tabBarIcon: ({ color }) => <IconSymbol name="creditcard" size={24} color={color} />,
-		// 		}}
-		// 	/>
-		// 	<Tabs.Screen
-		// 		name="strategy"
-		// 		options={{
-		// 			title: 'Strategy',
-		// 			tabBarIcon: ({ color }) => <IconSymbol name="chart.bar" size={24} color={color} />,
-		// 		}}
-		// 	/>
-		// 	<Tabs.Screen
-		// 		name="profile"
-		// 		options={{
-		// 			title: 'Profile',
-		// 			tabBarIcon: ({ color }) => <IconSymbol name="person" size={24} color={color} />,
-		// 		}}
-		// 	/>
-		// </Tabs>
+		// <Slot />
+		<Stack
+			screenOptions={{
+				...(process.env.EXPO_OS !== 'ios'
+					? {}
+					: {
+							headerLargeTitle: true,
+							headerTransparent: true,
+							headerBlurEffect: 'systemChromeMaterial',
+							headerLargeTitleShadowVisible: false,
+							headerShadowVisible: true,
+							headerLargeStyle: {
+								// NEW: Make the large title transparent to match the background.
+								backgroundColor: 'transparent',
+							},
+						}),
+			}}
+		>
+			<Stack.Screen
+				name="index"
+				options={{
+					title: 'Overview',
+				}}
+			/>
+			<Stack.Screen name="strategy" />
+			<Stack.Screen
+				name="profile"
+				options={{
+					presentation: 'formSheet',
+					headerTitle: 'Settings',
+					sheetGrabberVisible: false,
+					headerLargeTitle: false,
+					headerShown: true,
+					sheetAllowedDetents: [0.55],
+				}}
+			/>
+		</Stack>
 	);
 }
