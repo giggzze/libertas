@@ -1,13 +1,12 @@
-import { View, Text } from 'react-native';
-
 import Button from '@/components/ui/Button';
 import TextInput from '@/components/ui/TextInput';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { BodyScrollView } from '@/components/ui/BodyScrollView';
-import { useSignIn, useSignUp } from '@clerk/clerk-expo';
-import { ThemedText } from '@/components/ThemedText';
+import { useSignUp } from '@clerk/clerk-expo';
+import Toast from '@/components/ui/Toast';
 import { ClerkAPIError } from '@clerk/types';
+import { set } from 'date-fns';
 
 export default function SignUpScreen() {
 	const { signUp, setActive, isLoaded } = useSignUp();
@@ -21,6 +20,18 @@ export default function SignUpScreen() {
 	const [pendingVerification, setPendingVerification] = useState(false);
 	const [code, setCode] = useState('');
 
+	const [toastMessage, setToastMessage] = useState('');
+	const [toastVisible, setToastVisible] = useState(false);
+
+	const showToast = () => {
+		setToastMessage(errors?.[0]?.longMessage || 'An error occurred during sign up. Please try again.');
+		setToastVisible(true);
+	};
+
+	const hideToast = () => {
+		setToastVisible(false);
+	};
+
 	const handleSignup = async () => {
 		if (!isLoaded) return;
 		setIsLoading(true);
@@ -33,8 +44,12 @@ export default function SignUpScreen() {
 			});
 			await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
 			setPendingVerification(true);
-		} catch (error) {
+		} catch (error: any) {
 			console.error(JSON.stringify(error, null, 2));
+			setErrors(error.errors);
+			if (error?.errors?.[0]?.longMessage) {
+				showToast();
+			}
 		} finally {
 			setIsLoading(false);
 		}
@@ -56,8 +71,12 @@ export default function SignUpScreen() {
 			} else {
 				console.log(JSON.stringify(signupAttempt, null, 2));
 			}
-		} catch (error) {
+		} catch (error: any) {
 			console.error(JSON.stringify(error, null, 2));
+			setErrors(error.errors);
+			if (error?.errors?.[0]?.longMessage) {
+				showToast();
+			}
 		} finally {
 			setIsLoading(false);
 		}
@@ -65,45 +84,41 @@ export default function SignUpScreen() {
 
 	if (pendingVerification) {
 		return (
-			<BodyScrollView contentContainerStyle={{ padding: 16 }}>
-				<TextInput
-					value={code}
-					label={`Enter the verification code we sent to ${email}`}
-					placeholder="Enter your verification code"
-					onChangeText={(code) => setCode(code)}
-				/>
-				<Button onPress={onVerifyPress} disabled={!code || isLoading} loading={isLoading}>
-					Verify
-				</Button>
-				{errors.map((error) => (
-					<ThemedText key={error.longMessage} style={{ color: 'red' }}>
-						{error.longMessage}
-					</ThemedText>
-				))}
-			</BodyScrollView>
+			<>
+				<Toast message={toastMessage} visible={toastVisible} onHide={hideToast} type="error" />
+				<BodyScrollView contentContainerStyle={{ padding: 16 }}>
+					<TextInput
+						value={code}
+						label={`Enter the verification code we sent to ${email}`}
+						placeholder="Enter your verification code"
+						onChangeText={(code) => setCode(code)}
+					/>
+					<Button onPress={onVerifyPress} disabled={!code || isLoading} loading={isLoading}>
+						Verify
+					</Button>
+				</BodyScrollView>
+			</>
 		);
 	}
 
 	return (
-		<BodyScrollView contentContainerStyle={{ padding: 16 }}>
-			<TextInput label="Email" value={email} onChangeText={setEmail} placeholder="Email" autoCapitalize="none" keyboardType="email-address" />
-			<TextInput
-				label="Password"
-				value={password}
-				onChangeText={setPassword}
-				placeholder="Password"
-				autoCapitalize="none"
-				keyboardType="visible-password"
-			/>
-			<Button onPress={handleSignup} loading={isLoading} disabled={isLoading || !email || !password}>
-				Sign up
-			</Button>
-
-			{errors.map((error) => (
-				<ThemedText key={error.message} style={{ color: 'red' }}>
-					{error.longMessage}
-				</ThemedText>
-			))}
-		</BodyScrollView>
+		<>
+			<Toast message={toastMessage} visible={toastVisible} onHide={hideToast} type="error" />
+			<BodyScrollView contentContainerStyle={{ padding: 16 }}>
+				<TextInput label="Email" value={email} onChangeText={setEmail} placeholder="Email" autoCapitalize="none" keyboardType="email-address" />
+				<TextInput
+					label="Password"
+					value={password}
+					onChangeText={setPassword}
+					secureTextEntry
+					placeholder="Password"
+					autoCapitalize="none"
+					keyboardType="visible-password"
+				/>
+				<Button onPress={handleSignup} loading={isLoading} disabled={isLoading || !email || !password}>
+					Sign up
+				</Button>
+			</BodyScrollView>
+		</>
 	);
 }
