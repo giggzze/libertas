@@ -7,37 +7,33 @@ import { useExpenses } from '@/hooks/useExpense';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Expense, ExpenseInsert } from '@/types/STT';
 import { useUser } from '@clerk/clerk-expo';
-import React, { useEffect, useState } from 'react';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function AddExpenseModal() {
 	const { user } = useUser();
+	const { createExpense } = useExpenses();
+
 	const [name, setName] = useState('');
 	const [amount, setAmount] = useState('');
 	const [dueDate, setDueDate] = useState('');
-	const { expenses, createExpense, updateExpense, deleteExpense, loading: expensesLoading } = useExpenses();
-
-	// useEffect(() => {
-	// 	if (visible && expense) {
-	// 		setName(expense.name || '');
-	// 		setAmount(expense.amount ? expense.amount.toString() : '');
-	// 		setDueDate(expense.due_date ? expense.due_date.toString() : '');
-	// 	} else if (visible && !expense) {
-	// 		setName('');
-	// 		setAmount('');
-	// 		setDueDate('');
-	// 	}
-	// }, [visible, expense]);
 
 	const handleAddExpense = async () => {
+		// Validate inputs
+		if (!name.trim() || !amount || !dueDate) {
+			return;
+		}
+
 		const expenseData: ExpenseInsert = {
-			name: name,
+			name: name.trim(),
 			amount: Number(amount),
 			due_date: Number(dueDate),
 			user_id: user!.id,
 		};
 
 		await createExpense(expenseData);
+		router.dismiss();
 	};
 
 	return (

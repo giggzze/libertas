@@ -6,65 +6,16 @@ import { formatCurrency } from '@/utils/formatCurrency';
 import { router } from 'expo-router';
 import React from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import ExpenseItem from '@/components/debt-planner/ExpenseItem';
 
 interface ExpenseListProps {
 	expenses: Expense[];
 	onEditExpense: (expense: Expense) => void;
 	onDeleteExpense: (expenseId: string) => void;
+	loading?: boolean;
 }
 
-interface ExpenseItemProps {
-	expense: Expense;
-	onEditExpense: (expense: Expense) => void;
-	onDeleteExpense: (expenseId: string) => void;
-	isDark: boolean;
-	textColor: string;
-	iconColor: string;
-}
-
-function ExpenseItem({ expense, onEditExpense, onDeleteExpense, isDark, textColor, iconColor }: ExpenseItemProps) {
-	const handleDelete = () => {
-		Alert.alert('Delete Expense', `Are you sure you want to delete ${expense.name}?`, [
-			{
-				text: 'Cancel',
-				style: 'cancel',
-			},
-			{
-				text: 'Delete',
-				style: 'destructive',
-				onPress: () => onDeleteExpense(expense.id),
-			},
-		]);
-	};
-
-	return (
-		<View
-			style={[
-				styles.expenseItem,
-				{
-					backgroundColor: isDark ? '#2d3748' : 'white',
-					borderColor: isDark ? '#4a5568' : '#ddd',
-				},
-			]}
-		>
-			<View style={styles.expenseInfo}>
-				<Text style={[styles.expenseName, { color: textColor }]}>{expense.name}</Text>
-				<Text style={[styles.expenseAmount, { color: textColor }]}>{formatCurrency(expense.amount)}</Text>
-				<Text style={[styles.dueDate, { color: iconColor }]}>Due: {expense.due_date}th</Text>
-			</View>
-			<View style={styles.actions}>
-				<TouchableOpacity style={styles.actionButton} onPress={() => onEditExpense(expense)}>
-					<IconSymbol name="pencil" size={20} color={iconColor} />
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.actionButton} onPress={handleDelete}>
-					<IconSymbol name="trash" size={20} color="#ff3b30" />
-				</TouchableOpacity>
-			</View>
-		</View>
-	);
-}
-
-export function ExpenseList({ expenses, onDeleteExpense }: ExpenseListProps) {
+export function ExpenseList({ expenses, onEditExpense, onDeleteExpense, loading }: ExpenseListProps) {
 	const colorScheme = useColorScheme();
 	const isDark = colorScheme === 'dark';
 	const textColor = useThemeColor({}, 'text');
@@ -75,19 +26,12 @@ export function ExpenseList({ expenses, onDeleteExpense }: ExpenseListProps) {
 		router.push('/(tabs)/AddExpenseModal');
 	};
 
-	const onEditExpense = (expense: Expense) => {
-		router.push('/(tabs)/edit');
-	};
-
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
 				<Text style={[styles.title, { color: textColor }]}>Monthly Expenses</Text>
 				<TouchableOpacity style={[styles.addButton, { backgroundColor: tintColor }]} onPress={onAddExpense}>
 					<IconSymbol name="plus" size={20} color={isDark ? 'black' : 'white'} />
-				</TouchableOpacity>
-				<TouchableOpacity style={[styles.addButton, { backgroundColor: tintColor }]} onPress={onEditExpense}>
-					<IconSymbol name="pencil" size={20} color={isDark ? 'black' : 'white'} />
 				</TouchableOpacity>
 			</View>
 

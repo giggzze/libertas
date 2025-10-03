@@ -3,24 +3,44 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import HeaderButton from '@/components/ui/HeaderButton';
 import { appleBlue } from '@/constants/theme';
 import { useUser } from '@clerk/clerk-expo';
-import { router, Stack } from 'expo-router';
-import React from 'react';
+import { router, Stack, useFocusEffect } from 'expo-router';
+import React, { useEffect, useCallback } from 'react';
 import { Pressable, StyleSheet, View, Text, Button } from 'react-native';
 import { SummaryCard } from '@/components/ui/SummaryCard';
 import { ExpenseList } from '@/components/debt-planner/ExpenseList';
 import { useExpenses } from '@/hooks/useExpense';
 
 export default function HomeScreen() {
-	const { expenses, createExpense, updateExpense, deleteExpense, loading: expensesLoading } = useExpenses();
+	const { expenses, createExpense, updateExpense, deleteExpense, loading: expensesLoading, refetch } = useExpenses();
 	const { user } = useUser();
 	const totalDebt = 10;
 	const totalMonthlyObligations = 20;
 	const totalExpenses = 30;
 	const totalMonthlyPayments = 40;
 
-	const setIsAddExpenseModalVisible = () => {};
-	const handleEditExpense = () => {};
-	const handleDeleteExpense = () => {};
+	// Refetch expenses when screen comes back into focus (e.g., after modal closes)
+	useFocusEffect(
+		useCallback(() => {
+			console.log('refetching expenses');
+			refetch();
+		}, [refetch]),
+	);
+
+	const handleEditExpense = (expense: any) => {
+		// Navigate to edit screen with expense data
+		router.push({
+			pathname: '/(tabs)/edit',
+			params: { expenseId: expense.id },
+		});
+	};
+
+	const handleDeleteExpense = async (expenseId: string) => {
+		await deleteExpense(expenseId);
+	};
+
+	useEffect(() => {
+		console.log(expenses.length, 'expenses count exHome');
+	}, [expenses]);
 
 	return (
 		<>
@@ -45,7 +65,7 @@ export default function HomeScreen() {
 				</View>
 
 				<View style={styles.section}>
-					<ExpenseList expenses={expenses} onEditExpense={handleEditExpense} onDeleteExpense={handleDeleteExpense} />
+					<ExpenseList expenses={expenses} onEditExpense={handleEditExpense} onDeleteExpense={handleDeleteExpense} loading={expensesLoading} />
 				</View>
 			</BodyScrollView>
 		</>
