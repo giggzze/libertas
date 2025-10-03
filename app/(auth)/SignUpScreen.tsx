@@ -3,10 +3,11 @@ import TextInput from '@/components/ui/TextInput';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { BodyScrollView } from '@/components/ui/BodyScrollView';
-import { useSignUp } from '@clerk/clerk-expo';
+import { useSignUp, useUser } from '@clerk/clerk-expo';
 import Toast from '@/components/ui/Toast';
 import { ClerkAPIError } from '@clerk/types';
 import { set } from 'date-fns';
+import { DatabaseService } from '@/services/database';
 
 export default function SignUpScreen() {
 	const { signUp, setActive, isLoaded } = useSignUp();
@@ -23,6 +24,8 @@ export default function SignUpScreen() {
 	const [toastMessage, setToastMessage] = useState('');
 	const [toastVisible, setToastVisible] = useState(false);
 
+	const { user } = useUser();
+
 	const showToast = () => {
 		setToastMessage(errors?.[0]?.longMessage || 'An error occurred during sign up. Please try again.');
 		setToastVisible(true);
@@ -38,12 +41,13 @@ export default function SignUpScreen() {
 		setErrors([]);
 
 		try {
-			await signUp.create({
+			const k = await signUp.create({
 				emailAddress: email,
 				password,
 			});
-			await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+			const l = await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
 			setPendingVerification(true);
+			console.log('l ', l);
 		} catch (error: any) {
 			console.error(JSON.stringify(error, null, 2));
 			setErrors(error.errors);
@@ -67,6 +71,11 @@ export default function SignUpScreen() {
 
 			if (signupAttempt.status === 'complete') {
 				await setActive({ session: signupAttempt.createdSessionId });
+
+				// Create profile after user is fully verified and session is active
+				if (signupAttempt.createdUserId) {
+					await DatabaseService.createProfile(signupAttempt.createdUserId);
+				}
 				router.replace('/(tabs)');
 			} else {
 				console.log(JSON.stringify(signupAttempt, null, 2));

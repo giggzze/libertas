@@ -6,13 +6,14 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { useMonthlyIncome } from '@/hooks/useMonthlyIncome';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useAuthStore } from '@/store/auth';
-import { useUser } from '@clerk/clerk-expo';
+import { useAuth, useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ProfileScreen() {
 	const { user } = useUser();
+	const { signOut } = useAuth();
 
 	const { currentIncome, createIncome, loading: incomeLoading } = useMonthlyIncome();
 	const [newIncome, setNewIncome] = useState('');
@@ -76,7 +77,7 @@ export default function ProfileScreen() {
 				</View>
 			</View>
 
-			<Button onPress={handleLogout} size="sm">
+			<Button onPress={() => signOut()} size="sm">
 				Logout
 			</Button>
 		</ScrollView>

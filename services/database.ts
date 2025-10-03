@@ -42,6 +42,15 @@ export class DatabaseService {
 		return data;
 	}
 
+	static async createProfile(profileId: string): Promise<void> {
+		const { data, error } = await supabase.from('profiles')
+		.insert({ id: profileId }).select().single();
+
+		if (error) {
+			console.error('Error creating profile:', error);
+		}
+	}
+
 	// Monthly Income operations
 	static async getCurrentMonthlyIncome(userId: string): Promise<MonthlyIncome | null> {
 		const { data, error } = await supabase

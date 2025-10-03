@@ -1,5 +1,5 @@
 import { AddDebtModal } from '@/components/debt-planner/AddDebtModal';
-import { AddExpenseModal } from '@/components/debt-planner/AddExpenseModal';
+import { AddExpenseModal } from '@/app/(tabs)/expense/AddExpenseModal';
 import { AddPaymentModal } from '@/components/debt-planner/AddPaymentModal';
 import { DebtList } from '@/components/debt-planner/DebtList';
 import { EditDebtModal } from '@/components/debt-planner/EditDebtModal';

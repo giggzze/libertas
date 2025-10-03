@@ -1,11 +1,11 @@
 import { DatabaseService } from "@/services/database";
-import { useAuthStore } from "@/store/auth";
+import { useUser } from "@clerk/clerk-expo";
 import { Expense, ExpenseInsert, ExpenseUpdate } from "@/types/STT";
 import { useCallback, useEffect, useState, useRef } from "react";
 
 // Expenses hook
 export function useExpenses() {
-  const { user, rehydrated } = useAuthStore();
+  const { user } = useUser();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,13 +18,6 @@ export function useExpenses() {
   const fetchExpenses = useCallback(async () => {
     // Don't attempt to fetch if we're not authenticated yet
     if (!user?.id) {
-      if (!rehydrated) {
-        // Still waiting for auth state to rehydrate, don't count as a retry
-        console.log("Auth state not rehydrated yet, waiting to fetch expenses");
-        return;
-      }
-      
-      // Auth state is rehydrated but no user, clear data
       setExpenses([]);
       setLoading(false);
       return;
@@ -63,7 +56,7 @@ export function useExpenses() {
     } finally {
       setLoading(false);
     }
-  }, [user?.id, rehydrated]);
+  }, [user?.id]);
 
   const createExpense = useCallback(
     async (expense: ExpenseInsert) => {
@@ -100,10 +93,10 @@ export function useExpenses() {
 
   useEffect(() => {
     // Only fetch data if auth state is rehydrated
-    if (rehydrated) {
+    if (user?.id) {
       fetchExpenses();
     }
-  }, [fetchExpenses, rehydrated]);
+  }, [fetchExpenses, user?.id]);
   
   // Cleanup function to clear any pending retries
   useEffect(() => {
@@ -122,6 +115,6 @@ export function useExpenses() {
     createExpense,
     updateExpense,
     deleteExpense,
-    isReady: rehydrated && (!loading || retryCount.current > 0),
+    isReady: user?.id && (!loading || retryCount.current > 0),
   };
 }

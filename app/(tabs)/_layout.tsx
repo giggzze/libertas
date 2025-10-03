@@ -10,6 +10,7 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useUser } from '@clerk/clerk-expo';
+import { Colors } from '@/constants/theme';
 
 export default function TabLayout() {
 	// const { user, loading } = useAuthStore();
@@ -48,7 +49,7 @@ export default function TabLayout() {
 								// NEW: Make the large title transparent to match the background.
 								backgroundColor: 'transparent',
 							},
-						}),
+					  }),
 			}}
 		>
 			<Stack.Screen
@@ -67,6 +68,31 @@ export default function TabLayout() {
 					headerLargeTitle: false,
 					headerShown: true,
 					sheetAllowedDetents: [0.55],
+				}}
+			/>
+			<Stack.Screen
+				name="AddExpenseModal"
+				options={{
+					headerShown: false,
+					title: 'Add Expense',
+					headerLargeTitle: false,
+					presentation: 'formSheet',
+					sheetGrabberVisible: false,
+					sheetAllowedDetents: [0.45],
+					contentStyle: {
+						backgroundColor: Colors.light.background,
+					},
+				}}
+			/>
+			<Stack.Screen
+				name="edit"
+				options={{
+					headerShown: true,
+					title: 'Edit Expense',
+					headerLargeTitle: false,
+					presentation: 'formSheet',
+					sheetGrabberVisible: true,
+					sheetAllowedDetents: [0.55, 0.9],
 				}}
 			/>
 		</Stack>

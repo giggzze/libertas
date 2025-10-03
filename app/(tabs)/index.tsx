@@ -8,15 +8,16 @@ import React from 'react';
 import { Pressable, StyleSheet, View, Text, Button } from 'react-native';
 import { SummaryCard } from '@/components/ui/SummaryCard';
 import { ExpenseList } from '@/components/debt-planner/ExpenseList';
+import { useExpenses } from '@/hooks/useExpense';
 
 export default function HomeScreen() {
+	const { expenses, createExpense, updateExpense, deleteExpense, loading: expensesLoading } = useExpenses();
 	const { user } = useUser();
 	const totalDebt = 10;
 	const totalMonthlyObligations = 20;
 	const totalExpenses = 30;
 	const totalMonthlyPayments = 40;
 
-	const expenses = ['Rent', 'Groceries', 'Utilities'];
 	const setIsAddExpenseModalVisible = () => {};
 	const handleEditExpense = () => {};
 	const handleDeleteExpense = () => {};
@@ -44,15 +45,8 @@ export default function HomeScreen() {
 				</View>
 
 				<View style={styles.section}>
-					<ExpenseList
-						expenses={expenses}
-						onAddExpense={() => setIsAddExpenseModalVisible(true)}
-						onEditExpense={handleEditExpense}
-						onDeleteExpense={handleDeleteExpense}
-					/>
+					<ExpenseList expenses={expenses} onEditExpense={handleEditExpense} onDeleteExpense={handleDeleteExpense} />
 				</View>
-
-				<Button onPress={() => router.push('/(tabs)/test')} title="Test" />
 			</BodyScrollView>
 		</>
 	);
