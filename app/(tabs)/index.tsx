@@ -4,14 +4,26 @@ import HeaderButton from '@/components/ui/HeaderButton';
 import { appleBlue } from '@/constants/theme';
 import { useUser } from '@clerk/clerk-expo';
 import { router, Stack, useFocusEffect } from 'expo-router';
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { Pressable, StyleSheet, View, Text, Button } from 'react-native';
 import { SummaryCard } from '@/components/ui/SummaryCard';
 import { ExpenseList } from '@/components/debt-planner/ExpenseList';
 import { useExpenses } from '@/hooks/useExpense';
+import { DebtList } from '@/components/debt-planner/DebtList';
+import { useDebts } from '@/hooks/useDebt';
 
 export default function HomeScreen() {
 	const { expenses, createExpense, updateExpense, deleteExpense, loading: expensesLoading, refetch } = useExpenses();
+	const { debts, createDebt, updateDebt, deleteDebt, loading: debtsLoading } = useDebts();
+
+	const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+	const handleEditDebt = async () => {}
+	const handleCreateDebt = async () => {}
+	const handleDeleteDebt = async () => {}
+	const handleMakePayment = async () => {}
+	const handleAddCharge = async () => {}
+	const handleShowHistory = async () => {}
+
 	const { user } = useUser();
 	const totalDebt = 10;
 	const totalMonthlyObligations = 20;
@@ -30,10 +42,6 @@ export default function HomeScreen() {
 		await deleteExpense(expenseId);
 	};
 
-	useEffect(() => {
-		console.log(expenses.length, 'expenses count exHome');
-	}, [expenses]);
-
 	return (
 		<>
 			<Stack.Screen
@@ -43,6 +51,7 @@ export default function HomeScreen() {
 				}}
 			/>
 			<BodyScrollView>
+				{/*summary section*/}
 				<View style={styles.summarySection}>
 					<View style={styles.summaryContainer}>
 						<SummaryCard title="Total Debt" amount={totalDebt} />
@@ -55,9 +64,20 @@ export default function HomeScreen() {
 						<SummaryCard title="Debt Payments" amount={totalMonthlyPayments} subtitle="Monthly" />
 					</View>
 				</View>
-
+				{/*expense section*/}
 				<View style={styles.section}>
 					<ExpenseList expenses={expenses} onDeleteExpense={handleDeleteExpense} loading={expensesLoading} />
+				</View>
+				{/*debt section*/}
+				<View style={styles.section}>
+					<DebtList
+						debts={debts}
+						onEditDebt={handleEditDebt}
+						onDeleteDebt={handleDeleteDebt}
+						onMakePayment={handleMakePayment}
+						onShowHistory={handleShowHistory}
+						onAddCharge={handleAddCharge}
+					/>
 				</View>
 			</BodyScrollView>
 		</>

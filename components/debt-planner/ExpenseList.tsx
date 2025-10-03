@@ -15,7 +15,7 @@ interface ExpenseListProps {
 	loading?: boolean;
 }
 
-export function ExpenseList({ expenses, onEditExpense, onDeleteExpense, loading }: ExpenseListProps) {
+export function ExpenseList({ expenses, onDeleteExpense, loading }: ExpenseListProps) {
 	const colorScheme = useColorScheme();
 	const isDark = colorScheme === 'dark';
 	const textColor = useThemeColor({}, 'text');

@@ -2,9 +2,10 @@ import { DatabaseService } from "@/services/database";
 import { useAuthStore } from "@/store/auth";
 import { DebtInsert, DebtUpdate, DebtWithPayments } from "@/types/STT";
 import { useCallback, useEffect, useState, useRef } from "react";
+import { useUser } from '@clerk/clerk-expo';
 // Debts hook
 export function useDebts() {
-  const { user, rehydrated } = useAuthStore();
+  const { user} = useUser();
   const [debts, setDebts] = useState<DebtWithPayments[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,12 +18,6 @@ export function useDebts() {
   const fetchDebts = useCallback(async () => {
     // Don't attempt to fetch if we're not authenticated yet
     if (!user?.id) {
-      if (!rehydrated) {
-        // Still waiting for auth state to rehydrate, don't count as a retry
-        console.log("Auth state not rehydrated yet, waiting to fetch debts");
-        return;
-      }
-      
       // Auth state is rehydrated but no user, clear data
       setDebts([]);
       setLoading(false);
@@ -62,7 +57,7 @@ export function useDebts() {
     } finally {
       setLoading(false);
     }
-  }, [user?.id, rehydrated]);
+  }, [user?.id]);
 
   const createDebt = useCallback(
     async (debt: DebtInsert) => {
@@ -110,10 +105,8 @@ export function useDebts() {
 
   useEffect(() => {
     // Only fetch data if auth state is rehydrated
-    if (rehydrated) {
       fetchDebts();
-    }
-  }, [fetchDebts, rehydrated]);
+  }, [fetchDebts]);
   
   // Cleanup function to clear any pending retries
   useEffect(() => {
@@ -133,6 +126,6 @@ export function useDebts() {
     updateDebt,
     deleteDebt,
     markDebtAsPaid,
-    isReady: rehydrated && (!loading || retryCount.current > 0),
+    isReady:  (!loading || retryCount.current > 0),
   };
 }

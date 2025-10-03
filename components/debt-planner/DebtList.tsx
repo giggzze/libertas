@@ -1,13 +1,15 @@
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { DebtWithPayments } from '@/types/STT';
-import React from 'react';
+import { DebtCategory, DebtInsert, DebtWithPayments } from '@/types/STT';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { DebtCard } from './DebtCard';
+import { useDebts } from '@/hooks/useDebt';
+import { useUser } from '@clerk/clerk-expo';
+import { router } from 'expo-router';
 
 interface DebtListProps {
 	debts: DebtWithPayments[];
-	onAddDebt: () => void;
 	onEditDebt: (debt: DebtWithPayments) => void;
 	onDeleteDebt: (id: string) => void;
 	onMakePayment: (debt: DebtWithPayments) => void;
@@ -15,7 +17,7 @@ interface DebtListProps {
 	onAddCharge: (debt: DebtWithPayments) => void;
 }
 
-export function DebtList({ debts, onAddDebt, onEditDebt, onDeleteDebt, onMakePayment, onShowHistory, onAddCharge }: DebtListProps) {
+export function DebtList({ debts, onEditDebt, onDeleteDebt, onMakePayment, onShowHistory, onAddCharge }: DebtListProps) {
 	// Theme hooks
 	const colorScheme = useColorScheme();
 	const backgroundColor = useThemeColor({}, 'background');
@@ -23,11 +25,55 @@ export function DebtList({ debts, onAddDebt, onEditDebt, onDeleteDebt, onMakePay
 	const tintColor = useThemeColor({}, 'tint');
 	const iconColor = useThemeColor({}, 'icon');
 	const isDark = colorScheme === 'dark';
+
+	const [newDebt, setNewDebt] = useState({
+		name: '',
+		amount: '',
+		interest_rate: '',
+		minimum_payment: '',
+		term_in_months: '60', // Default to 5 years
+		category: 'OTHER' as DebtCategory,
+	});
+
+	const {  createDebt, updateDebt, deleteDebt, loading: debtsLoading } = useDebts();
+	const {user } = useUser();
+
+
+	const handleAddDebt = async () => {
+		// const debtData: DebtInsert = {
+		// 	name: newDebt.name,
+		// 	amount: Number(newDebt.amount),
+		// 	interest_rate: Number(newDebt.interest_rate),
+		// 	minimum_payment: Number(newDebt.minimum_payment),
+		// 	start_date: new Date().toISOString().split('T')[0],
+		// 	term_in_months: Number(newDebt.term_in_months),
+		// 	category: newDebt.category,
+		// 	is_paid: false,
+		// 	user_id: user!.id,
+		// };
+		//
+		// const success = await createDebt(debtData);
+		// if (success) {
+		// 	setNewDebt({
+		// 		name: '',
+		// 		amount: '',
+		// 		interest_rate: '',
+		// 		minimum_payment: '',
+		// 		term_in_months: '60',
+		// 		category: 'OTHER' as DebtCategory,
+		// 	});
+		// }
+
+		router.push('/(tabs)/AddDebtModal')
+
+	};
+
+
 	return (
 		<View style={styles.section}>
 			<View style={styles.sectionHeader}>
-				<Text style={[styles.sectionTitle, { color: textColor }]}>Your Debts</Text>
-				<TouchableOpacity style={[styles.addButton, { backgroundColor: tintColor }]} onPress={onAddDebt}>
+				<Text style={[styles.sectionTitle, { color: textColor }]}>Debts</Text>
+				<TouchableOpacity style={[styles.addButton, { backgroundColor: tintColor }]} onPress={handleAddDebt}>
 					<Text style={[styles.addButtonText, { color: isDark ? '#000' : '#fff' }]}>Add Debt</Text>
 				</TouchableOpacity>
 			</View>
