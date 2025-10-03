@@ -2,11 +2,20 @@ import { ThemedText } from '@/components/ThemedText';
 import { useSignIn } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { BodyScrollView } from '@/components/ui/BodyScrollView';
 import Button from '@/components/ui/Button';
 import TextInput from '@/components/ui/TextInput';
 
+/**
+ * SignInScreen is the main authentication screen for users to sign in.
+ *
+ * - Renders a form with email and password fields.
+ * - Handles sign-in using Clerk's `useSignIn` hook.
+ * - On successful sign-in, sets the active session and redirects to the home page.
+ * - Provides navigation to sign-up and password reset screens.
+ * - Displays loading and disables the sign-in button while signing in or if fields are empty.
+ */
 export default function SignInScreen() {
 	const { signIn, setActive, isLoaded } = useSignIn();
 	const router = useRouter();

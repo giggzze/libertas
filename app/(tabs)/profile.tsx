@@ -1,15 +1,11 @@
 import { ThemedText } from '@/components/ThemedText';
 import Button from '@/components/ui/Button';
 import TextInput from '@/components/ui/TextInput';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { useMonthlyIncome } from '@/hooks/useMonthlyIncome';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { useAuthStore } from '@/store/auth';
 import { useAuth, useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 
 export default function ProfileScreen() {
 	const { user } = useUser();
@@ -17,24 +13,6 @@ export default function ProfileScreen() {
 
 	const { currentIncome, createIncome, loading: incomeLoading } = useMonthlyIncome();
 	const [newIncome, setNewIncome] = useState('');
-	const router = useRouter();
-
-	const handleLogout = async () => {
-		// Alert.alert('Logout', 'Are you sure you want to logout?', [
-		// 	{
-		// 		text: 'Cancel',
-		// 		style: 'cancel',
-		// 	},
-		// 	{
-		// 		text: 'Logout',
-		// 		style: 'destructive',
-		// 		onPress: async () => {
-		// 			await logout();
-		// 			router.replace('/(auth)');
-		// 		},
-		// 	},
-		// ]);
-	};
 
 	const handleUpdateIncome = async () => {
 		if (!newIncome) return;
@@ -49,7 +27,7 @@ export default function ProfileScreen() {
 			await createIncome({
 				amount: incomeNumber,
 				start_date: new Date().toISOString().split('T')[0],
-				user_id: user?.id,
+				user_id: user!.id,
 			});
 			setNewIncome('');
 			Alert.alert('Success', 'Income updated successfully!');

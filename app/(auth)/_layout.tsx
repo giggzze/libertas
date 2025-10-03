@@ -1,7 +1,14 @@
 import { useAuth } from '@clerk/clerk-expo';
-import { Platform } from 'react-native';
 import { Redirect, Stack } from 'expo-router';
 
+/**
+ * AuthLayout is the layout component for authentication-related screens.
+ *
+ * - If the authentication state is not loaded, it returns null.
+ * - If the user is already signed in, it redirects to the main tabs route.
+ * - Otherwise, it renders a Stack navigator with screens for sign in, sign up, and password reset.
+ * - On iOS, it applies large title and transparent header styles for a native look.
+ */
 export default function AuthLayout() {
 	const { isLoaded, isSignedIn } = useAuth();
 
@@ -27,7 +34,7 @@ export default function AuthLayout() {
 							headerLargeStyle: {
 								backgroundColor: 'transparent',
 							},
-						}),
+					  }),
 			}}
 		>
 			<Stack.Screen name="index" options={{ headerTitle: 'Welcome back!', headerShown: true }} />

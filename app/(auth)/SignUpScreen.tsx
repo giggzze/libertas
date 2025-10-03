@@ -6,9 +6,15 @@ import { BodyScrollView } from '@/components/ui/BodyScrollView';
 import { useSignUp, useUser } from '@clerk/clerk-expo';
 import Toast from '@/components/ui/Toast';
 import { ClerkAPIError } from '@clerk/types';
-import { set } from 'date-fns';
 import { DatabaseService } from '@/services/database';
 
+/**
+ * SignUpScreen is the screen for users to sign up.
+ *
+ * - Renders a form with email and password fields.
+ * - Handles sign-up using Clerk's `useSignUp` hook.
+ * - On successful sign-up, sets the active session and redirects to the home page.
+ */
 export default function SignUpScreen() {
 	const { signUp, setActive, isLoaded } = useSignUp();
 	const router = useRouter();

@@ -1,11 +1,10 @@
 import { BodyScrollView } from '@/components/ui/BodyScrollView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import HeaderButton from '@/components/ui/HeaderButton';
 import { appleBlue } from '@/constants/theme';
 import { useUser } from '@clerk/clerk-expo';
 import { router, Stack, useFocusEffect } from 'expo-router';
-import React, { useEffect, useCallback, useState } from 'react';
-import { Pressable, StyleSheet, View, Text, Button } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { SummaryCard } from '@/components/ui/SummaryCard';
 import { ExpenseList } from '@/components/debt-planner/ExpenseList';
 import { useExpenses } from '@/hooks/useExpense';
@@ -16,13 +15,12 @@ export default function HomeScreen() {
 	const { expenses, createExpense, updateExpense, deleteExpense, loading: expensesLoading, refetch } = useExpenses();
 	const { debts, createDebt, updateDebt, deleteDebt, loading: debtsLoading } = useDebts();
 
-	const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-	const handleEditDebt = async () => {}
-	const handleCreateDebt = async () => {}
-	const handleDeleteDebt = async () => {}
-	const handleMakePayment = async () => {}
-	const handleAddCharge = async () => {}
-	const handleShowHistory = async () => {}
+	const handleEditDebt = async () => {};
+	const handleCreateDebt = async () => {};
+	const handleDeleteDebt = async () => {};
+	const handleMakePayment = async () => {};
+	const handleAddCharge = async () => {};
+	const handleShowHistory = async () => {};
 
 	const { user } = useUser();
 	const totalDebt = 10;

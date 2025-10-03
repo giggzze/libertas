@@ -2,15 +2,19 @@ import { BodyScrollView } from '@/components/ui/BodyScrollView';
 import Button from '@/components/ui/Button';
 import TextInput from '@/components/ui/TextInput';
 import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { useExpenses } from '@/hooks/useExpense';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { Expense, ExpenseInsert } from '@/types/STT';
+import { ExpenseInsert } from '@/types/STT';
 import { useUser } from '@clerk/clerk-expo';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
+/**
+ * AddExpenseModal is the modal for adding a new expense.
+ *
+ * - Renders a form with name, amount, and due date fields.
+ * - Handles adding an expense using the `useExpenses` hook.
+ */
 export default function AddExpenseModal() {
 	const { user } = useUser();
 	const { createExpense } = useExpenses();

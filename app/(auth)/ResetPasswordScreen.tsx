@@ -7,6 +7,13 @@ import TextInput from '@/components/ui/TextInput';
 import { isClerkAPIResponseError, useSignIn } from '@clerk/clerk-expo';
 import { ClerkAPIError } from '@clerk/types';
 
+/**
+ * ResetPasswordScreen is the screen for users to reset their password.
+ *
+ * - Renders a form with email and password fields.
+ * - Handles password reset using Clerk's `useSignIn` hook.
+ * - On successful password reset, sets the active session and redirects to the home page.
+ */
 export default function ResetPassword() {
 	const { isLoaded, signIn, setActive } = useSignIn();
 	const router = useRouter();
