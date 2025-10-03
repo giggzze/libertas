@@ -42,7 +42,6 @@ export function ExpenseList({ expenses, onEditExpense, onDeleteExpense, loading 
 					<ExpenseItem
 						key={expense.id}
 						expense={expense}
-						onEditExpense={onEditExpense}
 						onDeleteExpense={onDeleteExpense}
 						isDark={isDark}
 						textColor={textColor}

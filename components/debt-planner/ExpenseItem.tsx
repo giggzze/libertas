@@ -3,18 +3,17 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import React from 'react';
 import { Alert, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Expense } from '@/types/STT';
-
+import { router } from 'expo-router';
 
 interface ExpenseItemProps {
 	expense: Expense;
-	onEditExpense: (expense: Expense) => void;
 	onDeleteExpense: (expenseId: string) => void;
 	isDark: boolean;
 	textColor: string;
 	iconColor: string;
 }
 
-export default function ExpenseItem({ expense, onEditExpense, onDeleteExpense, isDark, textColor, iconColor }: ExpenseItemProps) {
+export default function ExpenseItem({ expense, onDeleteExpense, isDark, textColor, iconColor }: ExpenseItemProps) {
 	const handleDelete = () => {
 		Alert.alert('Delete Expense', `Are you sure you want to delete ${expense.name}?`, [
 			{
@@ -27,6 +26,14 @@ export default function ExpenseItem({ expense, onEditExpense, onDeleteExpense, i
 				onPress: () => onDeleteExpense(expense.id),
 			},
 		]);
+	};
+
+	const handleEditExpense = (expense: any) => {
+		// Navigate to edit screen with expense data
+		router.push({
+			pathname: '/(tabs)/EditExpenseModal',
+			params: { expenseId: expense.id },
+		});
 	};
 
 	return (
@@ -45,7 +52,7 @@ export default function ExpenseItem({ expense, onEditExpense, onDeleteExpense, i
 				<Text style={[styles.dueDate, { color: iconColor }]}>Due: {expense.due_date}th</Text>
 			</View>
 			<View style={styles.actions}>
-				<TouchableOpacity style={styles.actionButton} onPress={() => onEditExpense(expense)}>
+				<TouchableOpacity style={styles.actionButton} onPress={() => handleEditExpense(expense)}>
 					<IconSymbol name="pencil" size={20} color={iconColor} />
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.actionButton} onPress={handleDelete}>
@@ -55,7 +62,6 @@ export default function ExpenseItem({ expense, onEditExpense, onDeleteExpense, i
 		</View>
 	);
 }
-
 
 const styles = StyleSheet.create({
 	container: {

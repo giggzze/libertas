@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bf06cdd9-a063-40ba-b975-94532d8ed5a7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/ExpenseItem.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/AddExpenseModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/AddExpenseModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/_layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/debt-planner/ExpenseItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/debt-planner/ExpenseItem.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/debt-planner/ExpenseList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/debt-planner/ExpenseList.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -91,7 +91,7 @@
       <workItem from="1751728143983" duration="343000" />
       <workItem from="1759397383509" duration="4335000" />
       <workItem from="1759496066362" duration="2922000" />
-      <workItem from="1759499007762" duration="2908000" />
+      <workItem from="1759499007762" duration="3736000" />
     </task>
     <servers />
   </component>

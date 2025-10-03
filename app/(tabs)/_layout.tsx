@@ -85,14 +85,17 @@ export default function TabLayout() {
 				}}
 			/>
 			<Stack.Screen
-				name="edit"
+				name="EditExpenseModal"
 				options={{
-					headerShown: true,
-					title: 'Edit Expense',
+					headerShown: false,
+					title: 'Add Expense',
 					headerLargeTitle: false,
 					presentation: 'formSheet',
-					sheetGrabberVisible: true,
-					sheetAllowedDetents: [0.55, 0.9],
+					sheetGrabberVisible: false,
+					sheetAllowedDetents: [0.45],
+					contentStyle: {
+						backgroundColor: Colors.light.background,
+					},
 				}}
 			/>
 		</Stack>

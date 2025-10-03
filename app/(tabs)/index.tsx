@@ -26,14 +26,6 @@ export default function HomeScreen() {
 		}, [refetch]),
 	);
 
-	const handleEditExpense = (expense: any) => {
-		// Navigate to edit screen with expense data
-		router.push({
-			pathname: '/(tabs)/edit',
-			params: { expenseId: expense.id },
-		});
-	};
-
 	const handleDeleteExpense = async (expenseId: string) => {
 		await deleteExpense(expenseId);
 	};
@@ -65,7 +57,7 @@ export default function HomeScreen() {
 				</View>
 
 				<View style={styles.section}>
-					<ExpenseList expenses={expenses} onEditExpense={handleEditExpense} onDeleteExpense={handleDeleteExpense} loading={expensesLoading} />
+					<ExpenseList expenses={expenses} onDeleteExpense={handleDeleteExpense} loading={expensesLoading} />
 				</View>
 			</BodyScrollView>
 		</>
