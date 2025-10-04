@@ -1,10 +1,11 @@
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useDebts } from '@/hooks/useDebt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { DebtWithPayments } from '@/types/STT';
 import { formatCurrency } from '@/utils/formatCurrency';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 
 interface DebtCardProps {
@@ -29,6 +30,20 @@ export function DebtCard({ debt, onEdit, onDelete, onMakePayment, onShowHistory,
 	const iconColor = useThemeColor({}, 'icon');
 	const isDark = colorScheme === 'dark';
 
+	const handleDelete = () => {
+		Alert.alert('Remove Debt', `Are you sure you want to delete ${debt.name}?`, [
+			{
+				text: 'Cancel',
+				style: 'cancel',
+			},
+			{
+				text: 'Delete',
+				style: 'destructive',
+				onPress: () => onDelete(debt.id),
+			},
+		]);
+	};
+
 	const renderRightActions = () => (
 		<View style={{ flexDirection: 'row', alignItems: 'center', height: '100%' }}>
 			<TouchableOpacity
@@ -40,7 +55,7 @@ export function DebtCard({ debt, onEdit, onDelete, onMakePayment, onShowHistory,
 			</TouchableOpacity>
 			<TouchableOpacity
 				style={[styles.actionButton, styles.deleteButton, { marginLeft: 2, height: '90%', justifyContent: 'center', marginBottom: 10 }]}
-				onPress={() => onDelete(debt.id)}
+				onPress={() => handleDelete()}
 			>
 				<IconSymbol name="trash" size={16} color={isDark ? '#000' : '#fff'} />
 				<Text style={[styles.actionButtonText, { color: isDark ? '#000' : '#fff' }]}>Delete</Text>

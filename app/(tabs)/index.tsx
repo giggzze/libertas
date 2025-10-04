@@ -17,7 +17,6 @@ export default function HomeScreen() {
 
 	const handleEditDebt = async () => {};
 	const handleCreateDebt = async () => {};
-	const handleDeleteDebt = async () => {};
 	const handleMakePayment = async () => {};
 	const handleAddCharge = async () => {};
 	const handleShowHistory = async () => {};
@@ -39,6 +38,10 @@ export default function HomeScreen() {
 
 	const handleDeleteExpense = async (expenseId: string) => {
 		await deleteExpense(expenseId);
+	};
+
+	const handleDeleteDebt = async (debtId: string) => {
+		await deleteDebt(debtId);
 	};
 
 	return (
