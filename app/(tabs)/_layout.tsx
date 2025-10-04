@@ -1,108 +1,98 @@
-import { useAuthStore } from "@/store/auth";
-import { Tabs, useRouter } from "expo-router";
-import React, { useEffect } from "react";
-import { Platform, StatusBar } from "react-native";
+import { Redirect, Stack } from 'expo-router';
+import React from 'react';
+import { useUser } from '@clerk/clerk-expo';
+import { Colors } from '@/constants/theme';
 
-import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { Loading } from "@/components/ui/Loading";
-import TabBarBackground from "@/components/ui/TabBarBackground";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { useThemeColor } from "@/hooks/useThemeColor";
-
+/**
+ * TabLayout is the layout component for the main tabs.
+ *
+ * - If the user is not logged in, it redirects to the auth layout.
+ * - Sets the status bar style based on the theme.
+ */
 export default function TabLayout() {
-	const { user, loading } = useAuthStore();
-	const router = useRouter();
-	const colorScheme = useColorScheme();
-	const isDark = colorScheme === "dark";
-	
-	// Theme colors
-	const backgroundColor = useThemeColor({}, "background");
-	const textColor = useThemeColor({}, "text");
-	const tintColor = useThemeColor({}, "tint");
-	const iconColor = useThemeColor({}, "icon");
+	const { user } = useUser();
 
-	useEffect(() => {
-		if (!loading && !user) {
-			router.replace("/auth/Login");
-		}
-	}, [user, loading]);
-
-	if (loading) {
-		// Optionally show a splash/loading screen
-		return <Loading />;
+	if (!user) {
+		return <Redirect href="/(auth)" />;
 	}
-	
-	// Set status bar style based on theme
-	StatusBar.setBarStyle(isDark ? "light-content" : "dark-content");
-
-	if (!user) return null;
 
 	return (
-		<Tabs
+		<Stack
 			screenOptions={{
-				tabBarActiveTintColor: tintColor,
-				tabBarInactiveTintColor: iconColor,
-				tabBarStyle: Platform.select({
-					ios: {
-						backgroundColor: backgroundColor,
-						borderTopColor: isDark ? "#4a5568" : "#ddd",
-						position: "absolute",
+				...(process.env.EXPO_OS !== 'ios'
+					? {}
+					: {
+							headerLargeTitle: true,
+							headerTransparent: true,
+							headerBlurEffect: 'systemChromeMaterial',
+							headerLargeTitleShadowVisible: false,
+							headerShadowVisible: true,
+							headerLargeStyle: {
+								backgroundColor: 'transparent',
+							},
+						}),
+			}}
+		>
+			<Stack.Screen
+				name="index"
+				options={{
+					title: 'Overview',
+				}}
+			/>
+			<Stack.Screen name="strategy" options={{ headerShown: true, title: 'Strategy', headerLargeTitle: false }} />
+			<Stack.Screen
+				name="profile"
+				options={{
+					presentation: 'formSheet',
+					headerTitle: 'Settings',
+					sheetGrabberVisible: false,
+					headerLargeTitle: false,
+					headerShown: true,
+					sheetAllowedDetents: [0.55],
+				}}
+			/>
+			<Stack.Screen
+				name="AddExpenseModal"
+				options={{
+					headerShown: false,
+					title: 'Add Expense',
+					headerLargeTitle: false,
+					presentation: 'formSheet',
+					sheetGrabberVisible: false,
+					sheetAllowedDetents: [0.45],
+					contentStyle: {
+						backgroundColor: Colors.light.background,
 					},
-					default: {
-						backgroundColor: backgroundColor,
-						borderTopColor: isDark ? "#4a5568" : "#ddd",
+				}}
+			/>
+			<Stack.Screen
+				name="EditExpenseModal"
+				options={{
+					headerShown: false,
+					title: 'Add Expense',
+					headerLargeTitle: false,
+					presentation: 'formSheet',
+					sheetGrabberVisible: false,
+					sheetAllowedDetents: [0.45],
+					contentStyle: {
+						backgroundColor: Colors.light.background,
 					},
-				}),
-				headerStyle: {
-					backgroundColor: backgroundColor,
-				},
-				headerTitleStyle: {
-					color: textColor,
-				},
-				headerShown: true,
-				tabBarButton: HapticTab,
-				tabBarBackground: TabBarBackground,
-			}}>
-			<Tabs.Screen
-				name='index'
-				options={{
-					title: "Debts",
-					tabBarIcon: ({ color }) => (
-						<IconSymbol
-							name='creditcard'
-							size={24}
-							color={color}
-						/>
-					),
 				}}
 			/>
-			<Tabs.Screen
-				name='strategy'
+			<Stack.Screen
+				name="AddDebtModal"
 				options={{
-					title: "Strategy",
-					tabBarIcon: ({ color }) => (
-						<IconSymbol
-							name='chart.bar'
-							size={24}
-							color={color}
-						/>
-					),
+					headerShown: false,
+					title: 'Add Expense',
+					headerLargeTitle: false,
+					presentation: 'formSheet',
+					sheetGrabberVisible: false,
+					sheetAllowedDetents: [0.7],
+					contentStyle: {
+						backgroundColor: Colors.light.background,
+					},
 				}}
 			/>
-			<Tabs.Screen
-				name='profile'
-				options={{
-					title: "Profile",
-					tabBarIcon: ({ color }) => (
-						<IconSymbol
-							name='person'
-							size={24}
-							color={color}
-						/>
-					),
-				}}
-			/>
-		</Tabs>
+		</Stack>
 	);
 }

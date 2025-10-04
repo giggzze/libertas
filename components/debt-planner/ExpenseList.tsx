@@ -1,121 +1,54 @@
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { Expense } from "@/types/STT";
-import { formatCurrency } from "@/utils/formatCurrency";
-import React from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { Expense } from '@/types/STT';
+import { formatCurrency } from '@/utils/formatCurrency';
+import { router } from 'expo-router';
+import React from 'react';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import ExpenseItem from '@/components/debt-planner/ExpenseItem';
+import Button from '../ui/Button';
 
 interface ExpenseListProps {
 	expenses: Expense[];
-	onAddExpense: () => void;
 	onEditExpense: (expense: Expense) => void;
 	onDeleteExpense: (expenseId: string) => void;
+	loading?: boolean;
 }
 
-export function ExpenseList({
-	expenses,
-	onAddExpense,
-	onEditExpense,
-	onDeleteExpense,
-}: ExpenseListProps) {
+export function ExpenseList({ expenses, onDeleteExpense, loading }: ExpenseListProps) {
 	const colorScheme = useColorScheme();
-	const isDark = colorScheme === "dark";
-	const textColor = useThemeColor({}, "text");
-	const iconColor = useThemeColor({}, "icon");
-	const tintColor = useThemeColor({}, "tint");
+	const isDark = colorScheme === 'dark';
+	const textColor = useThemeColor({}, 'text');
+	const iconColor = useThemeColor({}, 'icon');
+	const tintColor = useThemeColor({}, 'tint');
 
-	const handleDelete = (expense: Expense) => {
-		Alert.alert(
-			"Delete Expense",
-			`Are you sure you want to delete ${expense.name}?`,
-			[
-				{
-					text: "Cancel",
-					style: "cancel",
-				},
-				{
-					text: "Delete",
-					style: "destructive",
-					onPress: () => onDeleteExpense(expense.id),
-				},
-			]
-		);
+	const onAddExpense = () => {
+		router.push('/(tabs)/AddExpenseModal');
 	};
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
-				<Text style={[styles.title, { color: textColor }]}>
-					Monthly Expenses
-				</Text>
-				<TouchableOpacity
-					style={[styles.addButton, { backgroundColor: tintColor }]}
-					onPress={onAddExpense}>
-					<IconSymbol
-						name='plus'
-						size={20}
-						color={isDark ? "black" : "white"}
-					/>
-				</TouchableOpacity>
+				<Text style={[styles.title, { color: textColor }]}>Monthly Expenses</Text>
+				{/*<TouchableOpacity style={[styles.addButton, { backgroundColor: tintColor }]} onPress={onAddExpense}>
+					<IconSymbol name="plus" size={20} color={isDark ? 'black' : 'white'} />
+				</TouchableOpacity>*/}
+				<Button onPress={onAddExpense}> Add Expense</Button>
 			</View>
 
 			{expenses.length === 0 ? (
-				<Text style={[styles.emptyText, { color: iconColor }]}>
-					No expenses added yet
-				</Text>
+				<Text style={[styles.emptyText, { color: iconColor }]}>No expenses added yet</Text>
 			) : (
-				expenses.map(expense => (
-					<View
+				expenses.map((expense) => (
+					<ExpenseItem
 						key={expense.id}
-						style={[
-							styles.expenseItem,
-							{
-								backgroundColor: isDark ? "#2d3748" : "white",
-								borderColor: isDark ? "#4a5568" : "#ddd",
-							},
-						]}>
-						<View style={styles.expenseInfo}>
-							<Text
-								style={[
-									styles.expenseName,
-									{ color: textColor },
-								]}>
-								{expense.name}
-							</Text>
-							<Text
-								style={[
-									styles.expenseAmount,
-									{ color: textColor },
-								]}>
-								{formatCurrency(expense.amount)}
-							</Text>
-							<Text
-								style={[styles.dueDate, { color: iconColor }]}>
-								Due: {expense.due_date}th
-							</Text>
-						</View>
-						<View style={styles.actions}>
-							<TouchableOpacity
-								style={styles.actionButton}
-								onPress={() => onEditExpense(expense)}>
-								<IconSymbol
-									name='pencil'
-									size={20}
-									color={iconColor}
-								/>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={styles.actionButton}
-								onPress={() => handleDelete(expense)}>
-								<IconSymbol
-									name='trash'
-									size={20}
-									color='#ff3b30'
-								/>
-							</TouchableOpacity>
-						</View>
-					</View>
+						expense={expense}
+						onDeleteExpense={onDeleteExpense}
+						isDark={isDark}
+						textColor={textColor}
+						iconColor={iconColor}
+					/>
 				))
 			)}
 		</View>
@@ -127,28 +60,28 @@ const styles = StyleSheet.create({
 		marginBottom: 24,
 	},
 	header: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
 		marginBottom: 16,
 	},
 	title: {
 		fontSize: 20,
-		fontWeight: "bold",
+		fontWeight: 'bold',
 	},
 	addButton: {
 		padding: 8,
 		borderRadius: 8,
 	},
 	emptyText: {
-		textAlign: "center",
+		textAlign: 'center',
 		fontSize: 16,
 		marginTop: 16,
 	},
 	expenseItem: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
 		padding: 16,
 		borderRadius: 8,
 		borderWidth: 1,
@@ -159,7 +92,7 @@ const styles = StyleSheet.create({
 	},
 	expenseName: {
 		fontSize: 16,
-		fontWeight: "600",
+		fontWeight: '600',
 		marginBottom: 4,
 	},
 	expenseAmount: {
@@ -170,7 +103,7 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 	},
 	actions: {
-		flexDirection: "row",
+		flexDirection: 'row',
 		gap: 8,
 	},
 	actionButton: {
@@ -178,6 +111,6 @@ const styles = StyleSheet.create({
 	},
 	deleteButton: {
 		padding: 8,
-		backgroundColor: "#e53e3e",
+		backgroundColor: '#e53e3e',
 	},
 });
