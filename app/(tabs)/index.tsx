@@ -22,10 +22,11 @@ export default function HomeScreen() {
 	const handleShowHistory = async () => {};
 
 	const { user } = useUser();
-	const totalDebt = 10;
-	const totalMonthlyObligations = 20;
-	const totalExpenses = 30;
-	const totalMonthlyPayments = 40;
+	const totalDebt = debts.reduce((sum, debt) => sum + (debt.remaining_balance || debt.amount), 0);
+	const totalMonthlyPayments = debts.reduce((sum, debt) => sum + debt.minimum_payment, 0);
+	const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+	const totalMonthlyObligations = totalMonthlyPayments + totalExpenses;
+
 
 	// Refetch expenses when screen comes back into focus (e.g., after modal closes)
 	useFocusEffect(

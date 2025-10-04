@@ -32,6 +32,7 @@ export default function ProfileScreen() {
 			setNewIncome('');
 			Alert.alert('Success', 'Income updated successfully!');
 		} catch (error) {
+			console.log(error)
 			Alert.alert('Error', 'Failed to update income. Please try again.');
 		}
 	};

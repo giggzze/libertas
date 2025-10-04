@@ -22,7 +22,7 @@ import { useUser } from '@clerk/clerk-expo';
 export class DatabaseService {
 	// Profile operations
 	static async getProfile(userId: string): Promise<Profile | null> {
-		const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
+		const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
 
 		if (error) {
 			console.error('Error fetching profile:', error);
@@ -89,12 +89,11 @@ export class DatabaseService {
 	static async createMonthlyIncome(income: MonthlyIncomeInsert, userId: string): Promise<MonthlyIncome | null> {
 		const { data, error } = await supabase
 			.from('monthly_income')
-			.upsert(
+			.insert(
 				{
 					...income,
 					user_id: userId,
-				},
-				{ onConflict: 'user_id' },
+				}
 			)
 			.select()
 			.single();
