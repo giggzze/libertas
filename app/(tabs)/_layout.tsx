@@ -30,7 +30,7 @@ export default function TabLayout() {
 							headerLargeStyle: {
 								backgroundColor: 'transparent',
 							},
-					  }),
+						}),
 			}}
 		>
 			<Stack.Screen
@@ -74,6 +74,20 @@ export default function TabLayout() {
 					presentation: 'formSheet',
 					sheetGrabberVisible: false,
 					sheetAllowedDetents: [0.45],
+					contentStyle: {
+						backgroundColor: Colors.light.background,
+					},
+				}}
+			/>
+			<Stack.Screen
+				name="AddDebtModal"
+				options={{
+					headerShown: false,
+					title: 'Add Expense',
+					headerLargeTitle: false,
+					presentation: 'formSheet',
+					sheetGrabberVisible: false,
+					sheetAllowedDetents: [0.7],
 					contentStyle: {
 						backgroundColor: Colors.light.background,
 					},

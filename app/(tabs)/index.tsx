@@ -13,7 +13,7 @@ import { useDebts } from '@/hooks/useDebt';
 
 export default function HomeScreen() {
 	const { expenses, createExpense, updateExpense, deleteExpense, loading: expensesLoading, refetch } = useExpenses();
-	const { debts, createDebt, updateDebt, deleteDebt, loading: debtsLoading } = useDebts();
+	const { debts, createDebt, updateDebt, deleteDebt, loading: debtsLoading, refetch: refetchDebts } = useDebts();
 
 	const handleEditDebt = async () => {};
 	const handleCreateDebt = async () => {};
@@ -33,7 +33,8 @@ export default function HomeScreen() {
 		useCallback(() => {
 			console.log('refetching expenses');
 			refetch();
-		}, [refetch]),
+			refetchDebts();
+		}, [refetch, refetchDebts]),
 	);
 
 	const handleDeleteExpense = async (expenseId: string) => {

@@ -43,8 +43,7 @@ export class DatabaseService {
 	}
 
 	static async createProfile(profileId: string): Promise<void> {
-		const { data, error } = await supabase.from('profiles')
-		.insert({ id: profileId }).select().single();
+		const { data, error } = await supabase.from('profiles').insert({ id: profileId }).select().single();
 
 		if (error) {
 			console.error('Error creating profile:', error);
@@ -232,21 +231,12 @@ export class DatabaseService {
 		});
 	}
 
-	static async createDebt(debt: DebtInsert): Promise<Debt | null> {
-		// Get current user from Supabase auth
-		const {
-			data: { user },
-		} = await supabase.auth.getUser();
-		if (!user) {
-			console.error('No authenticated user found');
-			return null;
-		}
-
+	static async createDebt(debt: DebtInsert, userId: string): Promise<Debt | null> {
 		const { data, error } = await supabase
 			.from('debts')
 			.insert({
 				...debt,
-				user_id: user.id,
+				user_id: userId,
 			})
 			.select()
 			.single();

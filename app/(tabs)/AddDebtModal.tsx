@@ -1,33 +1,17 @@
+import Button from '@/components/ui/Button';
+import TextInput from '@/components/ui/TextInput';
+import { borderColor, Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useDebts } from '@/hooks/useDebt';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useAuthStore } from '@/store/auth';
 import { DebtCategory } from '@/types/STT';
 import { calculateMinimumPayment } from '@/utils/debtCalculations';
+import { useUser } from '@clerk/clerk-expo';
 import { Picker } from '@react-native-picker/picker';
-import React, { useEffect } from 'react';
-import { Modal, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-
-interface AddDebtModalProps {
-	visible: boolean;
-	onClose: () => void;
-	onAdd: (debt: { name: string; amount: string; interest_rate: string; minimum_payment: string; term_in_months: string; category: DebtCategory }) => void;
-	newDebt: {
-		name: string;
-		amount: string;
-		interest_rate: string;
-		minimum_payment: string;
-		term_in_months: string;
-		category: DebtCategory;
-	};
-	onNewDebtChange: (debt: {
-		name: string;
-		amount: string;
-		interest_rate: string;
-		minimum_payment: string;
-		term_in_months: string;
-		category: DebtCategory;
-	}) => void;
-}
+import { router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const categoryLabels: Record<DebtCategory, string> = {
 	CREDIT_CARD: 'Credit Card',
@@ -39,356 +23,212 @@ const categoryLabels: Record<DebtCategory, string> = {
 };
 
 export default function AddDebtModal() {
-	// Theme hooks
-	const colorScheme = useColorScheme();
-	const backgroundColor = useThemeColor({}, 'background');
-	const textColor = useThemeColor({}, 'text');
-	const tintColor = useThemeColor({}, 'tint');
-	const iconColor = useThemeColor({}, 'icon');
-	const isDark = colorScheme === 'dark';
-	const { user } = useAuthStore();
+	const { user } = useUser();
+	const { createDebt, refetch } = useDebts();
+	const [newDebt, setNewDebt] = useState({
+		name: '',
+		amount: '',
+		interest_rate: '',
+		minimum_payment: '',
+		term_in_months: '12',
+		category: 'CAR_LOAN' as DebtCategory,
+	});
 
-	// Initialize category if not set
-	// useEffect(() => {
-	// 	if (!newDebt.category) {
-	// 		onNewDebtChange({
-	// 			...newDebt,
-	// 			category: "OTHER",
-	// 		});
-	// 	}
-	// }, []);
+	const handleAdd = async () => {
+		// Convert string values to numbers for validation
+		const amount = parseFloat(newDebt.amount);
+		const interestRate = parseFloat(newDebt.interest_rate);
+		const minimumPayment = parseFloat(newDebt.minimum_payment);
+		const termInMonths = parseInt(newDebt.term_in_months, 10);
 
-	const handleAdd = () => {
-		// // Convert string values to numbers for validation
-		// const amount = parseFloat(newDebt.amount);
-		// const interestRate = parseFloat(newDebt.interest_rate);
-		// const minimumPayment = parseFloat(newDebt.minimum_payment);
-		// const termInMonths = parseInt(newDebt.term_in_months, 10);
-		//
-		// // Validate all required fields
-		// if (
-		// 	!newDebt.name ||
-		// 	isNaN(amount) ||
-		// 	isNaN(interestRate) ||
-		// 	isNaN(minimumPayment) ||
-		// 	isNaN(termInMonths) ||
-		// 	amount <= 0 ||
-		// 	interestRate < 0 ||
-		// 	minimumPayment <= 0 ||
-		// 	termInMonths <= 0 ||
-		// 	!newDebt.category
-		// ) {
-		// 	console.log("Invalid debt values", {
-		// 		name: newDebt.name,
-		// 		amount,
-		// 		interestRate,
-		// 		minimumPayment,
-		// 		termInMonths,
-		// 		category: newDebt.category,
-		// 	});
-		// 	return;
-		// }
-		//
-		// console.log("Adding debt", {
-		// 	name: newDebt.name,
-		// 	amount: newDebt.amount,
-		// 	interest_rate: newDebt.interest_rate,
-		// 	minimum_payment: newDebt.minimum_payment,
-		// 	term_in_months: newDebt.term_in_months,
-		// 	category: newDebt.category,
-		// });
-		//
-		// // Pass the string values to the parent component
-		// onAdd({
-		// 	name: newDebt.name,
-		// 	amount: newDebt.amount,
-		// 	interest_rate: newDebt.interest_rate,
-		// 	minimum_payment: newDebt.minimum_payment,
-		// 	term_in_months: newDebt.term_in_months,
-		// 	category: newDebt.category,
-		// });
+		// Validate all required fields
+		if (
+			!newDebt.name ||
+			isNaN(amount) ||
+			isNaN(interestRate) ||
+			isNaN(minimumPayment) ||
+			isNaN(termInMonths) ||
+			amount <= 0 ||
+			interestRate < 0 ||
+			minimumPayment <= 0 ||
+			termInMonths <= 0 ||
+			!newDebt.category
+		) {
+			console.log('Invalid debt values', {
+				name: newDebt.name,
+				amount,
+				interestRate,
+				minimumPayment,
+				termInMonths,
+				category: newDebt.category,
+			});
+			return;
+		}
+
+		console.log('Adding debt', {
+			name: newDebt.name,
+			amount: newDebt.amount,
+			interest_rate: newDebt.interest_rate,
+			minimum_payment: newDebt.minimum_payment,
+			term_in_months: newDebt.term_in_months,
+			category: newDebt.category,
+		});
+
+		try {
+			await createDebt({
+				name: newDebt.name,
+				amount: parseFloat(newDebt.amount),
+				interest_rate: parseFloat(newDebt.interest_rate),
+				minimum_payment: parseFloat(newDebt.minimum_payment),
+				term_in_months: parseInt(newDebt.term_in_months, 10),
+				category: newDebt.category,
+				start_date: new Date(Date.now()).toISOString().split('T')[0],
+				user_id: user!.id,
+			});
+
+			// Ensure refetch happens
+			await refetch();
+
+			router.dismiss();
+		} catch (error) {
+			console.error('Error creating debt:', error);
+		}
 	};
 
 	const updateMinimumPayment = (amount: string, interestRate: string, termInMonths: string) => {
-		// const numAmount = parseFloat(amount);
-		// const numInterestRate = parseFloat(interestRate);
-		// const numTerm = parseInt(termInMonths, 10);
-		//
-		// if (
-		// 	!isNaN(numAmount) &&
-		// 	!isNaN(numInterestRate) &&
-		// 	!isNaN(numTerm) &&
-		// 	numAmount > 0 &&
-		// 	numInterestRate >= 0 &&
-		// 	numTerm > 0
-		// ) {
-		// 	const minPayment = calculateMinimumPayment(
-		// 		numAmount,
-		// 		numInterestRate,
-		// 		numTerm
-		// 	);
-		// 	onNewDebtChange({
-		// 		...newDebt,
-		// 		amount,
-		// 		interest_rate: interestRate,
-		// 		term_in_months: termInMonths,
-		// 		minimum_payment: minPayment.toFixed(2),
-		// 	});
-		// }
+		const numAmount = parseFloat(amount);
+		const numInterestRate = parseFloat(interestRate);
+		const numTerm = parseInt(termInMonths, 10);
+
+		if (!isNaN(numAmount) && !isNaN(numInterestRate) && !isNaN(numTerm) && numAmount > 0 && numInterestRate >= 0 && numTerm > 0) {
+			const minPayment = calculateMinimumPayment(numAmount, numInterestRate, numTerm);
+			setNewDebt({
+				...newDebt,
+				amount,
+				interest_rate: interestRate,
+				term_in_months: termInMonths,
+				minimum_payment: minPayment.toFixed(2),
+			});
+		}
 	};
 
 	return (
-		<View style={styles.modalContainer}>
-			{/*<View*/}
-			{/*	style={[*/}
-			{/*		styles.modalContent,*/}
-			{/*		{*/}
-			{/*			backgroundColor,*/}
-			{/*			borderColor: isDark ? "#4a5568" : "#ddd",*/}
-			{/*		},*/}
-			{/*	]}>*/}
-			{/*	<Text style={[styles.modalTitle, { color: textColor }]}>*/}
-			{/*		Add New Debt*/}
-			{/*	</Text>*/}
+		<View style={styles.modalContent}>
+			<TextInput
+				placeholder="Debt name"
+				placeholderTextColor={borderColor}
+				value={newDebt.name}
+				onChangeText={(text) => setNewDebt({ ...newDebt, name: text })}
+			/>
 
-			{/*	<TextInput*/}
-			{/*		style={[*/}
-			{/*			styles.input,*/}
-			{/*			{*/}
-			{/*				backgroundColor,*/}
-			{/*				borderColor: isDark ? "#4a5568" : "#ddd",*/}
-			{/*				color: textColor,*/}
-			{/*			},*/}
-			{/*		]}*/}
-			{/*		placeholder='Debt Name'*/}
-			{/*		placeholderTextColor={iconColor}*/}
-			{/*		value={newDebt.name}*/}
-			{/*		onChangeText={text =>*/}
-			{/*			onNewDebtChange({ ...newDebt, name: text })*/}
-			{/*		}*/}
-			{/*	/>*/}
+			<TextInput
+				placeholder="Amount"
+				placeholderTextColor={borderColor}
+				keyboardType="numeric"
+				value={newDebt.amount}
+				onChangeText={(text) => {
+					setNewDebt({ ...newDebt, amount: text });
+					updateMinimumPayment(text, newDebt.interest_rate, newDebt.term_in_months);
+				}}
+			/>
 
-			{/*	<View*/}
-			{/*		style={[*/}
-			{/*			styles.pickerContainer,*/}
-			{/*			{*/}
-			{/*				backgroundColor,*/}
-			{/*				borderColor: isDark ? "#4a5568" : "#ddd",*/}
-			{/*			},*/}
-			{/*		]}>*/}
-			{/*		<Picker*/}
-			{/*			selectedValue={newDebt.category || "OTHER"}*/}
-			{/*			onValueChange={(value: DebtCategory) =>*/}
-			{/*				onNewDebtChange({ ...newDebt, category: value })*/}
-			{/*			}*/}
-			{/*			style={[*/}
-			{/*				styles.picker,*/}
-			{/*				{*/}
-			{/*					color: textColor,*/}
-			{/*				},*/}
-			{/*			]}*/}
-			{/*			dropdownIconColor={textColor}>*/}
-			{/*			{Object.entries(categoryLabels).map(*/}
-			{/*				([value, label]) => (*/}
-			{/*					<Picker.Item*/}
-			{/*						key={value}*/}
-			{/*						label={label}*/}
-			{/*						value={value}*/}
-			{/*						color={textColor}*/}
-			{/*					/>*/}
-			{/*				)*/}
-			{/*			)}*/}
-			{/*		</Picker>*/}
-			{/*	</View>*/}
+			<TextInput
+				placeholder="Interest rate (%)"
+				placeholderTextColor={borderColor}
+				keyboardType="numeric"
+				value={newDebt.interest_rate}
+				onChangeText={(text) => {
+					setNewDebt({
+						...newDebt,
+						interest_rate: text,
+					});
+					updateMinimumPayment(newDebt.amount, text, newDebt.term_in_months);
+				}}
+			/>
 
-			{/*	<TextInput*/}
-			{/*		style={[*/}
-			{/*			styles.input,*/}
-			{/*			{*/}
-			{/*				backgroundColor,*/}
-			{/*				borderColor: isDark ? "#4a5568" : "#ddd",*/}
-			{/*				color: textColor,*/}
-			{/*			},*/}
-			{/*		]}*/}
-			{/*		placeholder='Amount'*/}
-			{/*		placeholderTextColor={iconColor}*/}
-			{/*		keyboardType='numeric'*/}
-			{/*		value={newDebt.amount}*/}
-			{/*		onChangeText={text => {*/}
-			{/*			onNewDebtChange({ ...newDebt, amount: text });*/}
-			{/*			updateMinimumPayment(*/}
-			{/*				text,*/}
-			{/*				newDebt.interest_rate,*/}
-			{/*				newDebt.term_in_months*/}
-			{/*			);*/}
-			{/*		}}*/}
-			{/*	/>*/}
+			<TextInput
+				placeholder="Term (months)"
+				placeholderTextColor={borderColor}
+				keyboardType="numeric"
+				value={newDebt.term_in_months}
+				onChangeText={(text) => {
+					setNewDebt({
+						...newDebt,
+						term_in_months: text,
+					});
+					updateMinimumPayment(newDebt.amount, newDebt.interest_rate, text);
+				}}
+			/>
 
-			{/*	<TextInput*/}
-			{/*		style={[*/}
-			{/*			styles.input,*/}
-			{/*			{*/}
-			{/*				backgroundColor,*/}
-			{/*				borderColor: isDark ? "#4a5568" : "#ddd",*/}
-			{/*				color: textColor,*/}
-			{/*			},*/}
-			{/*		]}*/}
-			{/*		placeholder='Interest Rate (%)'*/}
-			{/*		placeholderTextColor={iconColor}*/}
-			{/*		keyboardType='numeric'*/}
-			{/*		value={newDebt.interest_rate}*/}
-			{/*		onChangeText={text => {*/}
-			{/*			onNewDebtChange({*/}
-			{/*				...newDebt,*/}
-			{/*				interest_rate: text,*/}
-			{/*			});*/}
-			{/*			updateMinimumPayment(*/}
-			{/*				newDebt.amount,*/}
-			{/*				text,*/}
-			{/*				newDebt.term_in_months*/}
-			{/*			);*/}
-			{/*		}}*/}
-			{/*	/>*/}
+			<TextInput
+				placeholder="Minimum payment"
+				disabled
+				placeholderTextColor={Colors.light.text}
+				keyboardType="numeric"
+				value={newDebt.minimum_payment}
+				onChangeText={(text) =>
+					setNewDebt({
+						...newDebt,
+						minimum_payment: text,
+					})
+				}
+			/>
 
-			{/*	<TextInput*/}
-			{/*		style={[*/}
-			{/*			styles.input,*/}
-			{/*			{*/}
-			{/*				backgroundColor,*/}
-			{/*				borderColor: isDark ? "#4a5568" : "#ddd",*/}
-			{/*				color: textColor,*/}
-			{/*			},*/}
-			{/*		]}*/}
-			{/*		placeholder='Term (months)'*/}
-			{/*		placeholderTextColor={iconColor}*/}
-			{/*		keyboardType='numeric'*/}
-			{/*		value={newDebt.term_in_months}*/}
-			{/*		onChangeText={text => {*/}
-			{/*			onNewDebtChange({*/}
-			{/*				...newDebt,*/}
-			{/*				term_in_months: text,*/}
-			{/*			});*/}
-			{/*			updateMinimumPayment(*/}
-			{/*				newDebt.amount,*/}
-			{/*				newDebt.interest_rate,*/}
-			{/*				text*/}
-			{/*			);*/}
-			{/*		}}*/}
-			{/*	/>*/}
+			<View style={styles.pickerContainer}>
+				<Picker
+					selectedValue={newDebt.category || 'OTHER'}
+					onValueChange={(value: DebtCategory) => setNewDebt({ ...newDebt, category: value })}
+					style={styles.picker}
+					dropdownIconColor={Colors.light.text}
+				>
+					{Object.entries(categoryLabels).map(([value, label]) => (
+						<Picker.Item key={value} label={label} value={value} color={Colors.light.text} />
+					))}
+				</Picker>
+			</View>
 
-			{/*	<TextInput*/}
-			{/*		style={[*/}
-			{/*			styles.input,*/}
-			{/*			{*/}
-			{/*				backgroundColor,*/}
-			{/*				borderColor: isDark ? "#4a5568" : "#ddd",*/}
-			{/*				color: textColor,*/}
-			{/*			},*/}
-			{/*		]}*/}
-			{/*		placeholder='Minimum Payment'*/}
-			{/*		placeholderTextColor={iconColor}*/}
-			{/*		keyboardType='numeric'*/}
-			{/*		value={newDebt.minimum_payment}*/}
-			{/*		onChangeText={text =>*/}
-			{/*			onNewDebtChange({*/}
-			{/*				...newDebt,*/}
-			{/*				minimum_payment: text,*/}
-			{/*			})*/}
-			{/*		}*/}
-			{/*	/>*/}
-
-			{/*	<View style={styles.modalButtons}>*/}
-			{/*		<TouchableOpacity*/}
-			{/*			style={[*/}
-			{/*				styles.modalButton,*/}
-			{/*				styles.cancelButton,*/}
-			{/*				{*/}
-			{/*					backgroundColor: isDark*/}
-			{/*						? "#4a5568"*/}
-			{/*						: "#E5E5EA",*/}
-			{/*				},*/}
-			{/*			]}*/}
-			{/*			onPress={onClose}>*/}
-			{/*			<Text*/}
-			{/*				style={[*/}
-			{/*					styles.modalButtonText,*/}
-			{/*					{ color: isDark ? "#fff" : "#333" },*/}
-			{/*				]}>*/}
-			{/*				Cancel*/}
-			{/*			</Text>*/}
-			{/*		</TouchableOpacity>*/}
-
-			{/*		<TouchableOpacity*/}
-			{/*			style={[*/}
-			{/*				styles.modalButton,*/}
-			{/*				styles.addButton,*/}
-			{/*				{ backgroundColor: tintColor },*/}
-			{/*			]}*/}
-			{/*			onPress={handleAdd}>*/}
-			{/*			<Text*/}
-			{/*				style={[*/}
-			{/*					styles.modalButtonText,*/}
-			{/*					{ color: isDark ? "#000" : "#fff" },*/}
-			{/*				]}>*/}
-			{/*				Add*/}
-			{/*			</Text>*/}
-			{/*		</TouchableOpacity>*/}
-			{/*	</View>*/}
-			{/*</View>*/}
+			<Button onPress={handleAdd}>Add Debt </Button>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	modalContainer: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'rgba(0, 0, 0, 0.5)',
-	},
 	modalContent: {
-		borderRadius: 12,
-		padding: 24,
-		width: '90%',
-		maxWidth: 400,
-		borderWidth: 1,
-	},
-	modalTitle: {
-		fontSize: 24,
-		fontWeight: 'bold',
-		marginBottom: 20,
+		backgroundColor: '#fff',
+		borderTopLeftRadius: 20,
+		borderTopRightRadius: 20,
+		paddingHorizontal: 24,
+		paddingTop: 20,
+		paddingBottom: 40,
 	},
 	input: {
-		padding: 16,
-		borderRadius: 8,
-		borderWidth: 1,
+		backgroundColor: '#f5f5f5',
+		borderRadius: 12,
+		paddingHorizontal: 16,
+		paddingVertical: 16,
 		fontSize: 16,
-		marginBottom: 12,
+		marginBottom: 16,
+		borderWidth: 0,
 	},
 	pickerContainer: {
-		borderRadius: 8,
-		borderWidth: 1,
-		marginBottom: 12,
+		backgroundColor: '#f5f5f5',
+		borderRadius: 12,
+		marginBottom: 16,
 		overflow: 'hidden',
 	},
 	picker: {
-		height: Platform.OS === 'ios' ? 150 : 50,
+		height: Platform.OS === 'ios' ? 140 : 50,
 	},
-	modalButtons: {
-		flexDirection: 'row',
-		justifyContent: 'flex-end',
-		marginTop: 16,
+	addButton: {
+		backgroundColor: '#000',
+		borderRadius: 12,
+		paddingVertical: 16,
+		alignItems: 'center',
+		marginTop: 8,
 	},
-	modalButton: {
-		paddingHorizontal: 20,
-		paddingVertical: 10,
-		borderRadius: 8,
-		marginLeft: 12,
-	},
-	cancelButton: {},
-	addButton: {},
-	modalButtonText: {
-		fontWeight: '600',
+	addButtonText: {
+		color: '#fff',
 		fontSize: 16,
+		fontWeight: '600',
 	},
 });

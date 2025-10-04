@@ -4,6 +4,21 @@ import { Expense, ExpenseInsert, ExpenseUpdate } from "@/types/STT";
 import { useCallback, useEffect, useState, useRef } from "react";
 
 // Expenses hook
+/**
+ * useExpenses is a custom React hook for managing a user's expenses.
+ * It provides methods to fetch, create, update, and delete expenses, and handles
+ * loading, error, and retry logic internally.
+ *
+ * @returns {Object} An object containing:
+ *   - expenses: Array of Expense, the user's expenses.
+ *   - loading: Boolean, true if expenses are being loaded.
+ *   - error: String | null, error message if fetching expenses failed.
+ *   - refetch: Function, manually refetches the expenses from the database.
+ *   - createExpense: Function, creates a new expense. See method docstring.
+ *   - updateExpense: Function, updates an existing expense. See method docstring.
+ *   - deleteExpense: Function, deletes an expense by id. See method docstring.
+ *   - isReady: Boolean, true if expenses are loaded or a retry is in progress.
+ */
 export function useExpenses() {
   const { user } = useUser();
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -15,6 +30,11 @@ export function useExpenses() {
   const maxRetries = 3;
   const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  /**
+   * Fetches the user's expenses from the database.
+   * Handles authentication, error, and retry logic with exponential backoff.
+   * Updates the expenses, loading, and error state accordingly.
+   */
   const fetchExpenses = useCallback(async () => {
     // Don't attempt to fetch if we're not authenticated yet
     if (!user?.id) {
@@ -58,6 +78,13 @@ export function useExpenses() {
     }
   }, [user?.id]);
 
+  /**
+   * Creates a new expense in the database.
+   * After successful creation, refetches the expenses list.
+   *
+   * @param {ExpenseInsert} expense - The expense data to insert.
+   * @returns {Promise<Expense | null>} The newly created expense, or null if creation failed.
+   */
   const createExpense = useCallback(
     async (expense: ExpenseInsert) => {
       const newExpense = await DatabaseService.createExpense(expense);
@@ -69,6 +96,14 @@ export function useExpenses() {
     [fetchExpenses]
   );
 
+  /**
+   * Updates an existing expense in the database.
+   * After successful update, refetches the expenses list.
+   *
+   * @param {string} id - The ID of the expense to update.
+   * @param {ExpenseUpdate} updates - The fields to update.
+   * @returns {Promise<Expense | null>} The updated expense, or null if update failed.
+   */
   const updateExpense = useCallback(
     async (id: string, updates: ExpenseUpdate) => {
       const updatedExpense = await DatabaseService.updateExpense(id, updates);
@@ -80,6 +115,13 @@ export function useExpenses() {
     [fetchExpenses]
   );
 
+  /**
+   * Deletes an expense from the database by its ID.
+   * After successful deletion, refetches the expenses list.
+   *
+   * @param {string} id - The ID of the expense to delete.
+   * @returns {Promise<boolean>} True if deletion was successful, false otherwise.
+   */
   const deleteExpense = useCallback(
     async (id: string) => {
       const success = await DatabaseService.deleteExpense(id);

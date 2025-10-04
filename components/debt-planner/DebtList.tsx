@@ -26,48 +26,9 @@ export function DebtList({ debts, onEditDebt, onDeleteDebt, onMakePayment, onSho
 	const iconColor = useThemeColor({}, 'icon');
 	const isDark = colorScheme === 'dark';
 
-	const [newDebt, setNewDebt] = useState({
-		name: '',
-		amount: '',
-		interest_rate: '',
-		minimum_payment: '',
-		term_in_months: '60', // Default to 5 years
-		category: 'OTHER' as DebtCategory,
-	});
-
-	const {  createDebt, updateDebt, deleteDebt, loading: debtsLoading } = useDebts();
-	const {user } = useUser();
-
-
 	const handleAddDebt = async () => {
-		// const debtData: DebtInsert = {
-		// 	name: newDebt.name,
-		// 	amount: Number(newDebt.amount),
-		// 	interest_rate: Number(newDebt.interest_rate),
-		// 	minimum_payment: Number(newDebt.minimum_payment),
-		// 	start_date: new Date().toISOString().split('T')[0],
-		// 	term_in_months: Number(newDebt.term_in_months),
-		// 	category: newDebt.category,
-		// 	is_paid: false,
-		// 	user_id: user!.id,
-		// };
-		//
-		// const success = await createDebt(debtData);
-		// if (success) {
-		// 	setNewDebt({
-		// 		name: '',
-		// 		amount: '',
-		// 		interest_rate: '',
-		// 		minimum_payment: '',
-		// 		term_in_months: '60',
-		// 		category: 'OTHER' as DebtCategory,
-		// 	});
-		// }
-
-		router.push('/(tabs)/AddDebtModal')
-
+		router.push('/(tabs)/AddDebtModal');
 	};
-
 
 	return (
 		<View style={styles.section}>
