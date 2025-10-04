@@ -17,6 +17,7 @@ import {
 	UserDebtSummary,
 } from '@/types/STT';
 import { supabase } from '@/utils/supabaseClient';
+import { useUser } from '@clerk/clerk-expo';
 
 export class DatabaseService {
 	// Profile operations
@@ -85,22 +86,16 @@ export class DatabaseService {
 		return data || [];
 	}
 
-	static async createMonthlyIncome(income: MonthlyIncomeInsert): Promise<MonthlyIncome | null> {
-		// Get current user from Supabase auth
-		const {
-			data: { user },
-		} = await supabase.auth.getUser();
-		if (!user) {
-			console.error('No authenticated user found');
-			return null;
-		}
-
+	static async createMonthlyIncome(income: MonthlyIncomeInsert, userId: string): Promise<MonthlyIncome | null> {
 		const { data, error } = await supabase
 			.from('monthly_income')
-			.insert({
-				...income,
-				user_id: user.id,
-			})
+			.upsert(
+				{
+					...income,
+					user_id: userId,
+				},
+				{ onConflict: 'user_id' },
+			)
 			.select()
 			.single();
 

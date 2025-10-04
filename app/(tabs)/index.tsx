@@ -108,11 +108,11 @@ const styles = StyleSheet.create({
 		opacity: 0.8,
 	},
 	section: {
-		marginBottom: 24,
+		marginBottom: 4,
 		paddingHorizontal: 16,
 	},
 	summarySection: {
-		marginBottom: 8,
+		marginBottom: 12,
 	},
 	sectionTitle: {
 		fontSize: 20,

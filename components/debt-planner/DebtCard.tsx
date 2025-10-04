@@ -46,13 +46,13 @@ export function DebtCard({ debt, onEdit, onDelete, onMakePayment, onShowHistory,
 
 	const renderRightActions = () => (
 		<View style={{ flexDirection: 'row', alignItems: 'center', height: '100%' }}>
-			<TouchableOpacity
+			{/*<TouchableOpacity
 				style={[styles.actionButton, styles.editButton, { backgroundColor: tintColor, height: '90%', justifyContent: 'center', marginBottom: 10 }]}
 				onPress={() => onEdit(debt)}
 			>
 				<IconSymbol name="pencil" size={16} color={isDark ? '#000' : '#fff'} />
 				<Text style={[styles.actionButtonText, { color: isDark ? '#000' : '#fff' }]}>Edit</Text>
-			</TouchableOpacity>
+			</TouchableOpacity>*/}
 			<TouchableOpacity
 				style={[styles.actionButton, styles.deleteButton, { marginLeft: 2, height: '90%', justifyContent: 'center', marginBottom: 10 }]}
 				onPress={() => handleDelete()}
@@ -60,13 +60,13 @@ export function DebtCard({ debt, onEdit, onDelete, onMakePayment, onShowHistory,
 				<IconSymbol name="trash" size={16} color={isDark ? '#000' : '#fff'} />
 				<Text style={[styles.actionButtonText, { color: isDark ? '#000' : '#fff' }]}>Delete</Text>
 			</TouchableOpacity>
-			<TouchableOpacity
+			{/*<TouchableOpacity
 				style={[styles.actionButton, { backgroundColor: '#A0AEC0', marginLeft: 2, height: '90%', justifyContent: 'center', marginBottom: 10 }]}
 				onPress={() => onShowHistory(debt)}
 			>
 				<IconSymbol name="clock" size={16} color={isDark ? '#000' : '#fff'} />
 				<Text style={[styles.actionButtonText, { color: isDark ? '#000' : '#fff' }]}>History</Text>
-			</TouchableOpacity>
+			</TouchableOpacity>*/}
 		</View>
 	);
 
@@ -91,7 +91,7 @@ export function DebtCard({ debt, onEdit, onDelete, onMakePayment, onShowHistory,
 						</View>
 					)}
 				</View>
-				<View style={styles.actionButtons}>
+				{/*<View style={styles.actionButtons}>
 					<TouchableOpacity style={[styles.actionButton, { backgroundColor: '#4FD1C5' }]} onPress={() => onMakePayment(debt)}>
 						<IconSymbol name="creditcard" size={16} color={isDark ? '#000' : '#fff'} />
 						<Text style={[styles.actionButtonText, { color: isDark ? '#000' : '#fff' }]}>Pay</Text>
@@ -100,7 +100,7 @@ export function DebtCard({ debt, onEdit, onDelete, onMakePayment, onShowHistory,
 						<IconSymbol name="plus" size={16} color={isDark ? '#000' : '#fff'} />
 						<Text style={[styles.actionButtonText, { color: isDark ? '#000' : '#fff' }]}>Add Charge</Text>
 					</TouchableOpacity>
-				</View>
+				</View>*/}
 			</View>
 		</Swipeable>
 	);

@@ -52,9 +52,9 @@ export default function ExpenseItem({ expense, onDeleteExpense, isDark, textColo
 				<Text style={[styles.dueDate, { color: iconColor }]}>Due: {expense.due_date}th</Text>
 			</View>
 			<View style={styles.actions}>
-				<TouchableOpacity style={styles.actionButton} onPress={() => handleEditExpense(expense)}>
+				{/*<TouchableOpacity style={styles.actionButton} onPress={() => handleEditExpense(expense)}>
 					<IconSymbol name="pencil" size={20} color={iconColor} />
-				</TouchableOpacity>
+				</TouchableOpacity>*/}
 				<TouchableOpacity style={styles.actionButton} onPress={handleDelete}>
 					<IconSymbol name="trash" size={20} color="#ff3b30" />
 				</TouchableOpacity>

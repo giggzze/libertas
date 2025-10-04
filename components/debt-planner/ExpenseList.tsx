@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import React from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ExpenseItem from '@/components/debt-planner/ExpenseItem';
+import Button from '../ui/Button';
 
 interface ExpenseListProps {
 	expenses: Expense[];
@@ -30,9 +31,10 @@ export function ExpenseList({ expenses, onDeleteExpense, loading }: ExpenseListP
 		<View style={styles.container}>
 			<View style={styles.header}>
 				<Text style={[styles.title, { color: textColor }]}>Monthly Expenses</Text>
-				<TouchableOpacity style={[styles.addButton, { backgroundColor: tintColor }]} onPress={onAddExpense}>
+				{/*<TouchableOpacity style={[styles.addButton, { backgroundColor: tintColor }]} onPress={onAddExpense}>
 					<IconSymbol name="plus" size={20} color={isDark ? 'black' : 'white'} />
-				</TouchableOpacity>
+				</TouchableOpacity>*/}
+				<Button onPress={onAddExpense}> Add Expense</Button>
 			</View>
 
 			{expenses.length === 0 ? (

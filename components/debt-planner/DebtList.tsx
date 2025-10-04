@@ -7,6 +7,7 @@ import { DebtCard } from './DebtCard';
 import { useDebts } from '@/hooks/useDebt';
 import { useUser } from '@clerk/clerk-expo';
 import { router } from 'expo-router';
+import Button from '../ui/Button';
 
 interface DebtListProps {
 	debts: DebtWithPayments[];
@@ -34,9 +35,10 @@ export function DebtList({ debts, onEditDebt, onDeleteDebt, onMakePayment, onSho
 		<View style={styles.section}>
 			<View style={styles.sectionHeader}>
 				<Text style={[styles.sectionTitle, { color: textColor }]}>Debts</Text>
-				<TouchableOpacity style={[styles.addButton, { backgroundColor: tintColor }]} onPress={handleAddDebt}>
+				{/*<TouchableOpacity style={[styles.addButton, { backgroundColor: tintColor }]} onPress={handleAddDebt}>
 					<Text style={[styles.addButtonText, { color: isDark ? '#000' : '#fff' }]}>Add Debt</Text>
-				</TouchableOpacity>
+				</TouchableOpacity>*/}
+				<Button onPress={handleAddDebt}>Add Debt</Button>
 			</View>
 			{debts.length === 0 ? (
 				<View style={[styles.emptyState, { borderColor: isDark ? '#4a5568' : '#e2e8f0' }]}>
