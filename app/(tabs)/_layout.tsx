@@ -39,7 +39,7 @@ export default function TabLayout() {
 					title: 'Overview',
 				}}
 			/>
-			<Stack.Screen name="strategy" />
+			<Stack.Screen name="strategy" options={{ headerShown: true, title: 'Strategy', headerLargeTitle: false }} />
 			<Stack.Screen
 				name="profile"
 				options={{

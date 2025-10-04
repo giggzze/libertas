@@ -1,6 +1,7 @@
 import { PayoffTimeline } from '@/components/debt-planner/PayoffTimeline';
 import { RecommendationItem } from '@/components/debt-planner/RecommendationItem';
 import { StrategySelector } from '@/components/debt-planner/StrategySelector';
+import { BodyScrollView } from '@/components/ui/BodyScrollView';
 import { Loading } from '@/components/ui/Loading';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useDebts } from '@/hooks/useDebt';
@@ -120,93 +121,84 @@ export default function StrategyScreen() {
 	}
 
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
-			<StatusBar style={isDark ? 'light' : 'dark'} />
-			<ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor }]} showsVerticalScrollIndicator={false}>
-				{/* Header */}
-				<View style={styles.header}>
-					<Text style={[styles.headerTitle, { color: textColor }]}>Strategy</Text>
-					<Text style={[styles.headerSubtitle, { color: iconColor }]}>Optimize your debt payoff plan</Text>
+		<BodyScrollView>
+			{/* Strategy Overview */}
+			<View
+				style={[
+					styles.summaryCard,
+					{
+						backgroundColor,
+						borderColor: isDark ? '#4a5568' : '#ddd',
+					},
+				]}
+			>
+				<Text style={[styles.summaryTitle, { color: textColor }]}>Strategy Overview</Text>
+				<View style={styles.summaryRow}>
+					<Text style={[styles.summaryLabel, { color: iconColor }]}>Monthly Income:</Text>
+					<Text style={[styles.summaryValue, { color: textColor }]}>{formatCurrency(monthlyIncome)}</Text>
 				</View>
+				<View style={styles.summaryRow}>
+					<Text style={[styles.summaryLabel, { color: iconColor }]}>Debt Payments:</Text>
+					<Text style={[styles.summaryValue, { color: textColor }]}>{formatCurrency(totalMonthlyPayments)}</Text>
+				</View>
+				<View style={styles.summaryRow}>
+					<Text style={[styles.summaryLabel, { color: iconColor }]}>Monthly Expenses:</Text>
+					<Text style={[styles.summaryValue, { color: textColor }]}>{formatCurrency(totalExpenses)}</Text>
+				</View>
+				<View style={styles.summaryRow}>
+					<Text style={[styles.summaryLabel, { color: iconColor }]}>Available for Extra Payments:</Text>
+					<Text
+						style={[
+							styles.summaryValue,
+							availablePayment > 0 ? { color: isDark ? '#68d391' : '#28a745' } : { color: isDark ? '#fc8181' : '#dc3545' },
+						]}
+					>
+						{formatCurrency(availablePayment)}
+					</Text>
+				</View>
+			</View>
 
-				{/* Strategy Overview */}
+			{/* Strategy Selector */}
+			<View style={styles.section}>
+				<StrategySelector selectedStrategy={selectedStrategy} onStrategyChange={setSelectedStrategy} />
+			</View>
+
+			{/* Payoff Timeline */}
+			<View style={styles.section}>
+				<PayoffTimeline debts={payoffOrder} recommendedPayments={recommendedPayments} totalMonths={totalMonths} />
+			</View>
+
+			{/* Recommended Payment Plan */}
+			<View style={styles.section}>
 				<View
 					style={[
-						styles.summaryCard,
+						styles.recommendationCard,
 						{
 							backgroundColor,
 							borderColor: isDark ? '#4a5568' : '#ddd',
+							marginBottom: 80,
 						},
 					]}
 				>
-					<Text style={[styles.summaryTitle, { color: textColor }]}>Strategy Overview</Text>
-					<View style={styles.summaryRow}>
-						<Text style={[styles.summaryLabel, { color: iconColor }]}>Monthly Income:</Text>
-						<Text style={[styles.summaryValue, { color: textColor }]}>{formatCurrency(monthlyIncome)}</Text>
-					</View>
-					<View style={styles.summaryRow}>
-						<Text style={[styles.summaryLabel, { color: iconColor }]}>Debt Payments:</Text>
-						<Text style={[styles.summaryValue, { color: textColor }]}>{formatCurrency(totalMonthlyPayments)}</Text>
-					</View>
-					<View style={styles.summaryRow}>
-						<Text style={[styles.summaryLabel, { color: iconColor }]}>Monthly Expenses:</Text>
-						<Text style={[styles.summaryValue, { color: textColor }]}>{formatCurrency(totalExpenses)}</Text>
-					</View>
-					<View style={styles.summaryRow}>
-						<Text style={[styles.summaryLabel, { color: iconColor }]}>Available for Extra Payments:</Text>
-						<Text
-							style={[
-								styles.summaryValue,
-								availablePayment > 0 ? { color: isDark ? '#68d391' : '#28a745' } : { color: isDark ? '#fc8181' : '#dc3545' },
-							]}
-						>
-							{formatCurrency(availablePayment)}
-						</Text>
-					</View>
+					<Text style={[styles.recommendationTitle, { color: textColor }]}>Recommended Payment Plan</Text>
+					{payoffOrder.map((debt, index) => {
+						const recommendedPayment = recommendedPayments[debt.id];
+						const payoffTime = calculatePayoffTime(debt, recommendedPayment);
+						const totalInterest = calculateTotalInterest(debt, recommendedPayment);
+						return (
+							<RecommendationItem
+								key={debt.id}
+								debt={debt}
+								index={index}
+								recommendedPayment={recommendedPayment}
+								payoffTime={payoffTime}
+								totalInterest={totalInterest}
+							/>
+						);
+					})}
 				</View>
-
-				{/* Strategy Selector */}
-				<View style={styles.section}>
-					<StrategySelector selectedStrategy={selectedStrategy} onStrategyChange={setSelectedStrategy} />
-				</View>
-
-				{/* Payoff Timeline */}
-				<View style={styles.section}>
-					<PayoffTimeline debts={payoffOrder} recommendedPayments={recommendedPayments} totalMonths={totalMonths} />
-				</View>
-
-				{/* Recommended Payment Plan */}
-				<View style={styles.section}>
-					<View
-						style={[
-							styles.recommendationCard,
-							{
-								backgroundColor,
-								borderColor: isDark ? '#4a5568' : '#ddd',
-								marginBottom: 80,
-							},
-						]}
-					>
-						<Text style={[styles.recommendationTitle, { color: textColor }]}>Recommended Payment Plan</Text>
-						{payoffOrder.map((debt, index) => {
-							const recommendedPayment = recommendedPayments[debt.id];
-							const payoffTime = calculatePayoffTime(debt, recommendedPayment);
-							const totalInterest = calculateTotalInterest(debt, recommendedPayment);
-							return (
-								<RecommendationItem
-									key={debt.id}
-									debt={debt}
-									index={index}
-									recommendedPayment={recommendedPayment}
-									payoffTime={payoffTime}
-									totalInterest={totalInterest}
-								/>
-							);
-						})}
-					</View>
-				</View>
-			</ScrollView>
-		</SafeAreaView>
+			</View>
+		</BodyScrollView>
 	);
 }
 

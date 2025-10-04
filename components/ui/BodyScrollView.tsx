@@ -5,6 +5,7 @@ export const BodyScrollView = forwardRef<any, ScrollViewProps>((props, ref) => {
 	return (
 		<ScrollView
 			automaticallyAdjustsScrollIndicatorInsets
+			showsVerticalScrollIndicator={false}
 			contentInsetAdjustmentBehavior="automatic"
 			contentInset={{ bottom: 0 }}
 			scrollIndicatorInsets={{ bottom: 0 }}
