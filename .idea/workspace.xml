@@ -1,97 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="770e7c17-de74-4039-8191-f66592b1e931" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.detoxrc.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(auth)/ResetPasswordScreen.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(auth)/SignUpScreen.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(auth)/_layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(auth)/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(tabs)/AddDebtModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(tabs)/AddExpenseModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(tabs)/EditExpenseModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(tabs)/profile.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(tabs)/strategy.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cache.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/AddPaymentModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/DebtCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/DebtCategoryPill.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/DebtList.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/EditDebtModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/ExpenseItem.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/ExpenseList.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/IncomeInput.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/PayoffTimeline.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/RecommendationItem.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/StrategySelector.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/debt-planner/SummarySection.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/BodyScrollView.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/Button.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/HeaderButton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/Loading.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/SummaryCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/TabBarBackground.ios.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/TabBarBackground.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/TextInput.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ui/Toast.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useDebt.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useDebtPayment.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useDebtSummary.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useExpense.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useMonthlyIncome.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useProfile.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/services/database.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supabase/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supabase/config.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supabase/migrations/20251003084951_consolidated_schema.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supabase/seed.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/STT.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/supabase.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/debtCalculations.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/formatCurrency.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/supabaseClient.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/updateMinimumPayment.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libertas.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.prettierrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/ResetPasswordScreen.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/SignUpScreen.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/_layout.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/index.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/AddDebtModal.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/AddExpenseModal.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/EditExpenseModal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(tabs)/explore.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/profile.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/strategy.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/+not-found.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/fonts/SpaceMono-Regular.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/adaptive-icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/favicon.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/favicon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/ios-light.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/ios-light.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/splash-icon-light.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/splash-icon-light.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cache.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/Collapsible.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ExternalLink.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/HapticTab.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/HelloWave.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ParallaxScrollView.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ThemedText.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ThemedView.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/AddPaymentModal.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/DebtCard.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/DebtCategoryPill.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/DebtList.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/EditDebtModal.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/ExpenseItem.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/ExpenseList.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/IncomeInput.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/PayoffTimeline.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/RecommendationItem.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/StrategySelector.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debt-planner/SummarySection.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/index.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/BodyScrollView.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/Button.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/HeaderButton.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/IconSymbol.ios.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/IconSymbol.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/Loading.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/SummaryCard.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/TabBarBackground.ios.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/TabBarBackground.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/TextInput.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/Toast.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/modal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ui/collapsible.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/collapsible.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ui/icon-symbol.ios.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/IconSymbol.ios.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ui/icon-symbol.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/IconSymbol.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants/theme.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/theme.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/e2e/jest.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/e2e/starter.test.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eas.json" beforeDir="false" afterPath="$PROJECT_DIR$/eas.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/genSupabaseTypes.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useColorScheme.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useColorScheme.web.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useDebt.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useDebtPayment.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useDebtSummary.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useExpense.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useMonthlyIncome.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useProfile.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useThemeColor.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/metro.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/create-test-users.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/database.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/auth.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/supabase/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/supabase/config.toml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/supabase/migrations/20251003084951_consolidated_schema.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/supabase/seed.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/STT.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/supabase.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/debtCalculations.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/formatCurrency.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/storage.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/supabaseClient.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/updateMinimumPayment.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,31 +80,38 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 5
-}]]></component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="33cCoFp2V6nDZYqrRMc01PXahVJ" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "payments",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;payments&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\GitHub\\libertas\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-WS-251.26927.40" />
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-WS-252.23892.411" />
       </set>
     </attachedChunks>
   </component>
@@ -137,6 +123,8 @@
       <option name="presentableId" value="Default" />
       <updated>1759607147276</updated>
       <workItem from="1759607149019" duration="304000" />
+      <workItem from="1759656565372" duration="4002000" />
+      <workItem from="1759661103089" duration="1832000" />
     </task>
     <servers />
   </component>

@@ -1,98 +1,154 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { BodyScrollView } from '@/components/ui/BodyScrollView';
+import HeaderButton from '@/components/ui/HeaderButton';
+import { appleBlue } from '@/constants/theme';
+import { router, Stack, useFocusEffect } from 'expo-router';
+import React, { useCallback} from 'react';
+import { StyleSheet, View } from 'react-native';
+import { SummaryCard } from '@/components/ui/SummaryCard';
+import { ExpenseList } from '@/components/debt-planner/ExpenseList';
+import { useExpenses } from '@/hooks/useExpense';
+import { DebtList } from '@/components/debt-planner/DebtList';
+import { useDebts } from '@/hooks/useDebt';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+	const { expenses,  deleteExpense, loading: expensesLoading, refetch } = useExpenses();
+	const { debts, deleteDebt, refetch: refetchDebts } = useDebts();
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+	const handleEditDebt = async () => {};
+	const handleMakePayment = async () => {};
+	const handleAddCharge = async () => {};
+	const handleShowHistory = async () => {};
+
+	const totalDebt = debts.reduce((sum, debt) => sum + (debt.remaining_balance || debt.amount), 0);
+	const totalMonthlyPayments = debts.reduce((sum, debt) => sum + debt.minimum_payment, 0);
+	const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+	const totalMonthlyObligations = totalMonthlyPayments + totalExpenses;
+
+
+	// Refetch expenses when screen comes back into focus (e.g., after modal closes)
+	useFocusEffect(
+		useCallback(() => {
+			console.log('refetching expenses');
+			refetch();
+			refetchDebts();
+		}, [refetch, refetchDebts]),
+	);
+
+	const handleDeleteExpense = async (expenseId: string) => {
+		await deleteExpense(expenseId);
+	};
+
+	const handleDeleteDebt = async (debtId: string) => {
+		await deleteDebt(debtId);
+	};
+
+	return (
+		<>
+			<Stack.Screen
+				options={{
+					headerLeft: () => <HeaderButton onPress={() => router.push('/profile')} iconName="gear" color={appleBlue} />,
+					headerRight: () => <HeaderButton onPress={() => router.push('/strategy')} iconName="chart.bar" color={appleBlue} />,
+				}}
+			/>
+			<BodyScrollView>
+				{/*summary section*/}
+				<View style={styles.summarySection}>
+					<View style={styles.summaryContainer}>
+						<SummaryCard title="Total Debt" amount={totalDebt} />
+						<SummaryCard title="Total Outgoings" amount={totalMonthlyObligations} subtitle="Monthly" isNegative={true} />
+					</View>
+
+					<View style={styles.summaryContainer}>
+						<SummaryCard title="Expenses" amount={totalExpenses} subtitle="Monthly" />
+
+						<SummaryCard title="Debt Payments" amount={totalMonthlyPayments} subtitle="Monthly" />
+					</View>
+				</View>
+				{/*expense section*/}
+				<View style={styles.section}>
+					<ExpenseList expenses={expenses} onDeleteExpense={handleDeleteExpense} loading={expensesLoading} />
+				</View>
+				{/*debt section*/}
+				<View style={styles.section}>
+					<DebtList
+						debts={debts}
+						onEditDebt={handleEditDebt}
+						onDeleteDebt={handleDeleteDebt}
+						onMakePayment={handleMakePayment}
+						onShowHistory={handleShowHistory}
+						onAddCharge={handleAddCharge}
+					/>
+				</View>
+			</BodyScrollView>
+		</>
+	);
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+	container: {
+		flex: 1,
+		marginBottom: 60,
+	},
+	header: {
+		padding: 24,
+		paddingBottom: 20,
+		borderBottomWidth: 1,
+		borderBottomColor: '#2d3748',
+		marginBottom: 16,
+	},
+	title: {
+		fontSize: 32,
+		fontWeight: 'bold',
+		marginBottom: 8,
+	},
+	subtitle: {
+		fontSize: 16,
+		opacity: 0.8,
+	},
+	section: {
+		marginBottom: 4,
+		paddingHorizontal: 16,
+	},
+	summarySection: {
+		marginBottom: 12,
+	},
+	sectionTitle: {
+		fontSize: 20,
+		fontWeight: 'bold',
+		marginBottom: 12,
+		paddingHorizontal: 16,
+	},
+	summaryContainer: {
+		flexDirection: 'row',
+		paddingHorizontal: 16,
+		paddingVertical: 8,
+		gap: 16,
+		marginBottom: 4,
+	},
+	summaryCard: {
+		flex: 1,
+		padding: 20,
+		borderRadius: 12,
+		alignItems: 'center',
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 3,
+	},
+	summaryTitle: {
+		fontSize: 14,
+		marginBottom: 12,
+		textAlign: 'center',
+		fontWeight: '500',
+	},
+	summaryAmount: {
+		fontSize: 24,
+		fontWeight: 'bold',
+	},
+	summarySubtitle: {
+		fontSize: 12,
+		marginTop: 4,
+		opacity: 0.8,
+	},
 });
