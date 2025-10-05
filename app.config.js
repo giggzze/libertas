@@ -1,6 +1,34 @@
-{
-  "expo": {
-    "name": "libertas",
+
+const IS_DEV = process.env.NODE_ENV === 'development';
+const IS_PREVIEW = process.env.NODE_ENV === 'preview';
+
+const getUniqueIdentifier = () => {
+    if (IS_DEV) {
+        return 'com.giggzze.libertas.dev';
+    }
+
+    if (IS_PREVIEW) {
+        return 'com.giggzze.libertas.preview';
+    }
+
+    return 'com.giggzze.libertas';
+};
+
+const getAppName = () => {
+    if (IS_DEV) {
+        return 'Libertas (Dev)';
+    }
+
+    if (IS_PREVIEW) {
+        return 'Libertas (Preview)';
+    }
+
+    return 'Libertas';
+};
+
+export default ({config } ) => (  {
+     ...config,
+    "name": getAppName(),
     "slug": "libertas",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,7 +38,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.giggzze.libertas",
+      "bundleIdentifier": getUniqueIdentifier(),
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -24,7 +52,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.giggzze.libertas"
+      "package": getUniqueIdentifier()
     },
     "web": {
       "output": "static",
@@ -56,5 +84,4 @@
         "projectId": "370306f1-337b-45b1-8ae6-6a89aa27d2dc"
       }
     }
-  }
-}
+  })

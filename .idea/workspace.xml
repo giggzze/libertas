@@ -5,71 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="770e7c17-de74-4039-8191-f66592b1e931" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(auth)/ResetPasswordScreen.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(auth)/SignUpScreen.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(auth)/_layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(auth)/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/AddDebtModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/AddExpenseModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/EditExpenseModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/profile.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(tabs)/strategy.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cache.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/AddPaymentModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/DebtCard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/DebtCategoryPill.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/DebtList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/EditDebtModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/ExpenseItem.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/ExpenseList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/IncomeInput.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/PayoffTimeline.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/RecommendationItem.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/StrategySelector.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/debt-planner/SummarySection.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/BodyScrollView.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/Button.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/HeaderButton.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/Loading.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/SummaryCard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/TabBarBackground.ios.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/TabBarBackground.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/TextInput.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ui/Toast.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hooks/useDebt.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hooks/useDebtPayment.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hooks/useDebtSummary.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hooks/useExpense.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hooks/useMonthlyIncome.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hooks/useProfile.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/services/database.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/supabase/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/supabase/config.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/supabase/migrations/20251003084951_consolidated_schema.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/supabase/seed.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/types/STT.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/types/supabase.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/debtCalculations.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/formatCurrency.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/supabaseClient.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/updateMinimumPayment.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libertas.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/explore.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/modal.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/collapsible.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/collapsible.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/icon-symbol.ios.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/IconSymbol.ios.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/icon-symbol.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/IconSymbol.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constants/theme.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/theme.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eas.json" beforeDir="false" afterPath="$PROJECT_DIR$/eas.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -124,7 +62,8 @@
       <updated>1759607147276</updated>
       <workItem from="1759607149019" duration="304000" />
       <workItem from="1759656565372" duration="4002000" />
-      <workItem from="1759661103089" duration="1832000" />
+      <workItem from="1759661103089" duration="3513000" />
+      <workItem from="1759694420935" duration="2728000" />
     </task>
     <servers />
   </component>
