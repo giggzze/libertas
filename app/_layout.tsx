@@ -16,6 +16,7 @@ export default function RootLayout() {
 	});
 
 	const pubicKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+    console.log(pubicKey)
 
 	return (
 		<ClerkProvider publishableKey={pubicKey} tokenCache={tokenCache}>
