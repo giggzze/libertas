@@ -46,7 +46,12 @@ export default function HomeScreen() {
 		<>
 			<Stack.Screen
 				options={{
-					headerLeft: () => <HeaderButton onPress={() => router.push('/profile')} iconName="gear" color={appleBlue} />,
+					headerLeft: () => (
+						<View style={{marginLeft: 5}}>
+							<HeaderButton onPress={() => router.push('/profile')}
+										  iconName="gear" color={appleBlue}  />
+						</View>
+					),
 					headerRight: () => <HeaderButton onPress={() => router.push('/strategy')} iconName="chart.bar" color={appleBlue} />,
 				}}
 			/>

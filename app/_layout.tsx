@@ -8,6 +8,7 @@ import { ClerkLoaded, ClerkProvider } from '@clerk/clerk-expo';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { tokenCache } from '@/cache';
+import { Text, View, StyleSheet } from 'react-native';
 
 export default function RootLayout() {
 	const colorScheme = useColorScheme();
@@ -15,11 +16,20 @@ export default function RootLayout() {
 		SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
 	});
 
-	const pubicKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-    console.log(pubicKey)
+	const publicKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+    console.log(publicKey)
+
+	// Show error message if Clerk key is missing
+	if (!publicKey) {
+		return (
+			<View style={styles.errorContainer}>
+				<Text style={styles.errorText}>Key is empty</Text>
+			</View>
+		);
+	}
 
 	return (
-		<ClerkProvider publishableKey={pubicKey} tokenCache={tokenCache}>
+		<ClerkProvider publishableKey={publicKey} tokenCache={tokenCache}>
 			<ClerkLoaded>
 				<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 					<GestureHandlerRootView style={{ flex: 1 }}>
@@ -31,3 +41,19 @@ export default function RootLayout() {
 		</ClerkProvider>
 	);
 }
+
+const styles = StyleSheet.create({
+	errorContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#f5f5f5',
+		padding: 20,
+	},
+	errorText: {
+		fontSize: 18,
+		color: '#333',
+		textAlign: 'center',
+		fontWeight: '500',
+	},
+});
