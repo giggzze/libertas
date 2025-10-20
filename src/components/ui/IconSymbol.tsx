@@ -20,6 +20,10 @@ const MAPPING = {
 	'chevron.right': 'chevron-right',
 	gear: 'settings',
 	'chart.bar': 'area-chart',
+	creditcard: 'credit-card',
+	'arrow.down.circle': 'arrow-circle-down',
+	cart: 'shopping-cart',
+	banknote: 'attach-money',
 } as IconMapping;
 
 /**

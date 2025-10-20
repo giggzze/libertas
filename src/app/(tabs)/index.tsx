@@ -2,17 +2,27 @@ import { BodyScrollView } from '@/src/components/ui/BodyScrollView';
 import HeaderButton from '@/src/components/ui/HeaderButton';
 import { appleBlue } from '@/src/constants/theme';
 import { router, Stack, useFocusEffect } from 'expo-router';
-import React, { useCallback} from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, View, Text, RefreshControl, Animated } from 'react-native';
 import { SummaryCard } from '@/src/components/ui/SummaryCard';
 import { ExpenseList } from '@/src/components/debt-planner/ExpenseList';
 import { useExpenses } from '@/src/hooks/useExpense';
 import { DebtList } from '@/src/components/debt-planner/DebtList';
 import { useDebts } from '@/src/hooks/useDebt';
+import { useThemeColor } from '@/src/hooks/use-theme-color';
+import { useColorScheme } from '@/src/hooks/use-color-scheme';
 
 export default function HomeScreen() {
-	const { expenses,  deleteExpense, loading: expensesLoading, refetch } = useExpenses();
+	const { expenses, deleteExpense, loading: expensesLoading, refetch } = useExpenses();
 	const { debts, deleteDebt, refetch: refetchDebts } = useDebts();
+	const [refreshing, setRefreshing] = useState(false);
+
+	// Theme
+	const colorScheme = useColorScheme();
+	const isDark = colorScheme === 'dark';
+	const textColor = useThemeColor({}, 'text');
+	const iconColor = useThemeColor({}, 'icon');
+	const backgroundColor = useThemeColor({}, 'background');
 
 	const handleEditDebt = async () => {};
 	const handleMakePayment = async () => {};
@@ -24,6 +34,16 @@ export default function HomeScreen() {
 	const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 	const totalMonthlyObligations = totalMonthlyPayments + totalExpenses;
 
+	// Calculate additional insights
+	const totalDebts = debts.length;
+	const totalExpenseCount = expenses.length;
+
+	// Pull to refresh
+	const onRefresh = useCallback(async () => {
+		setRefreshing(true);
+		await Promise.all([refetch(), refetchDebts()]);
+		setRefreshing(false);
+	}, [refetch, refetchDebts]);
 
 	// Refetch expenses when screen comes back into focus (e.g., after modal closes)
 	useFocusEffect(
@@ -47,33 +67,58 @@ export default function HomeScreen() {
 			<Stack.Screen
 				options={{
 					headerLeft: () => (
-						<View style={{marginLeft: 5}}>
-							<HeaderButton onPress={() => router.push('/profile')}
-										  iconName="gear" color={appleBlue}  />
+						<View style={{ marginLeft: 5 }}>
+							<HeaderButton onPress={() => router.push('/profile')} iconName="gear" color={appleBlue} />
 						</View>
 					),
 					headerRight: () => <HeaderButton onPress={() => router.push('/strategy')} iconName="chart.bar" color={appleBlue} />,
+					title: 'Overview',
 				}}
 			/>
-			<BodyScrollView>
-				{/*summary section*/}
+			<BodyScrollView
+				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={appleBlue} />}
+			>
+				{/* Quick Stats Banner */}
+				{(totalDebts > 0 || totalExpenseCount > 0) && (
+					<View style={[styles.quickStats, { backgroundColor: isDark ? '#1f2937' : '#f8fafc' }]}>
+						<View style={styles.statItem}>
+							<Text style={[styles.statNumber, { color: textColor }]}>{totalDebts}</Text>
+							<Text style={[styles.statLabel, { color: iconColor }]}>Active Debts</Text>
+						</View>
+						<View style={[styles.statDivider, { backgroundColor: isDark ? '#374151' : '#e2e8f0' }]} />
+						<View style={styles.statItem}>
+							<Text style={[styles.statNumber, { color: textColor }]}>{totalExpenseCount}</Text>
+							<Text style={[styles.statLabel, { color: iconColor }]}>Monthly Expenses</Text>
+						</View>
+					</View>
+				)}
+
+				{/* Summary section */}
 				<View style={styles.summarySection}>
+					<Text style={[styles.sectionHeader, { color: textColor }]}>Financial Summary</Text>
 					<View style={styles.summaryContainer}>
-						<SummaryCard title="Total Debt" amount={totalDebt} />
-						<SummaryCard title="Total Outgoings" amount={totalMonthlyObligations} subtitle="Monthly" isNegative={true} />
+						<SummaryCard title="Total Debt" amount={totalDebt} iconName="creditcard" />
+						<SummaryCard
+							title="Total Outgoings"
+							amount={totalMonthlyObligations}
+							subtitle="Monthly"
+							isNegative={true}
+							iconName="arrow.down.circle"
+						/>
 					</View>
 
 					<View style={styles.summaryContainer}>
-						<SummaryCard title="Expenses" amount={totalExpenses} subtitle="Monthly" />
-
-						<SummaryCard title="Debt Payments" amount={totalMonthlyPayments} subtitle="Monthly" />
+						<SummaryCard title="Expenses" amount={totalExpenses} subtitle="Monthly" iconName="cart" />
+						<SummaryCard title="Debt Payments" amount={totalMonthlyPayments} subtitle="Monthly" iconName="banknote" />
 					</View>
 				</View>
-				{/*expense section*/}
+
+				{/* Expense section */}
 				<View style={styles.section}>
 					<ExpenseList expenses={expenses} onDeleteExpense={handleDeleteExpense} loading={expensesLoading} />
 				</View>
-				{/*debt section*/}
+
+				{/* Debt section */}
 				<View style={styles.section}>
 					<DebtList
 						debts={debts}
@@ -84,6 +129,9 @@ export default function HomeScreen() {
 						onAddCharge={handleAddCharge}
 					/>
 				</View>
+
+				{/* Bottom padding for better scroll */}
+				<View style={{ height: 40 }} />
 			</BodyScrollView>
 		</>
 	);
@@ -94,41 +142,61 @@ const styles = StyleSheet.create({
 		flex: 1,
 		marginBottom: 60,
 	},
-	header: {
-		padding: 24,
-		paddingBottom: 20,
-		borderBottomWidth: 1,
-		borderBottomColor: '#2d3748',
-		marginBottom: 16,
+	quickStats: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		alignItems: 'center',
+		marginHorizontal: 16,
+		marginTop: 8,
+		marginBottom: 20,
+		padding: 20,
+		borderRadius: 16,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 1 },
+		shadowOpacity: 0.05,
+		shadowRadius: 3,
+		elevation: 2,
 	},
-	title: {
-		fontSize: 32,
+	statItem: {
+		flex: 1,
+		alignItems: 'center',
+	},
+	statNumber: {
+		fontSize: 28,
 		fontWeight: 'bold',
-		marginBottom: 8,
+		marginBottom: 4,
 	},
-	subtitle: {
+	statLabel: {
+		fontSize: 13,
+		opacity: 0.7,
+	},
+	statDivider: {
+		width: 1,
+		height: 40,
+		marginHorizontal: 16,
+	},
+	sectionHeader: {
 		fontSize: 16,
-		opacity: 0.8,
+		fontWeight: '600',
+		paddingHorizontal: 16,
+		marginBottom: 12,
+		textTransform: 'uppercase',
+		letterSpacing: 0.5,
+		opacity: 0.6,
 	},
 	section: {
-		marginBottom: 4,
+		marginBottom: 8,
 		paddingHorizontal: 16,
 	},
 	summarySection: {
-		marginBottom: 12,
-	},
-	sectionTitle: {
-		fontSize: 20,
-		fontWeight: 'bold',
-		marginBottom: 12,
-		paddingHorizontal: 16,
+		marginBottom: 24,
 	},
 	summaryContainer: {
 		flexDirection: 'row',
 		paddingHorizontal: 16,
-		paddingVertical: 8,
-		gap: 16,
-		marginBottom: 4,
+		paddingVertical: 6,
+		gap: 12,
+		marginBottom: 8,
 	},
 	summaryCard: {
 		flex: 1,

@@ -118,38 +118,69 @@ export class DatabaseService {
 
 	// Debt operations
 	static async getUserDebts(userId: string): Promise<Debt[]> {
-		const { data, error } = await supabase
-			.from('debts')
-			.select('*')
-			.eq('user_id', userId)
-			.eq('is_paid', false)
-			.order('created_at', { ascending: false });
+		// const { data, error } = await supabase
+		// 	.from('debts')
+		// 	.select('*')
+		// 	.eq('user_id', userId)
+		// 	.eq('is_paid', false)
+		// 	.order('created_at', { ascending: false });
 
-		if (error) {
-			console.error('Error fetching debts:', error);
-			return [];
-		}
+		// if (error) {
+		// 	console.error('Error fetching debts:', error);
+		// 	return [];
+		// }
 
-		return data || [];
+		// return data || [];
+		return [{
+			amount: 1000,
+			category: 'CREDIT_CARD',
+			created_at: new Date().toISOString(),
+			end_date: null,
+			id: '1',
+			interest_rate: 0.1,
+			is_paid: false,
+			minimum_payment: 100,
+			name: 'Credit Card',
+			start_date: new Date().toISOString(),
+			term_in_months: 12,
+			updated_at: new Date().toISOString(),
+			user_id: userId,
+		}]
 	}
 
 	static async getAllUserDebts(userId: string, includePaid: boolean = false): Promise<Debt[]> {
-		let query = supabase.from('debts').select('*').eq('user_id', userId);
+		// let query = supabase.from('debts').select('*').eq('user_id', userId);
 
-		if (!includePaid) {
-			query = query.eq('is_paid', false);
-		}
+		// if (!includePaid) {
+		// 	query = query.eq('is_paid', false);
+		// }
 
-		const { data, error } = await query.order('created_at', {
-			ascending: false,
-		});
+		// const { data, error } = await query.order('created_at', {
+		// 	ascending: false,
+		// });
 
-		if (error) {
-			console.error('Error fetching all debts:', error);
-			return [];
-		}
+		// if (error) {
+		// 	console.error('Error fetching all debts:', error);
+		// 	return [];
+		// }
 
-		return data || [];
+		// return data || [];
+
+		return [{
+			amount: 1000,
+			category: 'CREDIT_CARD',
+			created_at: new Date().toISOString(),
+			end_date: null,
+			id: '1',
+			interest_rate: 0.1,
+			is_paid: false,
+			minimum_payment: 100,
+			name: 'Credit Card',
+			start_date: new Date().toISOString(),
+			term_in_months: 12,
+			updated_at: new Date().toISOString(),
+			user_id: userId,
+		}]
 	}
 
 	static async getDebtWithPayments(debtId: string): Promise<DebtWithPayments | null> {
@@ -188,40 +219,78 @@ export class DatabaseService {
 	}
 
 	static async getUserDebtsWithPayments(userId: string): Promise<DebtWithPayments[]> {
-		const { data, error } = await supabase
-			.from('debts')
-			.select(
-				`
-        *,
-        debt_payments (*)
-      `,
-			)
-			.eq('user_id', userId)
-			.eq('is_paid', false)
-			.order('created_at', { ascending: false });
+	// 	const { data, error } = await supabase
+	// 		.from('debts')
+	// 		.select(
+	// 			`
+    //     *,
+    //     debt_payments (*)
+    //   `,
+	// 		)
+	// 		.eq('user_id', userId)
+	// 		.eq('is_paid', false)
+	// 		.order('created_at', { ascending: false });
 
-		if (error) {
-			console.error('Error fetching debts with payments:', error);
-			return [];
-		}
+	// 	if (error) {
+	// 		console.error('Error fetching debts with payments:', error);
+	// 		return [];
+	// 	}
 
-		// Calculate totals for each debt
-		return (data || []).map((debt: any) => {
-			const totalPaid =
-				debt.debt_payments
-					?.filter((p: DebtPayment) => p.type === 'payment')
-					.reduce((sum: number, payment: DebtPayment) => sum + payment.amount, 0) || 0;
-			const totalCharges =
-				debt.debt_payments
-					?.filter((p: DebtPayment) => p.type === 'charge')
-					.reduce((sum: number, payment: DebtPayment) => sum + payment.amount, 0) || 0;
-			const remainingBalance = debt.amount + totalCharges - totalPaid;
-			return {
-				...debt,
-				total_paid: totalPaid,
-				remaining_balance: remainingBalance,
-			};
-		});
+	// 	// Calculate totals for each debt
+	// 	return (data || []).map((debt: any) => {
+	// 		const totalPaid =
+	// 			debt.debt_payments
+	// 				?.filter((p: DebtPayment) => p.type === 'payment')
+	// 				.reduce((sum: number, payment: DebtPayment) => sum + payment.amount, 0) || 0;
+	// 		const totalCharges =
+	// 			debt.debt_payments
+	// 				?.filter((p: DebtPayment) => p.type === 'charge')
+	// 				.reduce((sum: number, payment: DebtPayment) => sum + payment.amount, 0) || 0;
+	// 		const remainingBalance = debt.amount + totalCharges - totalPaid;
+	// 		return {
+	// 			...debt,
+	// 			total_paid: totalPaid,
+	// 			remaining_balance: remainingBalance,
+	// 		};
+	// 	});
+
+	return [{
+		amount: 1000,
+		category: 'CREDIT_CARD',
+		created_at: new Date().toISOString(),
+		end_date: null,
+		id: '1',
+		interest_rate: 0.1,
+		is_paid: false,
+		minimum_payment: 100,
+		name: 'Credit Card',
+		start_date: new Date().toISOString(),
+		term_in_months: 12,
+		updated_at: new Date().toISOString(),
+		user_id: userId,
+		debt_payments: [],
+		remaining_balance: 1000,
+		last_payment_date: null,
+		last_payment_amount: null
+	}, {
+		amount: 1000,
+		category: 'CREDIT_CARD',
+		created_at: new Date().toISOString(),
+		end_date: null,
+		id: '2',
+		interest_rate: 0.1,
+		is_paid: false,
+		minimum_payment: 100,
+		name: 'Credit Card',
+		start_date: new Date().toISOString(),
+		term_in_months: 12,
+		updated_at: new Date().toISOString(),
+		user_id: userId,
+		debt_payments: [],
+		remaining_balance: 1000,
+		last_payment_date: null,
+		last_payment_amount: null
+	}]
 	}
 
 	static async createDebt(debt: DebtInsert, userId: string): Promise<Debt | null> {
