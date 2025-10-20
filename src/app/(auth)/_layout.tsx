@@ -23,23 +23,12 @@ export default function AuthLayout() {
 	return (
 		<Stack
 			screenOptions={{
-				...(process.env.EXPO_OS !== 'ios'
-					? {}
-					: {
-							headerLargeTitle: true,
-							headerTransparent: true,
-							headerBlurEffect: 'systemChromeMaterial',
-							headerLargeTitleShadowVisible: false,
-							headerShadowVisible: true,
-							headerLargeStyle: {
-								backgroundColor: 'transparent',
-							},
-					  }),
+				headerShown: false
 			}}
 		>
-			<Stack.Screen name="index" options={{ headerTitle: 'Welcome back!', headerShown: true }} />
-			<Stack.Screen name="SignUpScreen" options={{ headerTitle: 'Sign Up' }} />
-			<Stack.Screen name="reset-password" options={{ headerTitle: 'Reset password' }} />
+			<Stack.Screen name="index" options={{ headerTitle: 'Log in'}} />
+			<Stack.Screen name="SignUpScreen" options={{ headerTitle: '', headerShown: true }} />
+			<Stack.Screen name="ResetPasswordScreen" options={{ headerTitle: '', headerShown: true }} />
 		</Stack>
 	);
 }
