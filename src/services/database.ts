@@ -1,3 +1,6 @@
+import { SupabaseClient } from "@supabase/supabase-js";
+import { DebtPayment, Expense } from "../types/STT";
+
 export class DatabaseService {
 	// Profile operations
 	static async getProfile(userId: string): Promise<Profile | null> {
@@ -198,80 +201,43 @@ export class DatabaseService {
 		};
 	}
 
-	static async getUserDebtsWithPayments(userId: string): Promise<DebtWithPayments[]> {
-	// 	const { data, error } = await supabase
-	// 		.from('debts')
-	// 		.select(
-	// 			`
-    //     *,
-    //     debt_payments (*)
-    //   `,
-	// 		)
-	// 		.eq('user_id', userId)
-	// 		.eq('is_paid', false)
-	// 		.order('created_at', { ascending: false });
+	static async getUserDebtsWithPayments(userId: string, supabase: SupabaseClient): Promise<DebtWithPayments[]> {
+		const { data, error } = await supabase
+			.from('debts')
+			.select(
+				`
+        *,
+        debt_payments (*)
+      `,
+			)
+			.eq('user_id', userId)
+			.eq('is_paid', false)
+			.order('created_at', { ascending: false });
 
-	// 	if (error) {
-	// 		console.error('Error fetching debts with payments:', error);
-	// 		return [];
-	// 	}
+		if (error) {
+			console.error('Error fetching debts with payments:', error);
+			return [];
+		}
 
-	// 	// Calculate totals for each debt
-	// 	return (data || []).map((debt: any) => {
-	// 		const totalPaid =
-	// 			debt.debt_payments
-	// 				?.filter((p: DebtPayment) => p.type === 'payment')
-	// 				.reduce((sum: number, payment: DebtPayment) => sum + payment.amount, 0) || 0;
-	// 		const totalCharges =
-	// 			debt.debt_payments
-	// 				?.filter((p: DebtPayment) => p.type === 'charge')
-	// 				.reduce((sum: number, payment: DebtPayment) => sum + payment.amount, 0) || 0;
-	// 		const remainingBalance = debt.amount + totalCharges - totalPaid;
-	// 		return {
-	// 			...debt,
-	// 			total_paid: totalPaid,
-	// 			remaining_balance: remainingBalance,
-	// 		};
-	// 	});
+		// Calculate totals for each debt
+		return (data || []).map((debt: any) => {
+			const totalPaid =
+				debt.debt_payment
+					?.filter((p: DebtPayment) => p.type === 'payment')
+					.reduce((sum: number, payment: DebtPayment) => sum + payment.amount, 0) || 0;
+			const totalCharges =
+				debt.debt_payments
+					?.filter((p: DebtPayment) => p.type === 'charge')
+					.reduce((sum: number, payment: DebtPayment) => sum + payment.amount, 0) || 0;
+			const remainingBalance = debt.amount + totalCharges - totalPaid;
+			return {
+				...debt,
+				total_paid: totalPaid,
+				remaining_balance: remainingBalance,
+			};
+		});
 
-	return [{
-		amount: 1000,
-		category: 'CREDIT_CARD',
-		created_at: new Date().toISOString(),
-		end_date: null,
-		id: '1',
-		interest_rate: 0.1,
-		is_paid: false,
-		minimum_payment: 100,
-		name: 'Credit Card',
-		start_date: new Date().toISOString(),
-		term_in_months: 12,
-		updated_at: new Date().toISOString(),
-		user_id: userId,
-		debt_payments: [],
-		remaining_balance: 1000,
-		last_payment_date: null,
-		last_payment_amount: null
-	}, {
-		amount: 1000,
-		category: 'CREDIT_CARD',
-		created_at: new Date().toISOString(),
-		end_date: null,
-		id: '2',
-		interest_rate: 0.1,
-		is_paid: false,
-		minimum_payment: 100,
-		name: 'Credit Card',
-		start_date: new Date().toISOString(),
-		term_in_months: 12,
-		updated_at: new Date().toISOString(),
-		user_id: userId,
-		debt_payments: [],
-		remaining_balance: 1000,
-		last_payment_date: null,
-		last_payment_amount: null
-	}]
-	}
+		}
 
 	static async createDebt(debt: DebtInsert, userId: string): Promise<Debt | null> {
 		const { data, error } = await supabase
@@ -457,34 +423,17 @@ export class DatabaseService {
 	}
 
 	// Expense methods
-	static async getUserExpenses(userId: string): Promise<Expense[]> {
-		// const { data, error } = await supabase
-		// 	.from('expenses')
-		// 	.select('*')
-		// 	.eq('user_id', userId)
-		// 	.order('due_date', { ascending: true });
+	static async getUserExpenses(userId: string, supabase: SupabaseClient): Promise<Expense[]> {
+		const { data, error } = await supabase
+			.from('expenses')
+			.select('*')
+			.eq('user_id', userId)
+			.order('due_date', { ascending: true });
 
-		// if (error) throw error;
-		// return data || [];
+		if (error) throw error;
+		return data || [];
 
-		return [{
-			amount: 150,
-			created_at: new Date().toISOString(),
-			due_date: new Date().getTime(),
-			id: '1',
-			name: 'Expense 1',
-			updated_at: new Date().toISOString(),
-			user_id: userId,
-		},
-		{
-			amount: 200,
-			created_at: new Date().toISOString(),
-			due_date: new Date().getTime(),
-			id: '2',
-			name: 'Expense 2',
-			updated_at: new Date().toISOString(),
-			user_id: userId,
-		}]
+		
 	}
 
 	static async createExpense(expense: ExpenseInsert): Promise<Expense | null> {

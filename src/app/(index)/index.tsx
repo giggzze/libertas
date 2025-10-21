@@ -15,7 +15,7 @@ import { SummaryCard } from '@/src/components/ui/SummaryCard';
 import { ExpenseList } from '@/src/components/debt-planner/ExpenseList';
 import { useExpenses } from '@/src/hooks/useExpense';
 import { DebtList } from '@/src/components/debt-planner/DebtList';
-import { useDebts } from '@/src/hooks/useDebt';
+import { useDebts } from '@/src/hooks/queries/useDebts';
 import { useThemeColor } from '@/src/hooks/use-theme-color';
 import { useColorScheme } from '@/src/hooks/use-color-scheme';
 import { useMonthlyIncome } from '@/src/hooks/useMonthlyIncome';
@@ -87,14 +87,18 @@ export default function HomeScreen() {
     console.log('Show history for debt:', debt);
   };
 
-  const totalDebt = debts.reduce(
-    (sum, debt) => sum + (debt.remaining_balance || debt.amount),
-    0,
-  );
-  const totalMonthlyPayments = debts.reduce(
-    (sum, debt) => sum + debt.minimum_payment,
-    0,
-  );
+  // const totalDebt = debts.reduce(
+  //   (sum, debt) => sum + (debt.remaining_balance || debt.amount),
+  //   0,
+  // );
+  const totalDebt = 10;
+
+  // const totalMonthlyPayments = debts.reduce(
+  //   (sum, debt) => sum + debt.minimum_payment,
+  //   0,
+  // );
+  const totalMonthlyPayments = 10;
+
   const totalExpenses = expenses.reduce(
     (sum, expense) => sum + expense.amount,
     0,
@@ -102,7 +106,8 @@ export default function HomeScreen() {
   const totalMonthlyObligations = totalMonthlyPayments + totalExpenses;
 
   // // Calculate additional insights
-  const totalDebts = debts.length;
+  // const totalDebts = debts.length;
+  const totalDebts = 6;
   const totalExpenseCount = expenses.length;
 
   // Income vs Outgoings calculations

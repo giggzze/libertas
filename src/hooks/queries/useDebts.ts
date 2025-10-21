@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useUser } from '@clerk/clerk-expo';
 import { DatabaseService } from '@/src/services/database';
 import { DebtWithPayments } from '@/src/types/STT';
+import { useSupabase } from '@/src/lib/supabaseClient';
 
 /**
  * React Query hook for fetching user debts with payments
@@ -9,10 +10,12 @@ import { DebtWithPayments } from '@/src/types/STT';
  */
 export function useDebts() {
   const { user } = useUser();
+  const supabase  = useSupabase();
+  console.log('the correct use debts hook is being called');
   
   return useQuery({
     queryKey: ['debts', user?.id],
-    queryFn: () => DatabaseService.getUserDebtsWithPayments(user!.id),
+    queryFn: () => DatabaseService.getUserDebtsWithPayments(user!.id, supabase),
     enabled: !!user?.id,
     staleTime: 2 * 60 * 1000, // 2 minutes
     gcTime: 5 * 60 * 1000, // 5 minutes (formerly cacheTime)
