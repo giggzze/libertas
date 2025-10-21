@@ -25,21 +25,23 @@ import { DebtWithPayments } from '@/src/types/STT';
 import { DatabaseService } from '@/src/services/database';
 
 export default function HomeScreen() {
+  const [debtsExpanded, setDebtsExpanded] = useState(false);
+  const [expensesExpanded, setExpensesExpanded] = useState(false);
+  const [paymentModalVisible, setPaymentModalVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [selectedDebt, setSelectedDebt] = useState<DebtWithPayments | null>(
+    null,
+  );
+
   const {
     expenses,
     deleteExpense,
     loading: expensesLoading,
     refetch,
   } = useExpenses();
+
   const { debts, deleteDebt, refetch: refetchDebts } = useDebts();
   const { currentIncome } = useMonthlyIncome();
-  const [refreshing, setRefreshing] = useState(false);
-  const [debtsExpanded, setDebtsExpanded] = useState(false);
-  const [expensesExpanded, setExpensesExpanded] = useState(false);
-  const [paymentModalVisible, setPaymentModalVisible] = useState(false);
-  const [selectedDebt, setSelectedDebt] = useState<DebtWithPayments | null>(
-    null,
-  );
 
   // Theme
   const colorScheme = useColorScheme();
