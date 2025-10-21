@@ -1,23 +1,3 @@
-import {
-	Debt,
-	DebtInsert,
-	DebtPayment,
-	DebtPaymentInsert,
-	DebtPaymentUpdate,
-	DebtUpdate,
-	DebtWithPayments,
-	Expense,
-	ExpenseInsert,
-	ExpenseUpdate,
-	MonthlyIncome,
-	MonthlyIncomeInsert,
-	MonthlyIncomeUpdate,
-	Profile,
-	ProfileUpdate,
-	UserDebtSummary,
-} from '@/src/types/STT';
-import { supabase } from '@/src/utils/supabaseClient';
-
 export class DatabaseService {
 	// Profile operations
 	static async getProfile(userId: string): Promise<Profile | null> {

@@ -5,28 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="770e7c17-de74-4039-8191-f66592b1e931" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/supabase/migrations/20251021132908_clerkInt.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/external-link.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/external-link.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/haptic-tab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/haptic-tab.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/hello-wave.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/hello-wave.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/parallax-scroll-view.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/parallax-scroll-view.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/themed-text.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/themed-text.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/themed-view.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/themed-view.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/collapsible.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/collapsible.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eas.json" beforeDir="false" afterPath="$PROJECT_DIR$/eas.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eslint.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/eslint.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/use-color-scheme.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/use-color-scheme.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/use-color-scheme.web.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/use-color-scheme.web.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/use-theme-color.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/use-theme-color.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/reset-project.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/reset-project.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/database.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/supabase.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/supabase.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/supabase/config.toml" beforeDir="false" afterPath="$PROJECT_DIR$/supabase/config.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +80,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-256f9dae541f-JavaScript-WS-253.24325.37" />
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-WS-252.23892.411" />
       </set>
     </attachedChunks>
   </component>
@@ -113,6 +97,7 @@
       <workItem from="1759694420935" duration="3445000" />
       <workItem from="1759739412421" duration="1866000" />
       <workItem from="1759742361037" duration="250000" />
+      <workItem from="1761048039265" duration="1939000" />
     </task>
     <servers />
   </component>
