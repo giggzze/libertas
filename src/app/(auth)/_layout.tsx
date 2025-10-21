@@ -17,7 +17,7 @@ export default function AuthLayout() {
 	}
 
 	if (isSignedIn) {
-		return <Redirect href="/(tabs)" />;
+		return <Redirect href="/(index)" />;
 	}
 
 	return (

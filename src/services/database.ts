@@ -478,14 +478,33 @@ export class DatabaseService {
 
 	// Expense methods
 	static async getUserExpenses(userId: string): Promise<Expense[]> {
-		const { data, error } = await supabase
-			.from('expenses')
-			.select('*')
-			.eq('user_id', userId)
-			.order('due_date', { ascending: true });
+		// const { data, error } = await supabase
+		// 	.from('expenses')
+		// 	.select('*')
+		// 	.eq('user_id', userId)
+		// 	.order('due_date', { ascending: true });
 
-		if (error) throw error;
-		return data || [];
+		// if (error) throw error;
+		// return data || [];
+
+		return [{
+			amount: 150,
+			created_at: new Date().toISOString(),
+			due_date: new Date().getTime(),
+			id: '1',
+			name: 'Expense 1',
+			updated_at: new Date().toISOString(),
+			user_id: userId,
+		},
+		{
+			amount: 200,
+			created_at: new Date().toISOString(),
+			due_date: new Date().getTime(),
+			id: '2',
+			name: 'Expense 2',
+			updated_at: new Date().toISOString(),
+			user_id: userId,
+		}]
 	}
 
 	static async createExpense(expense: ExpenseInsert): Promise<Expense | null> {
