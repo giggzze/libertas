@@ -1,7 +1,9 @@
-import { Redirect, Stack } from "expo-router";
+import { Redirect, router, Stack } from "expo-router";
 import React from "react";
 import { useUser } from "@clerk/clerk-expo";
-import { Colors } from "@/src/constants/theme";
+import { appleBlue, Colors } from "@/src/constants/theme";
+import { View } from "react-native";
+import HeaderButton from "@/src/components/ui/HeaderButton";
 
 export default function TabLayout() {
     const { user } = useUser();
@@ -30,7 +32,25 @@ export default function TabLayout() {
             <Stack.Screen
                 name="index"
                 options={{
-                    title: "Overview"
+                    title: "Overview",
+                    headerLeft: () => (
+                        <View style={{ marginLeft: 5 }}>
+                            <HeaderButton
+                                onPress={() => router.push("/profile")}
+                                iconName="gear"
+                                color={appleBlue}
+                            />
+                        </View>
+                    ),
+                    headerRight: () => (
+                        <View style={{ marginLeft: 5 }}>
+                            <HeaderButton
+                                onPress={() => router.push("/strategy")}
+                                iconName="chart.bar"
+                                color={appleBlue}
+                            />
+                        </View>
+                    )
                 }}
             />
             <Stack.Screen

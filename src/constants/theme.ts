@@ -34,7 +34,8 @@ export const Colors = {
         healthGray: '#9ca3af',
         healthRed: '#ef4444',
         healthYellow:  '#f59e0b',
-        healthGreen: '#10b981'
+        healthGreen: '#10b981',
+		progress: "#e5e7eb"
 	},
 	dark: {
 		text: '#ECEDEE',
@@ -48,6 +49,7 @@ export const Colors = {
         healthGray: '#6b7280',
         healthRed: '#dc2626',
         healthYellow:  '#f59e0b',
-        healthGreen: '#10b981'
+        healthGreen: '#10b981',
+		progress: "#374151"
 	},
 };

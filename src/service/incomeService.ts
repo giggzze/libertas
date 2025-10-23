@@ -10,6 +10,9 @@ export const getCurrentMonthlyIncome = async (userId: string, supabase: Supabase
         .order("start_date", { ascending: false })
         .maybeSingle();
 
+
+        console.log(data)
+
     if (error) {
         console.error("Error fetching monthly income:", error);
         return  { amount: 0} as MonthlyIncome;
