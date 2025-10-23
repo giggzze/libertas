@@ -5,74 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="34a2d1ba-ac02-4889-ad14-c5ada98ba02e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hooks/query/useDebts.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hooks/query/useIncome.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lib/cache.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/service/detbService.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/service/incomeService.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/helpers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libertas.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libertas.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks/query/useExpense.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/service/expenseService.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.prettierrc" beforeDir="false" afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/SignUpScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/SignUpScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(index)/AddDebtModal.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(index)/AddExpenseModal.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(index)/EditExpenseModal.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(index)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(index)/_layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/(index)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(index)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(index)/profile.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(index)/strategy.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cache.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/AddPaymentModal.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/DebtCard.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/DebtCategoryPill.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/DebtList.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/EditDebtModal.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/ExpenseItem.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/ExpenseList.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/IncomeInput.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/PayoffTimeline.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/RecommendationItem.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/StrategySelector.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/SummarySection.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/parallax-scroll-view.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parallax-scroll-view.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/Button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/Button.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/SummaryCard.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/collapsible.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/collapsible.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants/theme.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/theme.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/HomeScreenWithReactQuery.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/mutations/useDebtMutations.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/mutations/useExpenseMutations.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/mutations/useIncomeMutations.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/mutations/useProfileMutations.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/queries/useDebtPayments.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/queries/useDebts.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/queries/useExpenses.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/queries/useIncome.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/queries/useProfile.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/use-color-scheme.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/use-color-scheme.web.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/use-theme-color.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/use-theme-color.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useDebt.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useDebtPayment.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useDebtSummary.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useExpense.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useMonthlyIncome.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useProfile.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/queryClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/queryClient.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/supabaseClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/supabaseClient.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/database.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/debtService.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/STT.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/STT.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/updateMinimumPayment.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/helpers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/helpers.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +79,9 @@
       <workItem from="1761086356557" duration="3130000" />
       <workItem from="1761159896255" duration="441000" />
       <workItem from="1761164096432" duration="12138000" />
-      <workItem from="1761179206723" duration="2404000" />
+      <workItem from="1761179206723" duration="3643000" />
+      <workItem from="1761213580973" duration="67000" />
+      <workItem from="1761213657742" duration="3048000" />
     </task>
     <servers />
   </component>

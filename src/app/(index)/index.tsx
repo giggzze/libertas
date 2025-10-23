@@ -3,11 +3,16 @@ import { router, Stack } from "expo-router";
 import HeaderButton from "@/src/components/ui/HeaderButton";
 import { appleBlue } from "@/src/constants/theme";
 import { BodyScrollView } from "@/src/components/ui/BodyScrollView";
-import { getHealthColor } from "@/src/utils/helpers";
 import { useThemeColor } from "@/src/hooks/use-theme-color";
 import { useDebts } from "@/src/hooks/query/useDebts";
 import { useCurrentIncome } from "@/src/hooks/query/useIncome";
-import { MonthlyIncome } from "@/src/types/STT";
+import { useExpenses } from "@/src/hooks/query/useExpense";
+import {
+    calculateTotalDebt,
+    calculateTotalExpense,
+    calculateTotalMonthlyPayment,
+    getHealthColor
+} from "@/src/utils/helpers";
 
 
 export default function HomeScreen() {
@@ -17,23 +22,54 @@ export default function HomeScreen() {
     const backgroundColor = useThemeColor("background");
     const isDark = !!useColorScheme();
 
-    // Hooks
+    // Queries
     const { data: debts } = useDebts(false);
-    const { data: monthlyIncome } = useCurrentIncome()
+    const { data: monthlyIncome } = useCurrentIncome();
+    const { data: expenses } = useExpenses();
+
+    const totalDebts: number = calculateTotalDebt(debts)
+    const totalMonthlyPayments: number = calculateTotalMonthlyPayment(debts)
+    const totalExpenses: number = calculateTotalExpense(expenses)
+    const totalExpenseCount : number = expenses?.length || 0;
+
 
     const incomeUsagePercentage = 100;
-    const totalMonthlyObligations = 300;
+    const totalMonthlyObligations = totalMonthlyPayments + totalExpenses;
     const remainingIncome = 30;
 
-    const totalDebt : number = debts ? debts.reduce(
-        (sum, debt) => sum + debt.amount,
-        0
-    ) : 0;
 
-    const totalMonthlyPayments = debts?.reduce(
-        (sum, debt) => sum + debt.minimum_payment,
-        0,
-    );
+    // const originalTotalDebt = debts.reduce((sum, debt) => sum + debt.amount, 0);
+    // const amountPaidOff = originalTotalDebt - totalDebt;
+    // const debtProgressPercentage =
+    //   originalTotalDebt > 0 ? (amountPaidOff / originalTotalDebt) * 100 : 0;
+    //
+    // // Calculate projected debt-free date (simplified calculation)
+    // const calculateDebtFreeDate = () => {
+    //   if (totalDebt === 0 || totalMonthlyPayments === 0) return null;
+    //
+    //   // Simple calculation: total debt / monthly payments
+    //   // This doesn't account for interest, but gives a rough estimate
+    //   const monthsToPayoff = Math.ceil(totalDebt / totalMonthlyPayments);
+    //   const payoffDate = new Date();
+    //   payoffDate.setMonth(payoffDate.getMonth() + monthsToPayoff);
+    //   return payoffDate;
+    // };
+    //
+    // const debtFreeDate = calculateDebtFreeDate();
+    //
+    // // Months until debt-free
+    // const monthsUntilDebtFree =
+    //   totalDebt > 0 && totalMonthlyPayments > 0
+    //     ? Math.ceil(totalDebt / totalMonthlyPayments)
+    //     : 0;
+    //
+    // // Average interest rate
+    // const averageInterestRate =
+    //   debts.length > 0
+    //     ? debts.reduce((sum, debt) => sum + (debt.interest_rate || 0), 0) /
+    //       debts.length
+    //     : 0;
+
 
     return (
         <>
@@ -60,7 +96,6 @@ export default function HomeScreen() {
                 }}
             />
             <BodyScrollView
-
             >
                 {/* Income vs Outgoings Banner */}
                 {monthlyIncome?.amount! > 0 && (
@@ -77,7 +112,7 @@ export default function HomeScreen() {
                             <View
                                 style={[
                                     styles.healthIndicator,
-                                    { backgroundColor: getHealthColor(isDark, monthlyIncome.amount, incomeUsagePercentage) }
+                                    { backgroundColor: getHealthColor(isDark, monthlyIncome?.amount, incomeUsagePercentage) }
                                 ]}
                             >
                                 <Text style={styles.healthIndicatorText}>
@@ -126,11 +161,107 @@ export default function HomeScreen() {
                                                     ? isDark
                                                         ? "#f87171"
                                                         : "#dc2626"
-                                                    : getHealthColor(isDark, monthlyIncome, incomeUsagePercentage)
+                                                    : getHealthColor(isDark, monthlyIncome?.amount, incomeUsagePercentage)
                                         }
                                     ]}
                                 >
                                     ${remainingIncome.toFixed(2)}
+                                </Text>
+                            </View>
+                        </View>
+
+                        {/* Progress bar */}
+                        <View
+                            style={[
+                                styles.progressBarContainer,
+                                { backgroundColor: isDark ? "#374151" : "#e5e7eb" }
+                            ]}
+                        >
+                            <View
+                                style={[
+                                    styles.progressBarFill,
+                                    {
+                                        width: `${Math.min(incomeUsagePercentage, 100)}%`,
+                                        backgroundColor: getHealthColor(isDark, monthlyIncome.amount, incomeUsagePercentage)
+                                    }
+                                ]}
+                            />
+                        </View>
+                    </View>
+                )}
+
+                {/* Quick Stats Banner */}
+                {(totalDebts > 0 || totalExpenseCount > 0) && (
+                    <View style={styles.quickStatsContainer}>
+                        {/* Top Row - Summary Cards */}
+                        <View style={styles.summaryRow}>
+                            <View
+                                style={[
+                                    styles.summaryStatCard,
+                                    { backgroundColor: backgroundColor }
+                                ]}
+                            >
+                                <Text style={[styles.summaryStatLabel, { color: textColor }]}>
+                                    Total Outgoings
+                                </Text>
+                                <Text style={[styles.summaryStatAmount, { color: textColor }]}>
+                                    ${totalMonthlyObligations.toFixed(2)}
+                                </Text>
+                                <Text style={[styles.summaryStatSubtext, { color: textColor }]}>
+                                    Monthly
+                                </Text>
+                            </View>
+                            <View
+                                style={[
+                                    styles.summaryStatCard,
+                                    { backgroundColor: backgroundColor }
+                                ]}
+                            >
+                                <Text style={[styles.summaryStatLabel, { color: textColor }]}>
+                                    Total Debt
+                                </Text>
+                                <Text style={[styles.summaryStatAmount, { color: textColor }]}>
+                                    ${totalDebts.toFixed(2)}
+                                </Text>
+                                <Text style={[styles.summaryStatSubtext, { color: textColor }]}>
+                                    Remaining
+                                </Text>
+                            </View>
+                        </View>
+
+                        {/* Bottom Row - Detailed Stats */}
+                        <View
+                            style={[
+                                styles.quickStats,
+                                { backgroundColor: backgroundColor }
+                            ]}
+                        >
+                            <View style={styles.statItem}>
+                                <Text style={[styles.statNumber, { color: textColor }]}>
+                                    {totalDebts}
+                                </Text>
+                                <Text style={[styles.statLabel, { color: textColor }]}>
+                                    Active Debts
+                                </Text>
+                                <Text style={[styles.statAmount, { color: textColor }]}>
+                                    ${totalMonthlyPayments.toFixed(2)}/mo
+                                </Text>
+                            </View>
+                            <View
+                                style={[
+                                    styles.statDivider,
+                                    { backgroundColor: backgroundColor }
+                                ]}
+                            />
+                            <View style={styles.statItem}>
+                                <Text style={[styles.statNumber, { color: textColor }]}>
+                                    {totalExpenseCount}
+                                </Text>
+                                <Text style={[styles.statLabel, { color: textColor }]}>
+                                    Monthly Expenses
+                                </Text>
+                                <Text style={[styles.statAmount, { color: textColor }]}>
+                                    ${totalExpenses.toFixed(2)}/mo
                                 </Text>
                             </View>
                         </View>
