@@ -31,6 +31,10 @@ export const Colors = {
 		tabIconSelected: tintColorLight,
 		border: '#ddd',
 		contrastText: '#fff',
+        healthGray: '#9ca3af',
+        healthRed: '#ef4444',
+        healthYellow:  '#f59e0b',
+        healthGreen: '#10b981'
 	},
 	dark: {
 		text: '#ECEDEE',
@@ -41,5 +45,9 @@ export const Colors = {
 		tabIconSelected: tintColorDark,
 		border: '#4a5568',
 		contrastText: '#000',
+        healthGray: '#6b7280',
+        healthRed: '#dc2626',
+        healthYellow:  '#f59e0b',
+        healthGreen: '#10b981'
 	},
 };

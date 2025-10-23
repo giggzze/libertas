@@ -7,15 +7,7 @@ import { BodyScrollView } from "@/src/components/ui/BodyScrollView";
 import Button from "@/src/components/ui/Button";
 import TextInput from "@/src/components/ui/TextInput";
 
-/**
- * SignInScreen is the main authentication screen for users to sign in.
- *
- * - Renders a form with email and password fields.
- * - Handles sign-in using Clerk's `useSignIn` hook.
- * - On successful sign-in, sets the active session and redirects to the home page.
- * - Provides navigation to sign-up and password reset screens.
- * - Displays loading and disables the sign-in button while signing in or if fields are empty.
- */
+
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
   const router = useRouter();

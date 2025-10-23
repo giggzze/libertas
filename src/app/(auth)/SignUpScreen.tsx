@@ -6,7 +6,6 @@ import { BodyScrollView } from "@/src/components/ui/BodyScrollView";
 import { useSignUp } from "@clerk/clerk-expo";
 import Toast from "@/src/components/ui/Toast";
 import { ClerkAPIError } from "@clerk/types";
-import { DatabaseService } from "@/src/services/database";
 import { ThemedText } from "@/src/components/themed-text";
 import { Text, View } from "react-native";
 
@@ -67,7 +66,7 @@ export default function SignUpScreen() {
 
         // Create profile after user is fully verified and session is active
         if (signupAttempt.createdUserId) {
-          await DatabaseService.createProfile(signupAttempt.createdUserId);
+          // await DatabaseService.createProfile(signupAttempt.createdUserId);
         }
         router.replace("/(tabs)");
       } else {

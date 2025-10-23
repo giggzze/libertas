@@ -4,30 +4,99 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="770e7c17-de74-4039-8191-f66592b1e931" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/supabase/migrations/20251021132908_clerkInt.sql" afterDir="false" />
+    <list default="true" id="34a2d1ba-ac02-4889-ad14-c5ada98ba02e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks/query/useDebts.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks/query/useIncome.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/cache.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/service/detbService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/service/incomeService.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/helpers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libertas.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libertas.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/database.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/database.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/supabase.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/supabase.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/supabase/config.toml" beforeDir="false" afterPath="$PROJECT_DIR$/supabase/config.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.prettierrc" beforeDir="false" afterPath="$PROJECT_DIR$/.prettierrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(auth)/SignUpScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/SignUpScreen.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(auth)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(auth)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(index)/AddDebtModal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(index)/AddExpenseModal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(index)/EditExpenseModal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(index)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(index)/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(index)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(index)/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(index)/profile.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(index)/strategy.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cache.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/AddPaymentModal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/DebtCard.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/DebtCategoryPill.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/DebtList.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/EditDebtModal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/ExpenseItem.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/ExpenseList.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/IncomeInput.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/PayoffTimeline.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/RecommendationItem.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/StrategySelector.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/debt-planner/SummarySection.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/parallax-scroll-view.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/parallax-scroll-view.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ui/Button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/Button.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ui/SummaryCard.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ui/collapsible.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/collapsible.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constants/theme.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants/theme.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/HomeScreenWithReactQuery.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/mutations/useDebtMutations.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/mutations/useExpenseMutations.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/mutations/useIncomeMutations.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/mutations/useProfileMutations.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/queries/useDebtPayments.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/queries/useDebts.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/queries/useExpenses.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/queries/useIncome.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/queries/useProfile.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/use-color-scheme.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/use-color-scheme.web.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/use-theme-color.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/use-theme-color.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useDebt.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useDebtPayment.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useDebtSummary.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useExpense.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useMonthlyIncome.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useProfile.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/queryClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/queryClient.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/supabaseClient.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/supabaseClient.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/database.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/debtService.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/STT.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/STT.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/updateMinimumPayment.tsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 5
+  &quot;associatedIndex&quot;: 0
 }</component>
-  <component name="ProjectId" id="33cCoFp2V6nDZYqrRMc01PXahVJ" />
+  <component name="ProjectId" id="34OZ0M5YMo4ufEPNQVfnz1Pns6o" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -39,65 +108,41 @@
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;payments&quot;,
-    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/giggzze/Documents/GitHub/libertas&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\GitHub\\libertas\\node_modules\\typescript\\lib&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/giggzze/Documents/GitHub/libertas/node_modules/typescript/lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
-    <layout>
-      <window_info id="Bookmarks" side_tool="true" />
-      <window_info id="Merge Requests" />
-      <window_info id="Backup and Sync History" />
-      <window_info id="Commit_Guest" show_stripe_button="false" />
-      <window_info id="Pull Requests" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.32984102" />
-      <window_info id="Commit" order="1" weight="0.25" />
-      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Database Changes" />
-      <window_info anchor="bottom" id="TypeScript" />
-      <window_info anchor="bottom" id="TODO" />
-      <window_info anchor="bottom" id="File Transfer" />
-      <window_info anchor="bottom" id="Version Control" order="0" />
-      <window_info anchor="bottom" id="Problems" order="1" />
-      <window_info anchor="bottom" id="Problems View" order="2" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="3" visible="true" weight="0.33014113" />
-      <window_info anchor="bottom" id="Services" order="4" />
-      <window_info anchor="right" id="Endpoints" />
-      <window_info anchor="right" id="Coverage" side_tool="true" />
-      <window_info anchor="right" content_ui="combo" id="Notifications" order="0" weight="0.25" />
-      <window_info anchor="right" id="AIAssistant" order="1" weight="0.25" />
-      <window_info anchor="right" id="Database" order="2" weight="0.25" />
-      <window_info anchor="right" id="Gradle" order="3" weight="0.25" />
-      <window_info anchor="right" id="Maven" order="4" weight="0.25" />
-    </layout>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/lib" />
+    </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-WS-252.23892.411" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.26830.93" />
       </set>
     </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="770e7c17-de74-4039-8191-f66592b1e931" name="Changes" comment="" />
-      <created>1759607147276</created>
+      <changelist id="34a2d1ba-ac02-4889-ad14-c5ada98ba02e" name="Changes" comment="" />
+      <created>1761086354670</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1759607147276</updated>
-      <workItem from="1759607149019" duration="304000" />
-      <workItem from="1759656565372" duration="4002000" />
-      <workItem from="1759661103089" duration="3513000" />
-      <workItem from="1759694420935" duration="3445000" />
-      <workItem from="1759739412421" duration="1866000" />
-      <workItem from="1759742361037" duration="250000" />
-      <workItem from="1761048039265" duration="1939000" />
+      <updated>1761086354670</updated>
+      <workItem from="1761086356557" duration="3130000" />
+      <workItem from="1761159896255" duration="441000" />
+      <workItem from="1761164096432" duration="12138000" />
+      <workItem from="1761179206723" duration="2404000" />
     </task>
     <servers />
   </component>
