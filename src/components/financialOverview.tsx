@@ -50,7 +50,7 @@ export const FinancialOverview = ({
                         Income
                     </Text>
                     <Text style={[styles.incomeAmount, { color: textColor }]}>
-                        ${monthlyIncome.amount ? monthlyIncome.amount.toFixed(2) : 0}
+                        £{monthlyIncome.amount ? monthlyIncome.amount.toFixed(2) : 0}
                     </Text>
                 </View>
 
@@ -63,7 +63,7 @@ export const FinancialOverview = ({
                         Outgoings
                     </Text>
                     <Text style={[styles.incomeAmount, { color: textColor }]}>
-                        ${totalMonthlyObligations ? totalMonthlyObligations.toFixed(2) : 0}
+                        £{totalMonthlyObligations ? totalMonthlyObligations.toFixed(2) : 0}
                     </Text>
                 </View>
 
@@ -88,7 +88,7 @@ export const FinancialOverview = ({
                             }
                         ]}
                     >
-                        ${remainingIncome.toFixed(2)}
+                        £{remainingIncome.toFixed(2)}
                     </Text>
                 </View>
             </View>

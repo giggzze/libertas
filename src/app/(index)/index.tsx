@@ -7,6 +7,8 @@ import { useExpenses } from "@/src/hooks/query/useExpense";
 import { calculateTotalDebt, calculateTotalExpense, calculateTotalMonthlyPayment } from "@/src/utils/helpers";
 import { FinancialOverview } from "@/src/components/financialOverview";
 import { QuickStats } from "@/src/components/quickStats";
+import { KeyInsight } from "@/src/components/keyInsight";
+import { DebtCollapse } from "@/src/components/debtCollapse";
 
 
 export default function HomeScreen() {
@@ -32,37 +34,34 @@ export default function HomeScreen() {
     const remainingIncome = 30;
 
 
-    // const originalTotalDebt = debts.reduce((sum, debt) => sum + debt.amount, 0);
-    // const amountPaidOff = originalTotalDebt - totalDebt;
-    // const debtProgressPercentage =
-    //   originalTotalDebt > 0 ? (amountPaidOff / originalTotalDebt) * 100 : 0;
-    //
-    // // Calculate projected debt-free date (simplified calculation)
-    // const calculateDebtFreeDate = () => {
-    //   if (totalDebt === 0 || totalMonthlyPayments === 0) return null;
-    //
-    //   // Simple calculation: total debt / monthly payments
-    //   // This doesn't account for interest, but gives a rough estimate
-    //   const monthsToPayoff = Math.ceil(totalDebt / totalMonthlyPayments);
-    //   const payoffDate = new Date();
-    //   payoffDate.setMonth(payoffDate.getMonth() + monthsToPayoff);
-    //   return payoffDate;
-    // };
-    //
-    // const debtFreeDate = calculateDebtFreeDate();
-    //
+     const originalTotalDebt = debts?.reduce((sum, debt) => sum + debt.amount, 0);
+//     const amountPaidOff = originalTotalDebt - totalDebt;
+//     const debtProgressPercentage =
+//       originalTotalDebt > 0 ? (amountPaidOff / originalTotalDebt) * 100 : 0;
+
+     const calculateDebtFreeDate = () => {
+       if (totalDebts === 0 || totalMonthlyPayments === 0) return null;
+
+       const monthsToPayoff = Math.ceil(totalDebts / totalMonthlyPayments);
+       const payoffDate = new Date();
+       payoffDate.setMonth(payoffDate.getMonth() + monthsToPayoff);
+       return payoffDate;
+     };
+
+     const debtFreeDate = calculateDebtFreeDate();
+
     // // Months until debt-free
-    // const monthsUntilDebtFree =
-    //   totalDebt > 0 && totalMonthlyPayments > 0
-    //     ? Math.ceil(totalDebt / totalMonthlyPayments)
-    //     : 0;
-    //
+     const monthsUntilDebtFree =
+       totalDebts > 0 && totalMonthlyPayments > 0
+         ? Math.ceil(totalDebts / totalMonthlyPayments)
+         : 0;
+
     // // Average interest rate
-    // const averageInterestRate =
-    //   debts.length > 0
-    //     ? debts.reduce((sum, debt) => sum + (debt.interest_rate || 0), 0) /
-    //       debts.length
-    //     : 0;
+//     const averageInterestRate =
+//       debts.length > 0
+//         ? debts.reduce((sum, debt) => sum + (debt.interest_rate || 0), 0) /
+//           debts.length
+//         : 0;
 
 
     return (
@@ -86,6 +85,22 @@ export default function HomeScreen() {
                             totalMonthlyObligations={totalMonthlyObligations}
                             totalMonthlyPayments={totalMonthlyPayments} />
             )}
+
+            {/*{debts ? debts.length > 0 && (*/}
+            {/*    <KeyInsight isDark={false}*/}
+            {/*                amountPaidOff={amountPaidOff}*/}
+            {/*                debtProgressPercentage={0}*/}
+            {/*                debtFreeDate={debtFreeDate}*/}
+            {/*                monthsUntilDebtFree={0}*/}
+            {/*                remainingIncome={0}*/}
+            {/*                averageInterestRate={0}*/}
+            {/*                debts={[]} />*/}
+            {/*) : <Text>Nothing</Text>}*/}
+
+            {debts ? debts.length > 0 && (
+                <DebtCollapse debts={debts} totalDebts={totalDebts} />
+            ): <Text>Nothing</Text> }
+
         </BodyScrollView>
     );
 }
@@ -98,146 +113,6 @@ const styles = StyleSheet.create({
     },
 
 
-    insightsContainer: {
-        marginHorizontal: 16,
-        marginBottom: 20
-    },
-    insightsTitle: {
-        fontSize: 14,
-        fontWeight: "700",
-        textTransform: "uppercase",
-        letterSpacing: 0.5,
-        marginBottom: 12,
-        opacity: 0.7
-    },
-    insightsGrid: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        gap: 12
-    },
-    insightCard: {
-        flex: 1,
-        minWidth: "47%",
-        padding: 16,
-        borderRadius: 12,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 3,
-        elevation: 2
-    },
-    insightHeader: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 8,
-        marginBottom: 12
-    },
-    insightLabel: {
-        fontSize: 12,
-        fontWeight: "600",
-        opacity: 0.7
-    },
-    insightValue: {
-        fontSize: 24,
-        fontWeight: "700",
-        marginBottom: 4
-    },
-    insightSubtext: {
-        fontSize: 11,
-        opacity: 0.6
-    },
-    insightProgress: {
-        marginTop: 8
-    },
-    insightProgressBar: {
-        height: 6,
-        borderRadius: 3,
-        overflow: "hidden",
-        marginBottom: 6
-    },
-    insightProgressFill: {
-        height: "100%",
-        borderRadius: 3
-    },
-    insightProgressText: {
-        fontSize: 12,
-        fontWeight: "600",
-        textAlign: "right"
-    },
-    collapsibleSection: {
-        marginHorizontal: 16,
-        marginBottom: 16
-    },
-    collapsibleHeaderContainer: {
-        marginBottom: 12
-    },
-    collapsibleHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingVertical: 14,
-        paddingHorizontal: 16,
-        borderRadius: 12,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 3,
-        elevation: 2
-    },
-    collapsibleHeaderLeft: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 10,
-        flex: 1
-    },
-    collapsibleHeaderRight: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 8
-    },
-    collapsibleTitle: {
-        fontSize: 17,
-        fontWeight: "700"
-    },
-    countBadge: {
-        paddingHorizontal: 8,
-        paddingVertical: 3,
-        borderRadius: 10,
-        minWidth: 26,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    countBadgeText: {
-        fontSize: 12,
-        fontWeight: "700"
-    },
-    collapsibleAmount: {
-        fontSize: 15,
-        fontWeight: "600",
-        opacity: 0.75
-    },
-    addButtonInHeader: {
-        width: 32,
-        height: 32,
-        borderRadius: 8,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    collapsibleContent: {
-        marginTop: 12
-    },
-    emptyState: {
-        padding: 20,
-        borderWidth: 1,
-        borderRadius: 12,
-        borderStyle: "dashed",
-        alignItems: "center"
-    },
-    emptyStateText: {
-        fontSize: 14,
-        textAlign: "center",
-        opacity: 0.7
-    },
     sectionHeader: {
         fontSize: 16,
         fontWeight: "600",
@@ -286,5 +161,5 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginTop: 4,
         opacity: 0.8
-    }
+    },
 });

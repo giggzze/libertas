@@ -35,7 +35,7 @@ export const QuickStats = ({
                         Total Outgoings
                     </Text>
                     <Text style={[styles.summaryStatAmount, { color: textColor }]}>
-                        ${totalMonthlyObligations.toFixed(2)}
+                        £{totalMonthlyObligations.toFixed(2)}
                     </Text>
                     <Text style={[styles.summaryStatSubtext, { color: textColor }]}>
                         Monthly
@@ -51,7 +51,7 @@ export const QuickStats = ({
                         Total Debt
                     </Text>
                     <Text style={[styles.summaryStatAmount, { color: textColor }]}>
-                        ${totalDebts ? totalDebts.toFixed(2) : 0}
+                        £{totalDebts ? totalDebts.toFixed(2) : 0}
                     </Text>
                     <Text style={[styles.summaryStatSubtext, { color: textColor }]}>
                         Remaining
@@ -74,7 +74,7 @@ export const QuickStats = ({
                         Active Debts
                     </Text>
                     <Text style={[styles.statAmount, { color: textColor }]}>
-                        ${totalMonthlyPayments.toFixed(2)}/mo
+                        £{totalMonthlyPayments.toFixed(2)}/mo
                     </Text>
                 </View>
                 <View
@@ -91,7 +91,7 @@ export const QuickStats = ({
                         Monthly Expenses
                     </Text>
                     <Text style={[styles.statAmount, { color: textColor }]}>
-                        ${totalExpenses.toFixed(2)}/mo
+                        £{totalExpenses.toFixed(2)}/mo
                     </Text>
                 </View>
             </View>
