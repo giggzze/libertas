@@ -12,10 +12,10 @@ export const getUserExpenses = async (userId: string, supabase: SupabaseClient<D
 
     if (error) {
         console.log(error);
-        return  [] as Expense[];
+        return  [];
     }
 
-    if (!data) return [] as Expense[];
+    if (!data) return [];
 
     return data
 }

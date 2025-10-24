@@ -9,11 +9,15 @@ export const getHealthColor = (isDark: boolean, monthlyIncome: number, incomeUsa
     return isDark ? Colors.dark.healthGreen : Colors.light.healthGreen; // Green
 };
 
-export const calculateTotalDebt = (debts: Debt[]) => debts?.reduce(
-    (sum, debt) => sum + debt.amount, 0);
+export const calculateTotalDebt = (debts: Debt[]) => {
+    console.log("Calculating total debt for debts:", debts);
+    if (debts.length === 0) return 0;
+    return debts.reduce(
+    (sum, debt) => sum + debt.amount, 0)
+}
 
-export const calculateTotalMonthlyPayment = (debts: Debt[]) => debts?.reduce(
+export const calculateTotalMonthlyPayment = (debts: Debt[]) => debts.reduce(
     (sum, debt) => sum + debt.minimum_payment, 0);
 
-export const calculateTotalExpense = (expenses: Expense[]) => expenses?.reduce(
+export const calculateTotalExpense = (expenses: Expense[]) => expenses.reduce(
     (sum, expense) => sum + expense.amount, 0);

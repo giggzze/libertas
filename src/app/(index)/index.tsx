@@ -23,14 +23,14 @@ export default function HomeScreen() {
     const { data: monthlyIncome } = useCurrentIncome();
     const { data: expenses } = useExpenses();
 
-    const totalDebts: number = calculateTotalDebt(debts);
-    const totalMonthlyPayments: number = calculateTotalMonthlyPayment(debts);
-    const totalExpenses: number = calculateTotalExpense(expenses);
-    const totalExpenseCount: number = expenses?.length || 0;
-
+    const totalDebtAmount: number = calculateTotalDebt(debts!);
+    const totalMonthlyPaymentAmount: number = calculateTotalMonthlyPayment(debts!);
+    const totalExpenseAmount: number = calculateTotalExpense(expenses!);
+    const totalExpenseCount: number = expenses!.length;
+    const totalDebtCount : number = debts!.length;
 
     const incomeUsagePercentage = 100;
-    const totalMonthlyObligations = totalMonthlyPayments + totalExpenses;
+    const totalMonthlyObligations = totalMonthlyPaymentAmount + totalExpenseAmount;
     const remainingIncome = 30;
 
 
@@ -40,9 +40,9 @@ export default function HomeScreen() {
 //       originalTotalDebt > 0 ? (amountPaidOff / originalTotalDebt) * 100 : 0;
 
      const calculateDebtFreeDate = () => {
-       if (totalDebts === 0 || totalMonthlyPayments === 0) return null;
+       if (totalDebtAmount === 0 || totalMonthlyPaymentAmount === 0) return null;
 
-       const monthsToPayoff = Math.ceil(totalDebts / totalMonthlyPayments);
+       const monthsToPayoff = Math.ceil(totalDebtAmount / totalMonthlyPaymentAmount);
        const payoffDate = new Date();
        payoffDate.setMonth(payoffDate.getMonth() + monthsToPayoff);
        return payoffDate;
@@ -52,8 +52,8 @@ export default function HomeScreen() {
 
     // // Months until debt-free
      const monthsUntilDebtFree =
-       totalDebts > 0 && totalMonthlyPayments > 0
-         ? Math.ceil(totalDebts / totalMonthlyPayments)
+       totalDebtAmount > 0 && totalMonthlyPaymentAmount > 0
+         ? Math.ceil(totalDebtAmount / totalMonthlyPaymentAmount)
          : 0;
 
     // // Average interest rate
@@ -78,12 +78,12 @@ export default function HomeScreen() {
             )}
 
             {/* Quick Stats Banner */}
-            {(totalDebts > 0 || totalExpenseCount > 0) && (
-                <QuickStats totalDebts={totalDebts}
+            {(totalDebtAmount > 0 || totalExpenseCount > 0) && (
+                <QuickStats totalDebts={totalDebtAmount}
                             totalExpenseCount={totalExpenseCount}
-                            totalExpenses={totalExpenses}
+                            totalExpenses={totalExpenseAmount}
                             totalMonthlyObligations={totalMonthlyObligations}
-                            totalMonthlyPayments={totalMonthlyPayments} />
+                            totalMonthlyPayments={totalMonthlyPaymentAmount} />
             )}
 
             {/*{debts ? debts.length > 0 && (*/}
@@ -98,7 +98,7 @@ export default function HomeScreen() {
             {/*) : <Text>Nothing</Text>}*/}
 
             {debts ? debts.length > 0 && (
-                <DebtCollapse debts={debts} totalDebts={totalDebts} />
+                <DebtCollapse debts={debts} totalDebts={totalDebtAmount} />
             ): <Text>Nothing</Text> }
 
         </BodyScrollView>

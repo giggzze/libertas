@@ -17,6 +17,6 @@ export function useDebts(includePaid: boolean) {
         queryFn: () => getAllUserDebts(user!.id, false, supabase),
         enabled: !!user?.id,
         staleTime: 2 * 60 * 1000, // 2 minutes
-        gcTime: 5 * 60 * 1000 // 5 minutes (formerly cacheTime)
+        gcTime: 5 * 60 * 1000, 
     });
 }

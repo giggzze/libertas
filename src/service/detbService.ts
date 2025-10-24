@@ -6,7 +6,7 @@ export const getAllUserDebts = async (
     userId: string,
     includePaid: boolean = false,
     supabase: SupabaseClient
-): Promise<Debt[] | null> => {
+): Promise<Debt[]> => {
     let query = supabase.from("debts").select("*").eq("user_id", userId);
 
     if (!includePaid) {
@@ -15,11 +15,15 @@ export const getAllUserDebts = async (
 
     const { data, error } = await query.order("created_at", {
         ascending: false
-    });
+    }).maybeSingle();
 
     if (error) {
         console.error("Error fetching all debts:", error);
-        return null;
+        return [];
+    }
+
+    if (!data) {
+        return [];
     }
 
     return data;
