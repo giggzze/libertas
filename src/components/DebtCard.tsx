@@ -1,13 +1,13 @@
 import { IconSymbol } from '@/src/components/ui/IconSymbol';
 import { useThemeColor } from '@/src/hooks/use-theme-color';
-import { DebtWithPayments } from '@/src/types/STT';
+import { Debt, DebtWithPayments } from "@/src/types/STT";
 import { formatCurrency } from '@/src/utils/formatCurrency';
 import React from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from "react-native";
 import { Swipeable } from 'react-native-gesture-handler';
 
 interface DebtCardProps {
-	debt: DebtWithPayments;
+	debt: Debt;
 	onEdit: (debt: DebtWithPayments) => void;
 	onDelete: (debtId: string) => void;
 	onMakePayment: (debt: DebtWithPayments) => void;

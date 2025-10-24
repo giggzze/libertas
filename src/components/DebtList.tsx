@@ -1,12 +1,12 @@
 import { useThemeColor } from '@/src/hooks/use-theme-color';
-import { DebtWithPayments } from '@/src/types/STT';
+import { Debt, DebtWithPayments } from "@/src/types/STT";
 import React from 'react';
 import { StyleSheet, Text, useColorScheme, View } from "react-native";
 import { DebtCard } from './DebtCard';
 import { router } from 'expo-router';
 
 interface DebtListProps {
-  debts: DebtWithPayments[];
+  debts: Debt[];
   onEditDebt: (debt: DebtWithPayments) => void;
   onDeleteDebt: (id: string) => void;
   onMakePayment: (debt: DebtWithPayments) => void;

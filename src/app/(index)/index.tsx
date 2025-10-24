@@ -26,8 +26,8 @@ export default function HomeScreen() {
     const totalDebtAmount: number = calculateTotalDebt(debts!);
     const totalMonthlyPaymentAmount: number = calculateTotalMonthlyPayment(debts!);
     const totalExpenseAmount: number = calculateTotalExpense(expenses!);
-    const totalExpenseCount: number = expenses!.length;
-    const totalDebtCount : number = debts!.length;
+    const totalExpenseCount: number = expenses?.length ?? 0 ;
+    const totalDebtCount : number = debts?.length ?? 0;
 
     const incomeUsagePercentage = 100;
     const totalMonthlyObligations = totalMonthlyPaymentAmount + totalExpenseAmount;
@@ -98,7 +98,7 @@ export default function HomeScreen() {
             {/*) : <Text>Nothing</Text>}*/}
 
             {debts ? debts.length > 0 && (
-                <DebtCollapse debts={debts} totalDebts={totalDebtAmount} />
+                <DebtCollapse debts={debts} totalDebtCount={totalDebtCount} totalDebtAmount={totalDebtAmount}/>
             ): <Text>Nothing</Text> }
 
         </BodyScrollView>

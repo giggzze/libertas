@@ -15,7 +15,7 @@ export const getAllUserDebts = async (
 
     const { data, error } = await query.order("created_at", {
         ascending: false
-    }).maybeSingle();
+    });
 
     if (error) {
         console.error("Error fetching all debts:", error);

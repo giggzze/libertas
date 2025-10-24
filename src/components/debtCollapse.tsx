@@ -1,23 +1,27 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, useColorScheme, View } from "react-native";
 import {IconSymbol} from '@/src/components/ui/IconSymbol'
 import { router } from "expo-router";
 import { DebtList } from "@/src/components/DebtList";
 import { Debt } from "@/src/types/STT";
+import { useState } from "react";
+import { useThemeColor } from "@/src/hooks/use-theme-color";
 
 
 interface DebtCollapseProps {
     debts: Debt[],
-    totalDebt: number
+    totalDebtCount: number,
+    totalDebtAmount : number
 }
 
-export const DebtCollapse = ({ debts, totalDebt}: DebtCollapseProps) => {
+export const DebtCollapse = ({ debts, totalDebtCount, totalDebtAmount}: DebtCollapseProps) => {
+    const [debtsExpanded, setDebtsExpanded] = useState(false)
 
-    const isDark = false
-    const setDebtsExpanded = (debt) => {}
-    const debtsExpanded = true
-    const totalDebts = debts.length
-    const iconColor = 'green'
-    const textColor = 'green'
+    const isDark = !!useColorScheme()
+    const textColor = useThemeColor("text");
+    const iconColor = useThemeColor("icon");
+    const cardColor = useThemeColor('card')
+    const tabColor = useThemeColor('healthGray')
+
     const handleDeleteDebt = () => {}
     function handleEditDebt() {}
     function handleShowHistory() {}
@@ -30,7 +34,7 @@ export const DebtCollapse = ({ debts, totalDebt}: DebtCollapseProps) => {
               <TouchableOpacity
                 style={[
                   styles.collapsibleHeader,
-                  { backgroundColor: isDark ? '#1f2937' : '#f8fafc' },
+                  { backgroundColor: cardColor},
                 ]}
                 onPress={() =>
                   debts.length > 0 && setDebtsExpanded(!debtsExpanded)
@@ -52,11 +56,11 @@ export const DebtCollapse = ({ debts, totalDebt}: DebtCollapseProps) => {
                     <View
                       style={[
                         styles.countBadge,
-                        { backgroundColor: isDark ? '#374151' : '#e5e7eb' },
+                        { backgroundColor: tabColor},
                       ]}
                     >
                       <Text style={[styles.countBadgeText, { color: textColor }]}>
-                        {totalDebts}
+                        {totalDebtCount}
                       </Text>
                     </View>
                   )}
@@ -66,7 +70,7 @@ export const DebtCollapse = ({ debts, totalDebt}: DebtCollapseProps) => {
                     <Text
                       style={[styles.collapsibleAmount, { color: iconColor }]}
                     >
-                      £{totalDebt.toFixed(2)}
+                        £{totalDebtAmount}
                     </Text>
                   )}
                   <TouchableOpacity
