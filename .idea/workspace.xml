@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="34a2d1ba-ac02-4889-ad14-c5ada98ba02e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/app/(index)/strategy.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/DebtCategoryPill.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/PayoffTimeline.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/RecommendationItem.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/StrategySelector.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(index)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(index)/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(index)/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(index)/profile.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +47,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "preferences.pluginManager",
     "ts.external.directory.path": "/Users/giggzze/Documents/GitHub/libertas/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
@@ -91,7 +85,7 @@
       <workItem from="1761213580973" duration="67000" />
       <workItem from="1761213657742" duration="3048000" />
       <workItem from="1761247143763" duration="1757000" />
-      <workItem from="1761355340455" duration="14509000" />
+      <workItem from="1761355340455" duration="17367000" />
     </task>
     <servers />
   </component>
