@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from "react-native";
 import { useCurrentIncome } from "@/src/hooks/query/useIncome";
 import { useCreateIncome } from "@/src/hooks/mutations/useIncomeMutations";
+import { useThemeColor } from "@/src/hooks/use-theme-color";
+import { Stack } from "expo-router";
 
 export default function ProfileScreen() {
   const { user } = useUser();
@@ -16,6 +18,9 @@ export default function ProfileScreen() {
     const { data: currentIncome, isLoading: incomeLoading } = useCurrentIncome();
     const {mutate, error} = useCreateIncome()
   const [newIncome, setNewIncome] = useState('');
+
+    const textColor = useThemeColor('text')
+    const backgroundColor = useThemeColor('background')
 
   if ( incomeLoading) {
       return <ActivityIndicator />
@@ -48,17 +53,25 @@ export default function ProfileScreen() {
   };
 
   return (
-    <BodyScrollView contentContainerStyle={{ padding: 16 }}>
-      <View style={[styles.header]}>
-        <ThemedText style={[styles.email]}>
+      <>
+          <Stack.Screen options={{
+              headerLargeStyle: {
+                  backgroundColor: backgroundColor,
+              }
+
+          }} />
+
+    <BodyScrollView contentContainerStyle={{ paddingHorizontal: 10, backgroundColor: backgroundColor }}>
+      <View style={[styles.header, {borderBottomColor: textColor}]}>
+        <ThemedText style={[styles.email, {color: textColor}]}>
           {user?.emailAddresses[0].emailAddress}
         </ThemedText>
       </View>
 
       <View style={[styles.section]}>
-        <ThemedText style={[styles.sectionTitle]}>Monthly Income</ThemedText>
+        <ThemedText style={[styles.sectionTitle, {color: textColor}]}>Monthly Income</ThemedText>
         <View style={styles.incomeContainer}>
-          <ThemedText style={[styles.currentIncome]}>
+          <ThemedText style={[styles.currentIncome, {color: textColor}]}>
             Current: £{currentIncome?.amount.toLocaleString() || '0'}
           </ThemedText>
           <View style={styles.inputContainer}>
@@ -79,6 +92,8 @@ export default function ProfileScreen() {
         Logout
       </Button>
     </BodyScrollView>
+
+      </>
   );
 }
 
@@ -95,7 +110,6 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e5e5',
   },
   title: {
     fontSize: 28,

@@ -4,6 +4,7 @@ import { useUser } from "@clerk/clerk-expo";
 import { appleBlue, Colors } from "@/src/constants/theme";
 import { View } from "react-native";
 import HeaderButton from "@/src/components/ui/HeaderButton";
+import { useThemeColor } from "@/src/hooks/use-theme-color";
 
 export default function TabLayout() {
     const { user } = useUser();
@@ -69,7 +70,8 @@ export default function TabLayout() {
                     sheetGrabberVisible: false,
                     headerLargeTitle: false,
                     headerShown: true,
-                    sheetAllowedDetents: [0.55]
+                    sheetAllowedDetents: [0.55],
+
                 }}
             />
             <Stack.Screen

@@ -5,10 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="34a2d1ba-ac02-4889-ad14-c5ada98ba02e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/hooks/mutations/useExpenseMutations.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/(index)/strategy.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/DebtCategoryPill.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/PayoffTimeline.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/RecommendationItem.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/StrategySelector.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(index)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(index)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/expenseService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/expenseService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(index)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(index)/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(index)/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(index)/profile.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +48,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "payments",
-    "last_opened_file_path": "/Users/giggzze/Documents/GitHub/libertas/src/hooks/mutations",
+    "last_opened_file_path": "/Users/giggzze/Documents/GitHub/libertas/src/components",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -57,8 +61,9 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/hooks/mutations" />
+      <recent name="$PROJECT_DIR$/src/components" />
       <recent name="$PROJECT_DIR$/src/app/(index)" />
+      <recent name="$PROJECT_DIR$/src/hooks/mutations" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
@@ -86,7 +91,7 @@
       <workItem from="1761213580973" duration="67000" />
       <workItem from="1761213657742" duration="3048000" />
       <workItem from="1761247143763" duration="1757000" />
-      <workItem from="1761355340455" duration="12137000" />
+      <workItem from="1761355340455" duration="14509000" />
     </task>
     <servers />
   </component>
