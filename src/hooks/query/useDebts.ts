@@ -10,12 +10,10 @@ import { getAllUserDebts } from "@/src/service/detbService";
 export function useDebts(includePaid: boolean) {
     const { user } = useUser();
     const supabase = useSupabase();
-    console.log("the correct use debts hook is being called");
 
     return useQuery({
         queryKey: ["debts", user?.id],
-        queryFn: () => getAllUserDebts(user!.id, false, supabase),
-        enabled: !!user?.id,
+        queryFn: () => getAllUserDebts(user!.id, includePaid, supabase),
         staleTime: 2 * 60 * 1000, // 2 minutes
         gcTime: 5 * 60 * 1000, 
     });

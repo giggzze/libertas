@@ -11,7 +11,7 @@ export function useCurrentIncome() {
     return useQuery<MonthlyIncome>({
         queryKey: ['currentIncome', user?.id],
         queryFn: () =>  getCurrentMonthlyIncome(user!.id, supabase),
-        enabled: !!user?.id,
+        // enabled: !!user?.id,
         staleTime: 5 * 60 * 1000, // 5 minutes (income changes less frequently)
     });
 }

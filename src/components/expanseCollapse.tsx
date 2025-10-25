@@ -104,7 +104,7 @@ export const ExpanseCollapse = ( {expenses }: {expenses : Expense[] }) => {
                     <View
                       style={[
                         styles.emptyState,
-                        { borderColor: cardColor},
+                        { borderColor: iconColor},
                       ]}
                     >
                       <Text style={[styles.emptyStateText, { color: iconColor }]}>

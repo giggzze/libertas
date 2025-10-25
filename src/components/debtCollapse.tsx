@@ -21,6 +21,7 @@ export const DebtCollapse = ({ debts, totalDebtCount, totalDebtAmount}: DebtColl
     const iconColor = useThemeColor("icon");
     const cardColor = useThemeColor('card')
     const tabColor = useThemeColor('healthGray')
+    const healthGreen = useThemeColor('healthGreen')
 
     const handleDeleteDebt = () => {}
     function handleEditDebt() {}
@@ -76,7 +77,7 @@ export const DebtCollapse = ({ debts, totalDebtCount, totalDebtAmount}: DebtColl
                   <TouchableOpacity
                     style={[
                       styles.addButtonInHeader,
-                      { backgroundColor: isDark ? '#3b82f6' : '#3b82f6' },
+                      { backgroundColor: healthGreen},
                     ]}
                     onPress={(e) => {
                       e.stopPropagation();
@@ -107,7 +108,7 @@ export const DebtCollapse = ({ debts, totalDebtCount, totalDebtAmount}: DebtColl
               <View
                 style={[
                   styles.emptyState,
-                  { borderColor: isDark ? '#374151' : '#e5e7eb' },
+                  { borderColor: iconColor },
                 ]}
               >
                 <Text style={[styles.emptyStateText, { color: iconColor }]}>

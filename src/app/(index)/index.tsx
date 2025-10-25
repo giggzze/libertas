@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, useColorScheme } from "react-native";
+import { ActivityIndicator, StyleSheet, useColorScheme } from "react-native";
 import { BodyScrollView } from "@/src/components/ui/BodyScrollView";
 import { useThemeColor } from "@/src/hooks/use-theme-color";
 import { useDebts } from "@/src/hooks/query/useDebts";
@@ -73,15 +73,11 @@ export default function HomeScreen() {
     return (
         <BodyScrollView>
             {/* Income vs Outgoings Banner */}
-            {monthlyIncome?.amount ? monthlyIncome.amount > 0 && (
-                <FinancialOverview
-                    incomeUsagePercentage={incomeUsagePercentage}
-                    monthlyIncome={monthlyIncome}
-                    remainingIncome={remainingIncome}
-                    totalMonthlyObligations={totalMonthlyObligations} />
-            ) : (
-                <Text>Nothing</Text>
-            )}
+            <FinancialOverview
+                incomeUsagePercentage={incomeUsagePercentage}
+                monthlyIncome={monthlyIncome}
+                remainingIncome={remainingIncome}
+                totalMonthlyObligations={totalMonthlyObligations} />
 
             {/* Quick Stats Banner */}
             {(totalDebtAmount > 0 || totalExpenseCount > 0) && (
@@ -103,9 +99,7 @@ export default function HomeScreen() {
             {/*                debts={[]} />*/}
             {/*) : <Text>Nothing</Text>}*/}
 
-            {debts ? debts.length > 0 && (
-                <DebtCollapse debts={debts} totalDebtCount={totalDebtCount} totalDebtAmount={totalDebtAmount} />
-            ) : <Text>Nothing</Text>}
+            <DebtCollapse debts={debts} totalDebtCount={totalDebtCount} totalDebtAmount={totalDebtAmount} />
 
             <ExpanseCollapse expenses={expenses} />
 

@@ -19,84 +19,100 @@ export const FinancialOverview = ({
     const textColor = useThemeColor("text");
     const iconColor = useThemeColor("icon");
     const isDark = !!useColorScheme();
-    const healthColor = getHealthColor(isDark, monthlyIncome.amount, incomeUsagePercentage);
+    const healthColor = monthlyIncome && getHealthColor(isDark, monthlyIncome.amount, incomeUsagePercentage);
+    const cardColor = useThemeColor('card');
 
     return (
-        <View
-            style={[
-                styles.incomeBanner,
-                { backgroundColor: backgroundColor }
-            ]}
-        >
-            <View style={styles.incomeBannerHeader}>
-                <Text style={[styles.incomeBannerTitle, { color: textColor }]}>
-                    Monthly Financial Health
-                </Text>
+        <>
+            {monthlyIncome ? (
                 <View
                     style={[
-                        styles.healthIndicator,
-                        { backgroundColor: getHealthColor(isDark, monthlyIncome?.amount, incomeUsagePercentage) }
+                        styles.incomeBanner,
+                        { backgroundColor: backgroundColor }
                     ]}
                 >
-                    <Text style={styles.healthIndicatorText}>
-                        {incomeUsagePercentage.toFixed(0)}%
-                    </Text>
+
+
+                    <View style={styles.incomeBannerHeader}>
+                        <Text style={[styles.incomeBannerTitle, { color: textColor }]}>
+                            Monthly Financial Health
+                        </Text>
+                        <View
+                            style={[
+                                styles.healthIndicator,
+                                { backgroundColor: getHealthColor(isDark, monthlyIncome?.amount, incomeUsagePercentage) }
+                            ]}
+                        >
+                            <Text style={styles.healthIndicatorText}>
+                                {incomeUsagePercentage.toFixed(0)}%
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.incomeComparisonRow}>
+                        <View style={styles.incomeComparisonItem}>
+                            <Text style={[styles.incomeLabel, { color: iconColor }]}>
+                                Income
+                            </Text>
+                            <Text style={[styles.incomeAmount, { color: textColor }]}>
+                                £{monthlyIncome.amount ? monthlyIncome.amount.toFixed(2) : 0}
+                            </Text>
+                        </View>
+
+                        <View style={styles.incomeComparisonDivider}>
+                            <Text style={[styles.minusSign, { color: iconColor }]}>−</Text>
+                        </View>
+
+                        <View style={styles.incomeComparisonItem}>
+                            <Text style={[styles.incomeLabel, { color: iconColor }]}>
+                                Outgoings
+                            </Text>
+                            <Text style={[styles.incomeAmount, { color: textColor }]}>
+                                £{totalMonthlyObligations ? totalMonthlyObligations.toFixed(2) : 0}
+                            </Text>
+                        </View>
+
+                        <View style={styles.incomeComparisonDivider}>
+                            <Text style={[styles.equalsSign, { color: iconColor }]}>=</Text>
+                        </View>
+
+                        <View style={styles.incomeComparisonItem}>
+                            <Text style={[styles.incomeLabel, { color: iconColor }]}>
+                                Remaining
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.incomeAmount,
+                                    {
+                                        color:
+                                            remainingIncome < 0
+                                                ? isDark
+                                                    ? "#f87171"
+                                                    : "#dc2626"
+                                                : healthColor
+                                    }
+                                ]}
+                            >
+                                £{remainingIncome.toFixed(2)}
+                            </Text>
+                        </View>
+                    </View>
+
+                    {/* Progress bar */}
+                    <ProgressBar healthColor={healthColor} incomeUsagePercentage={incomeUsagePercentage} />
+
                 </View>
-            </View>
-
-            <View style={styles.incomeComparisonRow}>
-                <View style={styles.incomeComparisonItem}>
-                    <Text style={[styles.incomeLabel, { color: iconColor }]}>
-                        Income
-                    </Text>
-                    <Text style={[styles.incomeAmount, { color: textColor }]}>
-                        £{monthlyIncome.amount ? monthlyIncome.amount.toFixed(2) : 0}
-                    </Text>
-                </View>
-
-                <View style={styles.incomeComparisonDivider}>
-                    <Text style={[styles.minusSign, { color: iconColor }]}>−</Text>
-                </View>
-
-                <View style={styles.incomeComparisonItem}>
-                    <Text style={[styles.incomeLabel, { color: iconColor }]}>
-                        Outgoings
-                    </Text>
-                    <Text style={[styles.incomeAmount, { color: textColor }]}>
-                        £{totalMonthlyObligations ? totalMonthlyObligations.toFixed(2) : 0}
-                    </Text>
-                </View>
-
-                <View style={styles.incomeComparisonDivider}>
-                    <Text style={[styles.equalsSign, { color: iconColor }]}>=</Text>
-                </View>
-
-                <View style={styles.incomeComparisonItem}>
-                    <Text style={[styles.incomeLabel, { color: iconColor }]}>
-                        Remaining
-                    </Text>
-                    <Text
-                        style={[
-                            styles.incomeAmount,
-                            {
-                                color:
-                                    remainingIncome < 0
-                                        ? isDark
-                                            ? "#f87171"
-                                            : "#dc2626"
-                                        : healthColor
-                            }
-                        ]}
-                    >
-                        £{remainingIncome.toFixed(2)}
-                    </Text>
-                </View>
-            </View>
-
-            {/* Progress bar */}
-            <ProgressBar healthColor={healthColor} incomeUsagePercentage={incomeUsagePercentage} />
-        </View>
-
+            ) : <View
+                style={[
+                    styles.emptyState,
+                    { borderColor: iconColor, margin: 20},
+                ]}
+            >
+                <Text style={[styles.emptyStateText, { color: iconColor }]}>
+                    You&#39;re income is required to display insight information
+                </Text>
+            </View>}
+        </>
     );
 };
 
@@ -169,6 +185,17 @@ const styles = StyleSheet.create({
     incomeAmount: {
         fontSize: 18,
         fontWeight: "700"
-    }
-
+    },
+    emptyState: {
+        padding: 20,
+        borderWidth: 1,
+        borderRadius: 12,
+        borderStyle: 'dashed',
+        alignItems: 'center',
+    },
+    emptyStateText: {
+        fontSize: 14,
+        textAlign: 'center',
+        opacity: 0.7,
+    },
 });
