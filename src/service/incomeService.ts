@@ -1,5 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { MonthlyIncome } from "@/src/types/STT";
+import { MonthlyIncome, MonthlyIncomeInsert } from "@/src/types/STT";
+import { Database } from "@/src/types/supabase";
 
 export const getCurrentMonthlyIncome = async (userId: string, supabase: SupabaseClient):
     Promise<MonthlyIncome | null> => {
@@ -21,3 +22,26 @@ export const getCurrentMonthlyIncome = async (userId: string, supabase: Supabase
 
     return data;
 };
+
+
+export const createMonthlyIncome =
+    async (income: MonthlyIncomeInsert, userId: string, supabase : SupabaseClient<Database>):
+        Promise<MonthlyIncome | null> => {
+    const { data, error } = await supabase
+        .from('monthly_income')
+        .insert(
+            {
+                ...income,
+                user_id: userId,
+            }
+        )
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Error creating monthly income:', error);
+        return null;
+    }
+
+    return data;
+}
