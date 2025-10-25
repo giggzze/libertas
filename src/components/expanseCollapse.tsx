@@ -70,7 +70,7 @@ export const ExpanseCollapse = ( {expenses }: {expenses : Expense[] }) => {
                           <Text
                             style={[styles.collapsibleAmount, { color: iconColor }]}
                           >
-                            ${totalExpenseCount}/mo
+                            £{totalExpenseCount}/mo
                           </Text>
                         )}
                         <TouchableOpacity

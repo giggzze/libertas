@@ -36,8 +36,8 @@ export default function HomeScreen() {
     const totalDebtCount: number = debts?.length ?? 0;
 
     const totalMonthlyObligations = totalMonthlyPaymentAmount + totalExpenseAmount;
-    const incomeUsagePercentage =  monthlyIncome.amount > 0 ? (totalMonthlyObligations / monthlyIncome.amount) * 100 : 0;
-    const remainingIncome = monthlyIncome.amount - totalMonthlyObligations;
+    const incomeUsagePercentage =  monthlyIncome?.amount > 0 ? (totalMonthlyObligations / monthlyIncome?.amount) * 100 : 0;
+    const remainingIncome = monthlyIncome?.amount - totalMonthlyObligations;
 
 
     const originalTotalDebt = debts?.reduce((sum, debt) => sum + debt.amount, 0);
