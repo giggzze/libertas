@@ -1,4 +1,4 @@
-import { StyleSheet, Text, useColorScheme } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, useColorScheme } from "react-native";
 import { BodyScrollView } from "@/src/components/ui/BodyScrollView";
 import { useThemeColor } from "@/src/hooks/use-theme-color";
 import { useDebts } from "@/src/hooks/query/useDebts";
@@ -7,8 +7,8 @@ import { useExpenses } from "@/src/hooks/query/useExpense";
 import { calculateTotalDebt, calculateTotalExpense, calculateTotalMonthlyPayment } from "@/src/utils/helpers";
 import { FinancialOverview } from "@/src/components/financialOverview";
 import { QuickStats } from "@/src/components/quickStats";
-import { KeyInsight } from "@/src/components/keyInsight";
 import { DebtCollapse } from "@/src/components/debtCollapse";
+import { ExpanseCollapse } from "@/src/components/expanseCollapse";
 
 
 export default function HomeScreen() {
@@ -19,42 +19,48 @@ export default function HomeScreen() {
     const isDark = !!useColorScheme();
 
     // Queries
-    const { data: debts } = useDebts(false);
-    const { data: monthlyIncome } = useCurrentIncome();
-    const { data: expenses } = useExpenses();
+    const { data: debts, isLoading: debtLoading } = useDebts(false);
+    const { data: monthlyIncome, isLoading: incomeLoading } = useCurrentIncome();
+    const { data: expenses, isLoading: expensesLoading } = useExpenses();
+
+    if (debtLoading || incomeLoading || expensesLoading) {
+        return <ActivityIndicator />;
+    }
+
+    console.log(expenses, "expenses");
 
     const totalDebtAmount: number = calculateTotalDebt(debts!);
     const totalMonthlyPaymentAmount: number = calculateTotalMonthlyPayment(debts!);
     const totalExpenseAmount: number = calculateTotalExpense(expenses!);
-    const totalExpenseCount: number = expenses?.length ?? 0 ;
-    const totalDebtCount : number = debts?.length ?? 0;
+    const totalExpenseCount: number = expenses?.length ?? 0;
+    const totalDebtCount: number = debts?.length ?? 0;
 
     const incomeUsagePercentage = 100;
     const totalMonthlyObligations = totalMonthlyPaymentAmount + totalExpenseAmount;
     const remainingIncome = 30;
 
 
-     const originalTotalDebt = debts?.reduce((sum, debt) => sum + debt.amount, 0);
+    const originalTotalDebt = debts?.reduce((sum, debt) => sum + debt.amount, 0);
 //     const amountPaidOff = originalTotalDebt - totalDebt;
 //     const debtProgressPercentage =
 //       originalTotalDebt > 0 ? (amountPaidOff / originalTotalDebt) * 100 : 0;
 
-     const calculateDebtFreeDate = () => {
-       if (totalDebtAmount === 0 || totalMonthlyPaymentAmount === 0) return null;
+    const calculateDebtFreeDate = () => {
+        if (totalDebtAmount === 0 || totalMonthlyPaymentAmount === 0) return null;
 
-       const monthsToPayoff = Math.ceil(totalDebtAmount / totalMonthlyPaymentAmount);
-       const payoffDate = new Date();
-       payoffDate.setMonth(payoffDate.getMonth() + monthsToPayoff);
-       return payoffDate;
-     };
+        const monthsToPayoff = Math.ceil(totalDebtAmount / totalMonthlyPaymentAmount);
+        const payoffDate = new Date();
+        payoffDate.setMonth(payoffDate.getMonth() + monthsToPayoff);
+        return payoffDate;
+    };
 
-     const debtFreeDate = calculateDebtFreeDate();
+    const debtFreeDate = calculateDebtFreeDate();
 
     // // Months until debt-free
-     const monthsUntilDebtFree =
-       totalDebtAmount > 0 && totalMonthlyPaymentAmount > 0
-         ? Math.ceil(totalDebtAmount / totalMonthlyPaymentAmount)
-         : 0;
+    const monthsUntilDebtFree =
+        totalDebtAmount > 0 && totalMonthlyPaymentAmount > 0
+            ? Math.ceil(totalDebtAmount / totalMonthlyPaymentAmount)
+            : 0;
 
     // // Average interest rate
 //     const averageInterestRate =
@@ -98,8 +104,10 @@ export default function HomeScreen() {
             {/*) : <Text>Nothing</Text>}*/}
 
             {debts ? debts.length > 0 && (
-                <DebtCollapse debts={debts} totalDebtCount={totalDebtCount} totalDebtAmount={totalDebtAmount}/>
-            ): <Text>Nothing</Text> }
+                <DebtCollapse debts={debts} totalDebtCount={totalDebtCount} totalDebtAmount={totalDebtAmount} />
+            ) : <Text>Nothing</Text>}
+
+            <ExpanseCollapse expenses={expenses} />
 
         </BodyScrollView>
     );
@@ -161,5 +169,5 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginTop: 4,
         opacity: 0.8
-    },
+    }
 });

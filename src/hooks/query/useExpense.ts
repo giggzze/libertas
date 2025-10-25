@@ -9,7 +9,6 @@ export function useExpenses() {
     return useQuery({
         queryKey: ['expenses', user?.id],
         queryFn: () => getUserExpenses(user!.id, supabase),
-        enabled: !!user?.id,
         staleTime: 2 * 60 * 1000,
     });
 }
