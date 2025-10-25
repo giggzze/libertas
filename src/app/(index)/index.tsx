@@ -35,9 +35,9 @@ export default function HomeScreen() {
     const totalExpenseCount: number = expenses?.length ?? 0;
     const totalDebtCount: number = debts?.length ?? 0;
 
-    const incomeUsagePercentage = 100;
     const totalMonthlyObligations = totalMonthlyPaymentAmount + totalExpenseAmount;
-    const remainingIncome = 30;
+    const incomeUsagePercentage =  monthlyIncome.amount > 0 ? (totalMonthlyObligations / monthlyIncome.amount) * 100 : 0;
+    const remainingIncome = monthlyIncome.amount - totalMonthlyObligations;
 
 
     const originalTotalDebt = debts?.reduce((sum, debt) => sum + debt.amount, 0);
@@ -84,6 +84,7 @@ export default function HomeScreen() {
                 <QuickStats totalDebts={totalDebtAmount}
                             totalExpenseCount={totalExpenseCount}
                             totalExpenses={totalExpenseAmount}
+                            totalDebtCount={totalDebtCount}
                             totalMonthlyObligations={totalMonthlyObligations}
                             totalMonthlyPayments={totalMonthlyPaymentAmount} />
             )}

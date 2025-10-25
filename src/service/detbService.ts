@@ -1,5 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Debt } from "@/src/types/STT";
+import { Debt, DebtInsert } from "@/src/types/STT";
+import { Database } from "@/src/types/supabase";
 
 
 export const getAllUserDebts = async (
@@ -26,6 +27,27 @@ export const getAllUserDebts = async (
 
     if (!data) {
         return [];
+    }
+
+    return data;
+};
+
+
+export const createDebt =
+    async (debt: DebtInsert, userId: string, supabase: SupabaseClient<Database>):
+    Promise<Debt | null> => {
+    const { data, error } = await supabase
+        .from("debts")
+        .insert({
+            ...debt,
+            user_id: userId
+        })
+        .select()
+        .single();
+
+    if (error) {
+        console.error("Error creating debt:", error);
+        return null;
     }
 
     return data;

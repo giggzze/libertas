@@ -6,6 +6,7 @@ interface QuickStatsProps {
     totalDebts: number,
     totalExpenses: number,
     totalMonthlyObligations: number,
+    totalDebtCount: number,
     totalExpenseCount: number,
     totalMonthlyPayments: number
 }
@@ -15,7 +16,8 @@ export const QuickStats = ({
                                totalExpenses,
                                totalMonthlyObligations,
                                totalExpenseCount,
-                               totalMonthlyPayments
+                               totalMonthlyPayments,
+                                totalDebtCount,
                            }: QuickStatsProps) => {
     const textColor = useThemeColor("text");
     const backgroundColor = useThemeColor("background");
@@ -68,7 +70,7 @@ export const QuickStats = ({
             >
                 <View style={styles.statItem}>
                     <Text style={[styles.statNumber, { color: textColor }]}>
-                        {totalDebts}
+                        {totalDebtCount}
                     </Text>
                     <Text style={[styles.statLabel, { color: textColor }]}>
                         Active Debts
