@@ -1,11 +1,10 @@
 import { StyleSheet, Text, useColorScheme, View } from "react-native";
 import { useThemeColor } from "@/src/hooks/use-theme-color";
-import { MonthlyIncome } from "@/src/types/STT";
 import { ProgressBar } from "@/src/components/progressBar";
 import { getHealthColor } from "@/src/utils/helpers";
 
 interface NameeProps {
-    monthlyIncome: MonthlyIncome,
+    monthlyIncome: number,
     incomeUsagePercentage: number,
     totalMonthlyObligations: number,
     remainingIncome: number
@@ -19,8 +18,7 @@ export const FinancialOverview = ({
     const textColor = useThemeColor("text");
     const iconColor = useThemeColor("icon");
     const isDark = !!useColorScheme();
-    const healthColor = monthlyIncome && getHealthColor(isDark, monthlyIncome.amount, incomeUsagePercentage);
-    const cardColor = useThemeColor('card');
+    const healthColor = getHealthColor(isDark, monthlyIncome, incomeUsagePercentage);
 
     return (
         <>
@@ -40,7 +38,7 @@ export const FinancialOverview = ({
                         <View
                             style={[
                                 styles.healthIndicator,
-                                { backgroundColor: getHealthColor(isDark, monthlyIncome?.amount, incomeUsagePercentage) }
+                                { backgroundColor: getHealthColor(isDark, monthlyIncome, incomeUsagePercentage) }
                             ]}
                         >
                             <Text style={styles.healthIndicatorText}>
@@ -55,7 +53,7 @@ export const FinancialOverview = ({
                                 Income
                             </Text>
                             <Text style={[styles.incomeAmount, { color: textColor }]}>
-                                £{monthlyIncome.amount ? monthlyIncome.amount.toFixed(2) : 0}
+                                £{monthlyIncome ? monthlyIncome.toFixed(2) : 0}
                             </Text>
                         </View>
 
@@ -105,7 +103,7 @@ export const FinancialOverview = ({
             ) : <View
                 style={[
                     styles.emptyState,
-                    { borderColor: iconColor, margin: 20},
+                    { borderColor: iconColor, margin: 20 }
                 ]}
             >
                 <Text style={[styles.emptyStateText, { color: iconColor }]}>
@@ -190,12 +188,12 @@ const styles = StyleSheet.create({
         padding: 20,
         borderWidth: 1,
         borderRadius: 12,
-        borderStyle: 'dashed',
-        alignItems: 'center',
+        borderStyle: "dashed",
+        alignItems: "center"
     },
     emptyStateText: {
         fontSize: 14,
-        textAlign: 'center',
-        opacity: 0.7,
-    },
+        textAlign: "center",
+        opacity: 0.7
+    }
 });

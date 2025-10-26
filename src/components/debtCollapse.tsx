@@ -16,7 +16,6 @@ interface DebtCollapseProps {
 export const DebtCollapse = ({ debts, totalDebtCount, totalDebtAmount}: DebtCollapseProps) => {
     const [debtsExpanded, setDebtsExpanded] = useState(false)
 
-    const isDark = !!useColorScheme()
     const textColor = useThemeColor("text");
     const iconColor = useThemeColor("icon");
     const cardColor = useThemeColor('card')

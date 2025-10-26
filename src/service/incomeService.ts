@@ -3,45 +3,43 @@ import { MonthlyIncome, MonthlyIncomeInsert } from "@/src/types/STT";
 import { Database } from "@/src/types/supabase";
 
 export const getCurrentMonthlyIncome = async (userId: string, supabase: SupabaseClient):
-    Promise<MonthlyIncome | null> => {
+    Promise<MonthlyIncome[]> => {
     const { data, error } = await supabase
         .from("monthly_income")
         .select()
         .eq("user_id", userId)
         .order("start_date", { ascending: false })
-        .maybeSingle();
-
-    console.log(typeof data)
+        .limit(1)
 
     if (error) {
         console.error("Error fetching monthly income:", error);
-        return null
+        return [];
     }
 
-    if (!data) return null
+    if (!data) return [];
 
     return data;
 };
 
 
 export const createMonthlyIncome =
-    async (income: MonthlyIncomeInsert, userId: string, supabase : SupabaseClient<Database>):
+    async (income: MonthlyIncomeInsert, userId: string, supabase: SupabaseClient<Database>):
         Promise<MonthlyIncome | null> => {
-    const { data, error } = await supabase
-        .from('monthly_income')
-        .insert(
-            {
-                ...income,
-                user_id: userId,
-            }
-        )
-        .select()
-        .single();
+        const { data, error } = await supabase
+            .from("monthly_income")
+            .insert(
+                {
+                    ...income,
+                    user_id: userId
+                }
+            )
+            .select()
+            .single();
 
-    if (error) {
-        console.error('Error creating monthly income:', error);
-        return null;
-    }
+        if (error) {
+            console.error("Error creating monthly income:", error);
+            return null;
+        }
 
-    return data;
-}
+        return data;
+    };

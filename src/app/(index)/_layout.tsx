@@ -4,7 +4,6 @@ import { useUser } from "@clerk/clerk-expo";
 import { appleBlue, Colors } from "@/src/constants/theme";
 import { View } from "react-native";
 import HeaderButton from "@/src/components/ui/HeaderButton";
-import { useThemeColor } from "@/src/hooks/use-theme-color";
 
 export default function TabLayout() {
     const { user } = useUser();
@@ -19,15 +18,15 @@ export default function TabLayout() {
                 ...(process.env.EXPO_OS !== "ios"
                     ? {}
                     : {
-                        headerLargeTitle: false,
-                        headerTransparent: true,
-                        headerBlurEffect: "systemChromeMaterial",
-                        headerLargeTitleShadowVisible: false,
-                        headerShadowVisible: true,
-                        headerLargeStyle: {
-                            backgroundColor: "transparent"
-                        }
-                    })
+                          headerLargeTitle: false,
+                          headerTransparent: true,
+                          headerBlurEffect: "systemChromeMaterial",
+                          headerLargeTitleShadowVisible: false,
+                          headerShadowVisible: true,
+                          headerLargeStyle: {
+                              backgroundColor: "transparent"
+                          }
+                      })
             }}
         >
             <Stack.Screen
@@ -36,17 +35,13 @@ export default function TabLayout() {
                     title: "Overview",
                     headerLeft: () => (
                         <View style={{ marginLeft: 5 }}>
-                            <HeaderButton
-                                onPress={() => router.push("/profile")}
-                                iconName="gear"
-                                color={appleBlue}
-                            />
+                            <HeaderButton onPress={() => router.push("./profile")} iconName="gear" color={appleBlue} />
                         </View>
                     ),
                     headerRight: () => (
                         <View style={{ marginLeft: 5 }}>
                             <HeaderButton
-                                onPress={() => router.push("/strategy")}
+                                onPress={() => router.push("./strategy")}
                                 iconName="chart.bar"
                                 color={appleBlue}
                             />
@@ -70,8 +65,7 @@ export default function TabLayout() {
                     sheetGrabberVisible: false,
                     headerLargeTitle: false,
                     headerShown: true,
-                    sheetAllowedDetents: [0.55],
-
+                    sheetAllowedDetents: [0.55]
                 }}
             />
             <Stack.Screen

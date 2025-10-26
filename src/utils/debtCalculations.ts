@@ -200,7 +200,7 @@ export function calculateTotalInterest(
  * @returns Object mapping debt IDs to their recommended monthly payment amounts
  */
 export function calculateRecommendedPayment(
-	debts: (Debt | DebtWithPayments)[],
+	debts: Debt[],
 	strategy: PayoffStrategy,
 	availablePayment: number
 ): { [key: string]: number } {

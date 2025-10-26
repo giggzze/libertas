@@ -5,10 +5,11 @@ import { getUserExpenses } from "@/src/service/expenseService";
 
 export function useExpenses() {
     const { user } = useUser();
-    const supabase  = useSupabase();
+    const supabase = useSupabase();
+
     return useQuery({
-        queryKey: ['expenses', user?.id],
+        queryKey: ["expenses", user?.id],
         queryFn: () => getUserExpenses(user!.id, supabase),
-        staleTime: 2 * 60 * 1000,
+        staleTime: 2 * 60 * 1000
     });
 }
