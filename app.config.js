@@ -1,86 +1,45 @@
-const IS_DEV = process.env.APP_VARIANT === "development";
-const IS_PREVIEW = process.env.APP_VARIANT === "preview";
+const IS_DEV = process.env.APP_VARIANT === 'development';
+const IS_PREVIEW = process.env.APP_VARIANT === 'preview';
+
+// Debug logging
+console.log('APP_VARIANT:', process.env.APP_VARIANT);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('IS_DEV:', IS_DEV);
+console.log('IS_PREVIEW:', IS_PREVIEW);
 
 const getUniqueIdentifier = () => {
   if (IS_DEV) {
-    return "com.giggzze.libertas.dev";
+    return 'com.giggzze.libertas.dev';
   }
 
   if (IS_PREVIEW) {
-    return "com.giggzze.libertas.preview";
+    return 'com.giggzze.libertas.preview';
   }
 
-  return "com.giggzze.libertas";
+  return 'com.giggzze.libertas';
 };
 
 const getAppName = () => {
   if (IS_DEV) {
-    return "Libertas (Dev)";
+    return 'Libertas (Dev)';
   }
 
   if (IS_PREVIEW) {
-    return "Libertas (Preview)";
+    return 'Libertas (Preview)';
   }
 
-  return "Libertas";
+  return 'Libertas';
 };
 
 export default ({ config }) => ({
   ...config,
   name: getAppName(),
-  slug: "libertas",
-  version: "1.0.0",
-  orientation: "portrait",
-  icon: "./assets/images/icon.png",
-  scheme: "libertas",
-  userInterfaceStyle: "automatic",
-  newArchEnabled: true,
   ios: {
-    supportsTablet: false,
+    ...config.ios,
     bundleIdentifier: getUniqueIdentifier(),
-    infoPlist: {
-      ITSAppUsesNonExemptEncryption: false,
-    },
-    icon: {
-      dark: "./assets/images/ios-light.png",
-      light: "./assets/images/ios-light.png",
-      tinted: "./assets/images/ios-light.png",
-    },
   },
   android: {
-    adaptiveIcon: {
-      foregroundImage: "./assets/images/adaptive-icon.png",
-      backgroundColor: "#ffffff",
-    },
-    edgeToEdgeEnabled: true,
+    ...config.android,
     package: getUniqueIdentifier(),
   },
-  web: {
-    bundler: "metro",
-    output: "static",
-    favicon: "./assets/images/favicon.png",
-  },
-  plugins: [
-    "expo-router",
-    "expo-web-browser",
-    [
-      "expo-splash-screen",
-      {
-        image: "./assets/images/splash-icon-light.png",
-        imageWidth: 200,
-        resizeMode: "contain",
-        backgroundColor: "#343434",
-      },
-    ],
-  ],
-  experiments: {
-    typedRoutes: true,
-  },
-  extra: {
-    router: {},
-    eas: {
-      projectId: "465b9a55-4ffb-4b8b-b25f-c1bac6941529",
-    },
-  },
-  owner: "giggzze",
 });
