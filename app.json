@@ -3,7 +3,7 @@
     "slug": "libertas",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/ios-light.png",
     "scheme": "libertas",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -12,6 +12,11 @@
       "bundleIdentifier": "com.giggzze.libertas",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
+      },
+      "icon": {
+        "dark": "./assets/images/ios-light.png",
+        "light": "./assets/images/ios-light.png",
+        "tinted": "./assets/images/ios-light.png"
       }
     },
     "android": {
@@ -34,7 +39,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/splash-icon-light.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
