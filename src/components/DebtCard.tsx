@@ -2,9 +2,9 @@ import { IconSymbol } from "@/src/components/ui/IconSymbol";
 import { useThemeColor } from "@/src/hooks/use-theme-color";
 import { Debt, DebtWithPayments } from "@/src/types/STT";
 import { formatCurrency } from "@/src/utils/formatCurrency";
-import React from "react";
+import React, { useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from "react-native";
-import { Swipeable } from "react-native-gesture-handler";
+import { appleBlue, appleGreen, appleRed } from "@/src/constants/theme";
 
 interface DebtCardProps {
     debt: Debt;
@@ -16,7 +16,6 @@ interface DebtCardProps {
 }
 
 export function DebtCard({ debt, onDelete }: DebtCardProps) {
-    // Calculate the current balance (remaining amount or original amount if no payments)
     const currentBalance = debt.amount;
     const totalPaid = 0;
 
@@ -40,133 +39,160 @@ export function DebtCard({ debt, onDelete }: DebtCardProps) {
             }
         ]);
     };
-
-    const renderRightActions = () => (
-        <View style={{ flexDirection: "row", alignItems: "center", height: "100%" }}>
-            {/*<TouchableOpacity
-				style={[styles.actionButton, styles.editButton, { backgroundColor: tintColor, height: '90%', justifyContent: 'center', marginBottom: 10 }]}
-				onPress={() => onEdit(debt)}
-			>
-				<IconSymbol name="pencil" size={16} color={isDark ? '#000' : '#fff'} />
-				<Text style={[styles.actionButtonText, { color: isDark ? '#000' : '#fff' }]}>Edit</Text>
-			</TouchableOpacity>*/}
-            <TouchableOpacity
-                style={[styles.actionButton, styles.deleteButton, {
-                    marginLeft: 2,
-                    height: "90%",
-                    justifyContent: "center",
-                    marginBottom: 10
-                }]}
-                onPress={() => handleDelete()}
-            >
-                <IconSymbol name="trash" size={16} color={isDark ? "#000" : "#fff"} />
-                <Text style={[styles.actionButtonText, { color: isDark ? "#000" : "#fff" }]}>Delete</Text>
-            </TouchableOpacity>
-            {/*<TouchableOpacity
-				style={[styles.actionButton, { backgroundColor: '#A0AEC0', marginLeft: 2, height: '90%', justifyContent: 'center', marginBottom: 10 }]}
-				onPress={() => onShowHistory(debt)}
-			>
-				<IconSymbol name="clock" size={16} color={isDark ? '#000' : '#fff'} />
-				<Text style={[styles.actionButtonText, { color: isDark ? '#000' : '#fff' }]}>History</Text>
-			</TouchableOpacity>*/}
-        </View>
-    );
+    const handlePayment = () => {
+    };
+    const handleHistory = () => {
+    };
+    const handleCharge = () => {
+    };
 
     return (
-        <Swipeable renderRightActions={renderRightActions}>
-            <View style={[styles.debtCard, { backgroundColor, borderColor: isDark ? "#4a5568" : "#ddd" }]}>
-                <View style={styles.debtHeader}>
-                    <Text style={[styles.debtName, { color: textColor }]}>{debt.name}</Text>
-                    <Text
-                        style={[styles.debtAmount, { color: isDark ? "#81e6d9" : "#2c5282" }]}>{formatCurrency(currentBalance)}</Text>
+        <View style={[styles.debtCard, { backgroundColor }]}>
+            <View style={styles.debtHeader}>
+                <Text style={[styles.debtName, { color: textColor }]}>{debt.name}</Text>
+                <Text style={[styles.debtAmount, { color: isDark ? "#81e6d9" : "#2c5282" }]}>
+                    {formatCurrency(currentBalance)}
+                </Text>
+            </View>
+
+            <View style={styles.debtDetails}>
+                <View style={styles.detailRow}>
+                    <Text style={[styles.debtDetail, { color: iconColor }]}>Interest Rate: {debt.interest_rate}%</Text>
                 </View>
-                <View style={styles.debtDetails}>
-                    <View style={styles.detailColumn}>
-                        <Text style={[styles.debtDetail, { color: iconColor }]}>Interest
-                            Rate: {debt.interest_rate}%</Text>
-                        <Text style={[styles.debtDetail, { color: iconColor }]}>Minimum
-                            Payment: {formatCurrency(debt.minimum_payment)}</Text>
-                    </View>
-                    {totalPaid > 0 && (
-                        <View style={styles.detailColumn}>
+                <View style={styles.detailRow}>
+                    <Text style={[styles.debtDetail, { color: iconColor }]}>
+                        Minimum Payment: {formatCurrency(debt.minimum_payment)}
+                    </Text>
+                </View>
+                {totalPaid > 0 && (
+                    <>
+                        <View style={styles.detailRow}>
+                            <Text style={[styles.debtDetail, { color: iconColor }]}>
+                                Original: {formatCurrency(debt.amount)}
+                            </Text>
+                        </View>
+                        <View style={styles.detailRow}>
                             <Text
-                                style={[styles.debtDetail, { color: iconColor }]}>Original: {formatCurrency(debt.amount)}</Text>
-                            <Text
-                                style={[styles.debtDetail, styles.paidAmount, { color: isDark ? "#68d391" : "#28a745" }]}>
+                                style={[
+                                    styles.debtDetail,
+                                    styles.paidAmount,
+                                    { color: isDark ? "#68d391" : "#28a745" }
+                                ]}
+                            >
                                 Paid: {formatCurrency(totalPaid)}
                             </Text>
                         </View>
-                    )}
-                </View>
-                {/*<View style={styles.actionButtons}>
-					<TouchableOpacity style={[styles.actionButton, { backgroundColor: '#4FD1C5' }]} onPress={() => onMakePayment(debt)}>
-						<IconSymbol name="creditcard" size={16} color={isDark ? '#000' : '#fff'} />
-						<Text style={[styles.actionButtonText, { color: isDark ? '#000' : '#fff' }]}>Pay</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={[styles.actionButton, { backgroundColor: '#FFA500', marginLeft: 8 }]} onPress={() => onAddCharge(debt)}>
-						<IconSymbol name="plus" size={16} color={isDark ? '#000' : '#fff'} />
-						<Text style={[styles.actionButtonText, { color: isDark ? '#000' : '#fff' }]}>Add Charge</Text>
-					</TouchableOpacity>
-				</View>*/}
+                    </>
+                )}
             </View>
-        </Swipeable>
+
+            {/*<View style={styles.actionButtons}>*/}
+            {/*    <TouchableOpacity*/}
+            {/*        style={[styles.actionButton, { backgroundColor: appleGreen }]}*/}
+            {/*        onPress={() => handlePayment()}*/}
+            {/*    >*/}
+            {/*        <IconSymbol name="arrow.down" size={16} color="#ffffff" />*/}
+            {/*        <Text style={styles.actionButtonText}>Pay</Text>*/}
+            {/*    </TouchableOpacity>*/}
+
+            {/*    <TouchableOpacity*/}
+            {/*        style={[styles.actionButton, { backgroundColor: appleBlue }]}*/}
+            {/*        onPress={() => handleCharge()}*/}
+            {/*    >*/}
+            {/*        <IconSymbol name="arrow.up" size={16} color="#ffffff" />*/}
+            {/*        <Text style={styles.actionButtonText}>Charge</Text>*/}
+            {/*    </TouchableOpacity>*/}
+
+            {/*    <TouchableOpacity*/}
+            {/*        style={[styles.actionButton, { backgroundColor: iconColor }]}*/}
+            {/*        onPress={() => handleHistory()}*/}
+            {/*    >*/}
+            {/*        <IconSymbol name="clock" size={16} color="#ffffff" />*/}
+            {/*        <Text style={styles.actionButtonText}>History</Text>*/}
+            {/*    </TouchableOpacity>*/}
+
+            {/*    <TouchableOpacity*/}
+            {/*        style={[styles.deleteButton, { backgroundColor: appleRed }]}*/}
+            {/*        onPress={() => handleDelete()}*/}
+            {/*    >*/}
+            {/*        <IconSymbol name="trash" size={16} color="#ffffff" />*/}
+            {/*        <Text style={styles.actionButtonText}>Delete</Text>*/}
+            {/*    </TouchableOpacity>*/}
+            {/*</View>*/}
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     debtCard: {
-        borderRadius: 8,
+        borderRadius: 12,
         padding: 16,
         marginBottom: 12,
-        borderWidth: 1
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 3,
+        elevation: 2
     },
     debtHeader: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 8
-    },
-    debtName: {
-        fontSize: 18,
-        fontWeight: "600"
-    },
-    debtAmount: {
-        fontSize: 18,
-        fontWeight: "bold"
-    },
-    debtDetails: {
-        flexDirection: "row",
-        justifyContent: "space-between",
         marginBottom: 12
     },
-    detailColumn: {
-        flex: 1
+    debtName: {
+        fontSize: 17,
+        fontWeight: "700"
+    },
+    debtAmount: {
+        fontSize: 17,
+        fontWeight: "700"
+    },
+    debtDetails: {
+        marginBottom: 12
+    },
+    detailRow: {
+        marginBottom: 6
+    },
+    toggleButton: {
+        alignItems: "center",
+        paddingVertical: 8
     },
     debtDetail: {
         fontSize: 14,
-        marginBottom: 2
+        opacity: 0.8
     },
     paidAmount: {
-        fontWeight: "600"
+        fontWeight: "600",
+        opacity: 1
     },
     actionButtons: {
         flexDirection: "row",
-        justifyContent: "flex-end"
+        justifyContent: "center",
+        flexWrap: "wrap",
+        gap: 8
     },
     actionButton: {
         flexDirection: "row",
         alignItems: "center",
         paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 6,
-        gap: 4
+        paddingVertical: 8,
+        borderRadius: 8,
+        gap: 6
     },
-    editButton: {},
     deleteButton: {
-        backgroundColor: "#FF3B30"
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        borderRadius: 8,
+        gap: 6,
+        width: "85%"
     },
     actionButtonText: {
         fontWeight: "600",
-        fontSize: 14
+        fontSize: 14,
+        color: "#ffffff"
     }
 });
